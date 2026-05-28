@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] — Costify</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+
+<div id="sidebar">
+    <div class="sidebar-brand">
+        <div class="sidebar-logo"><img src="~/images/logo.png" alt="Costify" style="width:40px;height:40px;object-fit:contain;border-radius:6px" /></div>
+        <div>
+            <div class="sidebar-title">Costify</div>
+            <div class="sidebar-sub">Kafe & Restoran</div>
+        </div>
+    </div>
+
+    <div class="sidebar-section-label">MENÜ</div>
+    <nav class="sidebar-nav">
+        <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")"
+           asp-controller="Dashboard" asp-action="Index">
+            <span class="sidebar-icon"><i class="bi bi-speedometer2"></i></span>
+            <span>Genel Bakış</span>
+        </a>
+        <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Products" ? "active" : "")"
+           asp-controller="Products" asp-action="Index">
+            <span class="sidebar-icon"><i class="bi bi-box2"></i></span>
+            <span>Ürünler & Stok</span>
+        </a>
+        <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Vendors" ? "active" : "")"
+           asp-controller="Vendors" asp-action="Index">
+            <span class="sidebar-icon"><i class="bi bi-truck"></i></span>
+            <span>Tedarikçiler</span>
+        </a>
+        <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PurchaseOrders" ? "active" : "")"
+           asp-controller="PurchaseOrders" asp-action="Index">
+            <span class="sidebar-icon"><i class="bi bi-cart-check"></i></span>
+            <span>Satın Alma</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-section-label">OPERASYON</div>
+    <nav class="sidebar-nav">
+        <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Recipes" ? "active" : "")"
+           asp-controller="Recipes" asp-action="Index">
+            <span class="sidebar-icon"><i class="bi bi-clipboard-data"></i></span>
+            <span>Reçeteler</span>
+        </a>
+        <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "StockCounts" ? "active" : "")"
+           asp-controller="StockCounts" asp-action="Index">
+            <span class="sidebar-icon"><i class="bi bi-clipboard-check"></i></span>
+            <span>Stok Sayımı</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-section-label">ANALİZ</div>
+    <nav class="sidebar-nav">
+        <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reports" ? "active" : "")"
+           asp-controller="Reports" asp-action="Index">
+            <span class="sidebar-icon"><i class="bi bi-bar-chart-line"></i></span>
+            <span>Raporlar</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <div class="sidebar-avatar">
+                <i class="bi bi-person-fill"></i>
+            </div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">@User.Identity?.Name</div>
+                <div class="sidebar-user-role">Yönetici</div>
+            </div>
+            <form asp-controller="Auth" asp-action="Logout" method="post" class="ms-auto">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="sidebar-logout" title="Çıkış Yap">
+                    <i class="bi bi-box-arrow-right"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="main-content">
+    <div class="topbar">
+        <button class="topbar-toggle d-lg-none" id="sidebarToggle">
+            <i class="bi bi-list"></i>
+        </button>
+        <div class="topbar-breadcrumb">
+            <i class="bi bi-house-door me-1 text-muted" style="font-size:.8rem"></i>
+            <span class="text-muted" style="font-size:.8rem">Demo Kafe</span>
+            <i class="bi bi-chevron-right mx-1 text-muted" style="font-size:.65rem"></i>
+            <span style="font-size:.8rem;font-weight:600;color:#1e293b">@ViewData["Title"]</span>
+        </div>
+        <div class="ms-auto d-flex align-items-center gap-2">
+            <span class="badge-business"><i class="bi bi-building me-1"></i>Demo Kafe</span>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert-toast alert-toast-success">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+            <button onclick="this.parentElement.remove()" class="toast-close"><i class="bi bi-x"></i></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert-toast alert-toast-error">
+            <i class="bi bi-exclamation-circle-fill me-2"></i>@TempData["Error"]
+            <button onclick="this.parentElement.remove()" class="toast-close"><i class="bi bi-x"></i></button>
+        </div>
+    }
+
+    <main class="page-content">
+        @RenderBody()
+    </main>
+</div>
+
+<!-- Mobile Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+<script>
+document.getElementById('sidebarToggle')?.addEventListener('click', function() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('show');
+});
+document.getElementById('sidebarOverlay')?.addEventListener('click', function() {
+    document.getElementById('sidebar').classList.remove('open');
+    this.classList.remove('show');
+});
+setTimeout(() => {
+    document.querySelectorAll('.alert-toast').forEach(el => {
+        el.style.opacity = '0';
+        setTimeout(() => el.remove(), 400);
+    });
+}, 4000);
+</script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

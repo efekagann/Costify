@@ -1,0 +1,200 @@
+@model IEnumerable<Costify.Domain.Entities.Vendor>
+@{
+    ViewData["Title"] = "Tedarikçiler";
+}
+
+<div class="page-header">
+    <div class="text-muted" style="font-size:.875rem">
+        <i class="bi bi-truck me-1"></i>@Model.Count() tedarikçi
+    </div>
+    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#vendorModal">
+        <i class="bi bi-plus-lg me-1"></i>Yeni Tedarikçi
+    </button>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Firma</th>
+                    <th>İletişim</th>
+                    <th>Telefon</th>
+                    <th>E-Posta</th>
+                    <th>Vergi No</th>
+                    <th>Durum</th>
+                    <th style="width:80px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var v in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">@v.Name</div>
+                        </td>
+                        <td class="text-muted" style="font-size:.85rem">@(v.ContactPerson ?? "—")</td>
+                        <td style="font-size:.85rem">
+                            @if (!string.IsNullOrEmpty(v.Phone))
+                            {
+                                <a href="tel:@v.Phone" class="text-decoration-none text-reset">@v.Phone</a>
+                            }
+                            else { <span class="text-muted">—</span> }
+                        </td>
+                        <td style="font-size:.85rem">
+                            @if (!string.IsNullOrEmpty(v.Email))
+                            {
+                                <a href="mailto:@v.Email">@v.Email</a>
+                            }
+                            else { <span class="text-muted">—</span> }
+                        </td>
+                        <td class="text-muted" style="font-size:.82rem">@(v.TaxNumber ?? "—")</td>
+                        <td>
+                            <span class="badge @(v.IsActive ? "bg-success-soft" : "bg-secondary-soft")">
+                                @(v.IsActive ? "Aktif" : "Pasif")
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1 justify-content-end">
+                                <a asp-action="Details" asp-route-id="@v.Id"
+                                   class="btn btn-sm btn-outline-secondary" title="Detay">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <button class="btn btn-sm btn-outline-secondary btn-edit-vendor"
+                                        data-id="@v.Id" data-name="@v.Name"
+                                        data-contact="@v.ContactPerson" data-phone="@v.Phone"
+                                        data-email="@v.Email" data-address="@v.Address"
+                                        data-taxnumber="@v.TaxNumber"
+                                        data-isactive="@v.IsActive.ToString().ToLower()">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger"
+                                        onclick="confirmDeleteVendor(@v.Id, '@Html.Raw(v.Name.Replace("'","\\\'"))')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <i class="bi bi-truck"></i>
+                                <div class="fw-medium">Henüz tedarikçi yok</div>
+                                <small>İlk tedarikçiyi ekleyin</small>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Create / Edit Modal -->
+<div class="modal fade" id="vendorModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="vendorForm" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="v_Id" name="Id" value="0" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="vendorModalTitle">Yeni Tedarikçi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label">Firma Adı <span class="text-danger">*</span></label>
+                            <input type="text" name="Name" id="v_Name" class="form-control"
+                                   placeholder="Tedarikçi firma adı" required />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">İletişim Kişisi</label>
+                            <input type="text" name="ContactPerson" id="v_ContactPerson"
+                                   class="form-control" placeholder="Ad Soyad" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Telefon</label>
+                            <input type="tel" name="Phone" id="v_Phone"
+                                   class="form-control" placeholder="0212 555 00 00" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">E-Posta</label>
+                            <input type="email" name="Email" id="v_Email"
+                                   class="form-control" placeholder="info@firma.com" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Vergi Numarası</label>
+                            <input type="text" name="TaxNumber" id="v_TaxNumber"
+                                   class="form-control" placeholder="1234567890" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Adres</label>
+                            <textarea name="Address" id="v_Address"
+                                      class="form-control" rows="2" placeholder="Firma adresi..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="IsActive" id="v_IsActive"
+                                       class="form-check-input" value="true" checked />
+                                <label class="form-check-label" for="v_IsActive">Aktif</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<form id="deleteVendorForm" method="post" asp-action="Delete">
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="deleteVendorId" name="id" />
+</form>
+
+@section Scripts {
+<script>
+const vendorModal = document.getElementById('vendorModal');
+const vendorForm  = document.getElementById('vendorForm');
+
+vendorModal.addEventListener('show.bs.modal', function(e) {
+    if (!e.relatedTarget?.classList.contains('btn-edit-vendor')) {
+        document.getElementById('vendorModalTitle').textContent = 'Yeni Tedarikçi';
+        vendorForm.action = '@Url.Action("Create","Vendors")';
+        vendorForm.reset();
+        document.getElementById('v_Id').value = '0';
+        document.getElementById('v_IsActive').checked = true;
+    }
+});
+
+document.querySelectorAll('.btn-edit-vendor').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.getElementById('vendorModalTitle').textContent = 'Tedarikçi Düzenle';
+        vendorForm.action = '@Url.Action("Edit","Vendors")/' + this.dataset.id;
+        document.getElementById('v_Id').value           = this.dataset.id;
+        document.getElementById('v_Name').value         = this.dataset.name || '';
+        document.getElementById('v_ContactPerson').value = this.dataset.contact || '';
+        document.getElementById('v_Phone').value        = this.dataset.phone || '';
+        document.getElementById('v_Email').value        = this.dataset.email || '';
+        document.getElementById('v_Address').value      = this.dataset.address || '';
+        document.getElementById('v_TaxNumber').value    = this.dataset.taxnumber || '';
+        document.getElementById('v_IsActive').checked   = this.dataset.isactive === 'true';
+        new bootstrap.Modal(vendorModal).show();
+    });
+});
+
+function confirmDeleteVendor(id, name) {
+    if (confirm(`"${name}" tedarikçisini silmek istediğinize emin misiniz?`)) {
+        document.getElementById('deleteVendorId').value = id;
+        document.getElementById('deleteVendorForm').submit();
+    }
+}
+</script>
+}

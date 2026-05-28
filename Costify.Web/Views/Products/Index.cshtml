@@ -1,0 +1,249 @@
+@model IEnumerable<Costify.Domain.Entities.Product>
+@{
+    ViewData["Title"] = "Ürünler & Stok";
+}
+
+<div class="page-header">
+    <form class="d-flex gap-2 flex-wrap" method="get">
+        <input type="text" name="search" value="@ViewBag.Search"
+               class="form-control form-control-sm" placeholder="Ürün adı veya SKU..." style="width:200px" />
+        @Html.DropDownList("categoryId", (SelectList)ViewBag.Categories, "Tüm Kategoriler",
+            new { @class = "form-select form-select-sm", style = "width:170px" })
+        <button type="submit" class="btn btn-sm btn-outline-primary px-3">
+            <i class="bi bi-search me-1"></i>Ara
+        </button>
+        @if (!string.IsNullOrEmpty(ViewBag.Search as string) || ViewBag.CategoryId != null)
+        {
+            <a asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-x me-1"></i>Temizle
+            </a>
+        }
+    </form>
+    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#productModal">
+        <i class="bi bi-plus-lg me-1"></i>Yeni Ürün
+    </button>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Ürün</th>
+                    <th>Kategori</th>
+                    <th class="text-end">Stok</th>
+                    <th class="text-end">Min. Stok</th>
+                    <th class="text-end">Son Fiyat</th>
+                    <th>Durum</th>
+                    <th style="width:80px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    var isLow = p.CurrentStock <= p.MinimumStock;
+                    <tr>
+                        <td>
+                            <div class="fw-semibold" style="font-size:.875rem">@p.Name</div>
+                            @if (!string.IsNullOrEmpty(p.SKU))
+                            {
+                                <div class="text-muted" style="font-size:.72rem">@p.SKU</div>
+                            }
+                        </td>
+                        <td>
+                            @if (p.Category?.ColorHex != null)
+                            {
+                                <span class="badge rounded-pill fw-normal" style="background:@(p.Category.ColorHex)22;color:@p.Category.ColorHex;border:1px solid @(p.Category.ColorHex)44">
+                                    @p.Category.Name
+                                </span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <span class="fw-semibold @(isLow ? "text-danger" : "")">
+                                @p.CurrentStock.ToString("N2")
+                            </span>
+                            <span class="text-muted ms-1" style="font-size:.75rem">@p.Unit?.Symbol</span>
+                            @if (isLow)
+                            {
+                                <i class="bi bi-exclamation-triangle-fill text-danger ms-1" style="font-size:.75rem"></i>
+                            }
+                        </td>
+                        <td class="text-end text-muted" style="font-size:.825rem">
+                            @p.MinimumStock.ToString("N2") @p.Unit?.Symbol
+                        </td>
+                        <td class="text-end fw-medium">@p.LastPurchasePrice.ToString("N2") ₺</td>
+                        <td>
+                            <span class="badge @(p.IsActive ? "bg-success-soft" : "bg-secondary-soft")">
+                                @(p.IsActive ? "Aktif" : "Pasif")
+                            </span>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-1 justify-content-end">
+                                <button class="btn btn-sm btn-outline-secondary btn-edit-product"
+                                        data-id="@p.Id" data-name="@p.Name"
+                                        data-description="@p.Description" data-sku="@p.SKU"
+                                        data-categoryid="@p.CategoryId" data-unitid="@p.UnitId"
+                                        data-currentstock="@p.CurrentStock" data-minimumstock="@p.MinimumStock"
+                                        data-lastpurchaseprice="@p.LastPurchasePrice"
+                                        data-isactive="@p.IsActive.ToString().ToLower()"
+                                        title="Düzenle">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-danger"
+                                        onclick="confirmDeleteProduct(@p.Id, '@Html.Raw(p.Name.Replace("'","\\\'"))')"
+                                        title="Sil">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-state">
+                                <i class="bi bi-box2"></i>
+                                <div class="fw-medium">Ürün bulunamadı</div>
+                                <small>Arama kriterlerini değiştirin veya yeni ürün ekleyin</small>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Create / Edit Modal -->
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form id="productForm" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="p_Id" name="Id" value="0" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="productModalTitle">Yeni Ürün</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label class="form-label">Ürün Adı <span class="text-danger">*</span></label>
+                            <input type="text" name="Name" id="p_Name" class="form-control"
+                                   placeholder="Örn: Arabica Kahve Çekirdeği" required maxlength="200" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">SKU</label>
+                            <input type="text" name="SKU" id="p_SKU" class="form-control"
+                                   placeholder="KAH-001" maxlength="50" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Kategori <span class="text-danger">*</span></label>
+                            <select name="CategoryId" id="p_CategoryId" class="form-select" required>
+                                <option value="">— Seçiniz —</option>
+                                @foreach (var c in ViewBag.AllCategories as IEnumerable<Costify.Domain.Entities.Category> ?? [])
+                                {
+                                    <option value="@c.Id">@c.Name</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Birim <span class="text-danger">*</span></label>
+                            <select name="UnitId" id="p_UnitId" class="form-select" required>
+                                <option value="">— Seçiniz —</option>
+                                @foreach (var u in ViewBag.AllUnits as IEnumerable<Costify.Domain.Entities.Unit> ?? [])
+                                {
+                                    <option value="@u.Id">@u.Name (@u.Symbol)</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Mevcut Stok</label>
+                            <input type="number" name="CurrentStock" id="p_CurrentStock"
+                                   class="form-control" step="0.01" min="0" value="0" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Min. Stok Uyarı Sınırı
+                                <i class="bi bi-info-circle text-muted ms-1" title="Bu değerin altına düşünce uyarı verilir"></i>
+                            </label>
+                            <input type="number" name="MinimumStock" id="p_MinimumStock"
+                                   class="form-control" step="0.01" min="0" value="0" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Son Alış Fiyatı</label>
+                            <div class="input-group">
+                                <input type="number" name="LastPurchasePrice" id="p_LastPurchasePrice"
+                                       class="form-control" step="0.01" min="0" value="0" />
+                                <span class="input-group-text">₺</span>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Açıklama</label>
+                            <textarea name="Description" id="p_Description" class="form-control" rows="2"
+                                      placeholder="Opsiyonel notlar..."></textarea>
+                        </div>
+                        <div class="col-12">
+                            <div class="form-check form-switch">
+                                <input type="checkbox" name="IsActive" id="p_IsActive"
+                                       class="form-check-input" value="true" checked />
+                                <label class="form-check-label" for="p_IsActive">Aktif</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<form id="deleteProductForm" method="post" asp-action="Delete">
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="deleteProductId" name="id" />
+</form>
+
+@section Scripts {
+<script>
+const prodModal = document.getElementById('productModal');
+const prodForm  = document.getElementById('productForm');
+
+prodModal.addEventListener('show.bs.modal', function(e) {
+    if (!e.relatedTarget?.classList.contains('btn-edit-product')) {
+        document.getElementById('productModalTitle').textContent = 'Yeni Ürün';
+        prodForm.action = '@Url.Action("Create","Products")';
+        prodForm.reset();
+        document.getElementById('p_Id').value = '0';
+        document.getElementById('p_IsActive').checked = true;
+    }
+});
+
+document.querySelectorAll('.btn-edit-product').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.getElementById('productModalTitle').textContent = 'Ürün Düzenle';
+        prodForm.action = '@Url.Action("Edit","Products")/' + this.dataset.id;
+        document.getElementById('p_Id').value        = this.dataset.id;
+        document.getElementById('p_Name').value      = this.dataset.name || '';
+        document.getElementById('p_Description').value = this.dataset.description || '';
+        document.getElementById('p_SKU').value       = this.dataset.sku || '';
+        document.getElementById('p_CategoryId').value = this.dataset.categoryid || '';
+        document.getElementById('p_UnitId').value    = this.dataset.unitid || '';
+        document.getElementById('p_CurrentStock').value = this.dataset.currentstock || '0';
+        document.getElementById('p_MinimumStock').value = this.dataset.minimumstock || '0';
+        document.getElementById('p_LastPurchasePrice').value = this.dataset.lastpurchaseprice || '0';
+        document.getElementById('p_IsActive').checked = this.dataset.isactive === 'true';
+        new bootstrap.Modal(prodModal).show();
+    });
+});
+
+function confirmDeleteProduct(id, name) {
+    if (confirm(`"${name}" ürününü silmek istediğinize emin misiniz?`)) {
+        document.getElementById('deleteProductId').value = id;
+        document.getElementById('deleteProductForm').submit();
+    }
+}
+</script>
+}

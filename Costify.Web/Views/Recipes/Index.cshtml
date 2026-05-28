@@ -1,0 +1,354 @@
+@model IEnumerable<Costify.Domain.Entities.Recipe>
+@{
+    ViewData["Title"] = "Reçeteler";
+    var products = ViewBag.Products as IEnumerable<Costify.Domain.Entities.Product> ?? [];
+}
+
+<div class="page-header">
+    <div class="text-muted" style="font-size:.875rem">
+        <i class="bi bi-clipboard-data me-1"></i>@Model.Count() reçete
+    </div>
+    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#recipeModal" id="newRecipeBtn">
+        <i class="bi bi-plus-lg me-1"></i>Yeni Reçete
+    </button>
+</div>
+
+@{
+    var categories = Model.Select(r => r.Category).Where(c => !string.IsNullOrEmpty(c)).Distinct().OrderBy(c => c).ToList();
+}
+
+@if (Model.Any())
+{
+    foreach (var cat in categories.DefaultIfEmpty("Kategorisiz"))
+    {
+        var group = Model.Where(r => (r.Category ?? "Kategorisiz") == cat).ToList();
+        <div class="card mb-3">
+            <div class="card-header" style="font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#64748b">
+                <i class="bi bi-tag me-1"></i>@cat
+            </div>
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead>
+                        <tr>
+                            <th>Reçete</th>
+                            <th class="text-end">Malzeme Maliyeti</th>
+                            <th class="text-end">Satış Fiyatı</th>
+                            <th class="text-center">Gıda Maliyet %</th>
+                            <th class="text-center">Malzeme</th>
+                            <th style="width:90px"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in group)
+                        {
+                            var fcpct = r.FoodCostPercentage;
+                            var (fcClass, fcBg) = fcpct < 25 ? ("text-success","bg-success-soft")
+                                                : fcpct < 35 ? ("text-warning","bg-warning-soft")
+                                                :              ("text-danger","bg-danger-soft");
+                            <tr>
+                                <td>
+                                    <a asp-action="Details" asp-route-id="@r.Id" class="fw-semibold text-decoration-none">@r.Name</a>
+                                    @if (!r.IsActive) { <span class="badge bg-secondary-soft ms-1">Pasif</span> }
+                                </td>
+                                <td class="text-end">@r.TotalCost.ToString("N2") ₺</td>
+                                <td class="text-end fw-semibold">@r.SellingPrice.ToString("N2") ₺</td>
+                                <td class="text-center">
+                                    <span class="badge @fcBg @fcClass">%@fcpct.ToString("N1")</span>
+                                </td>
+                                <td class="text-center text-muted" style="font-size:.85rem">@r.Ingredients.Count</td>
+                                <td>
+                                    <div class="d-flex gap-1 justify-content-end">
+                                        <a asp-action="Details" asp-route-id="@r.Id"
+                                           class="btn btn-sm btn-outline-secondary" title="Detay">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <button class="btn btn-sm btn-outline-secondary btn-edit-recipe"
+                                                data-id="@r.Id" data-name="@r.Name"
+                                                data-category="@r.Category" data-description="@r.Description"
+                                                data-sellingprice="@r.SellingPrice.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"
+                                                data-isactive="@r.IsActive.ToString().ToLower()">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <form asp-action="Delete" asp-route-id="@r.Id" method="post" style="display:inline"
+                                              onsubmit="return confirm('@Html.Raw(r.Name.Replace("'","\\'")) reçetesini silmek istediğinize emin misiniz?')">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="card"><div class="card-body">
+        <div class="empty-state">
+            <i class="bi bi-clipboard-data"></i>
+            <div class="fw-medium">Henüz reçete yok</div>
+            <small>İlk reçeteyi oluşturun ve maliyetleri hesaplayın</small>
+        </div>
+    </div></div>
+}
+
+<!-- Create / Edit Modal -->
+<div class="modal fade" id="recipeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <form id="recipeForm" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" id="r_Id" name="Id" value="0" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="recipeModalTitle"><i class="bi bi-clipboard-plus me-2"></i>Yeni Reçete</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-3 mb-4 pb-3" style="border-bottom:1px solid var(--border)">
+                        <div class="col-md-5">
+                            <label class="form-label">Reçete Adı <span class="text-danger">*</span></label>
+                            <input type="text" name="Name" id="r_Name" class="form-control" placeholder="Espresso, Latte..." required />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Kategori</label>
+                            <input type="text" name="Category" id="r_Category" class="form-control" list="categoryList" placeholder="Sıcak İçecek..." />
+                            <datalist id="categoryList">
+                                @foreach (var c in new[]{"Sıcak İçecek","Soğuk İçecek","Atıştırmalık","Tatlı","Ana Yemek","Kahvaltı"})
+                                {
+                                    <option value="@c" />
+                                }
+                            </datalist>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Satış Fiyatı (₺) <span class="text-danger">*</span></label>
+                            <input type="number" name="SellingPrice" id="r_SellingPrice" class="form-control"
+                                   step="0.01" min="0" required oninput="updateFoodCost()" />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Açıklama</label>
+                            <input type="text" name="Description" id="r_Description" class="form-control" placeholder="Opsiyonel..." />
+                        </div>
+                        <div class="col-auto">
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" name="IsActive" id="r_IsActive" value="true" checked />
+                                <label class="form-check-label" for="r_IsActive">Aktif</label>
+                            </div>
+                        </div>
+                        <div class="col-auto ms-auto d-flex align-items-center">
+                            <div class="text-end">
+                                <div class="text-muted small">Tahmini Gıda Maliyet %</div>
+                                <div class="fw-bold fs-5" id="foodCostDisplay" style="color:var(--primary)">—</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fw-semibold" style="font-size:.875rem"><i class="bi bi-list-ul me-1"></i>Malzemeler</span>
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="addIngredientRow()">
+                            <i class="bi bi-plus-circle me-1"></i>Malzeme Ekle
+                        </button>
+                    </div>
+
+                    <table class="table table-sm" id="ingredientsTable">
+                        <thead>
+                            <tr style="background:#f8fafc">
+                                <th style="min-width:220px">Ürün / Hammadde</th>
+                                <th style="width:160px">Miktar</th>
+                                <th style="width:120px" class="text-end">Birim Maliyet</th>
+                                <th style="width:120px" class="text-end">Satır Maliyet</th>
+                                <th style="width:40px"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="ingredientsBody">
+                            <tr id="emptyIngRow">
+                                <td colspan="5" class="text-center py-3 text-muted" style="font-size:.85rem">
+                                    <i class="bi bi-arrow-up me-1"></i>Malzeme eklemek için yukarıdaki butonu kullanın
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold" style="font-size:.9rem">Toplam Maliyet:</td>
+                                <td class="text-end fw-bold" id="totalCostDisplay" style="font-size:1rem;color:var(--primary)">0,00 ₺</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+const allProducts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+    products.Select(p => new {
+        p.Id, p.Name,
+        unit = p.Unit != null ? p.Unit.Symbol : "",
+        lastPrice = p.LastPurchasePrice
+    })
+));
+
+let rowIdx = 0;
+
+function addIngredientRow(pid, qty) {
+    document.getElementById('emptyIngRow')?.remove();
+    const i = rowIdx++;
+    const opts = allProducts.map(p =>
+        `<option value="${p.Id}" data-price="${p.lastPrice}" data-unit="${p.unit}" ${p.Id==pid?'selected':''}>${p.Name} (${p.unit})</option>`
+    ).join('');
+
+    const tr = document.createElement('tr');
+    tr.id = `irow_${i}`;
+    tr.innerHTML = `
+        <td>
+            <select name="productIds" class="form-select form-select-sm" required onchange="onIngChange(this,${i})">
+                <option value="">— Ürün seçin —</option>${opts}
+            </select>
+        </td>
+        <td>
+            <div class="input-group input-group-sm">
+                <input type="number" name="quantities" id="iqty_${i}" class="form-control"
+                       step="0.0001" min="0.0001" value="${qty||1}" required oninput="calcIng(${i})" />
+                <span class="input-group-text" id="iunit_${i}" style="min-width:36px"></span>
+            </div>
+        </td>
+        <td class="text-end text-muted" id="iuprice_${i}" style="font-size:.82rem">—</td>
+        <td class="text-end fw-semibold" id="itotal_${i}" style="font-size:.85rem">0,00 ₺</td>
+        <td>
+            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeIng(${i})">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>`;
+    document.getElementById('ingredientsBody').appendChild(tr);
+
+    if (pid) {
+        const sel = tr.querySelector('select');
+        const opt = sel.options[sel.selectedIndex];
+        if (opt) {
+            document.getElementById(`iunit_${i}`).textContent = opt.dataset.unit || '';
+            document.getElementById(`iuprice_${i}`).textContent =
+                parseFloat(opt.dataset.price||0).toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' ₺';
+            calcIng(i);
+        }
+    }
+}
+
+function onIngChange(sel, i) {
+    const opt = sel.options[sel.selectedIndex];
+    document.getElementById(`iunit_${i}`).textContent = opt.dataset.unit || '';
+    document.getElementById(`iuprice_${i}`).textContent =
+        opt.dataset.price ? parseFloat(opt.dataset.price).toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' ₺' : '—';
+    calcIng(i);
+}
+
+function calcIng(i) {
+    const qty = parseFloat(document.getElementById(`iqty_${i}`)?.value) || 0;
+    const sel = document.querySelector(`#irow_${i} select`);
+    const price = parseFloat(sel?.options[sel.selectedIndex]?.dataset.price || 0);
+    document.getElementById(`itotal_${i}`).textContent =
+        (qty * price).toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' ₺';
+    calcTotals();
+}
+
+function calcTotals() {
+    let total = 0;
+    document.querySelectorAll('[id^="itotal_"]').forEach(el => {
+        total += parseFloat(el.textContent.replace(/[^\d,]/g,'').replace(',','.')) || 0;
+    });
+    document.getElementById('totalCostDisplay').textContent =
+        total.toLocaleString('tr-TR',{minimumFractionDigits:2}) + ' ₺';
+    updateFoodCost(total);
+}
+
+function updateFoodCost(cost) {
+    const selling = parseFloat(document.getElementById('r_SellingPrice')?.value) || 0;
+    if (!cost) {
+        let t = 0;
+        document.querySelectorAll('[id^="itotal_"]').forEach(el => {
+            t += parseFloat(el.textContent.replace(/[^\d,]/g,'').replace(',','.')) || 0;
+        });
+        cost = t;
+    }
+    const display = document.getElementById('foodCostDisplay');
+    if (selling > 0 && cost > 0) {
+        const pct = (cost / selling * 100).toFixed(1);
+        display.textContent = '%' + pct;
+        display.style.color = pct < 25 ? '#10b981' : pct < 35 ? '#f59e0b' : '#ef4444';
+    } else {
+        display.textContent = '—';
+        display.style.color = 'var(--primary)';
+    }
+}
+
+function removeIng(i) {
+    document.getElementById(`irow_${i}`)?.remove();
+    calcTotals();
+    if (!document.querySelector('#ingredientsBody tr:not(#emptyIngRow)')) {
+        const empty = document.createElement('tr');
+        empty.id = 'emptyIngRow';
+        empty.innerHTML = '<td colspan="5" class="text-center py-3 text-muted"><i class="bi bi-arrow-up me-1"></i>Malzeme eklemek için yukarıdaki butonu kullanın</td>';
+        document.getElementById('ingredientsBody').appendChild(empty);
+    }
+}
+
+// Edit button
+document.querySelectorAll('.btn-edit-recipe').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const modal = document.getElementById('recipeModal');
+        document.getElementById('recipeModalTitle').innerHTML = '<i class="bi bi-pencil me-2"></i>Reçete Düzenle';
+        document.getElementById('recipeForm').action = '/Recipes/Edit/' + this.dataset.id;
+        document.getElementById('r_Id').value = this.dataset.id;
+        document.getElementById('r_Name').value = this.dataset.name || '';
+        document.getElementById('r_Category').value = this.dataset.category || '';
+        document.getElementById('r_Description').value = this.dataset.description || '';
+        document.getElementById('r_SellingPrice').value = this.dataset.sellingprice || '';
+        document.getElementById('r_IsActive').checked = this.dataset.isactive === 'true';
+
+        // Mevcut malzemeleri sil ve yeniden yükle (fetch ile)
+        const tbody = document.getElementById('ingredientsBody');
+        tbody.innerHTML = '<tr id="emptyIngRow"><td colspan="5" class="text-center py-3 text-muted">Yükleniyor...</td></tr>';
+        rowIdx = 0;
+
+        fetch('/Recipes/GetIngredients/' + this.dataset.id)
+            .then(r => r.json())
+            .then(ings => {
+                tbody.innerHTML = '';
+                rowIdx = 0;
+                if (ings.length === 0) {
+                    tbody.innerHTML = '<tr id="emptyIngRow"><td colspan="5" class="text-center py-3 text-muted"><i class="bi bi-arrow-up me-1"></i>Malzeme eklemek için yukarıdaki butonu kullanın</td></tr>';
+                } else {
+                    ings.forEach(ing => addIngredientRow(ing.productId, ing.quantity));
+                }
+                calcTotals();
+            });
+
+        new bootstrap.Modal(modal).show();
+    });
+});
+
+document.getElementById('recipeModal').addEventListener('hidden.bs.modal', function() {
+    document.getElementById('recipeForm').reset();
+    document.getElementById('recipeForm').action = '@Url.Action("Create","Recipes")';
+    document.getElementById('r_Id').value = '0';
+    document.getElementById('recipeModalTitle').innerHTML = '<i class="bi bi-clipboard-plus me-2"></i>Yeni Reçete';
+    document.getElementById('ingredientsBody').innerHTML =
+        '<tr id="emptyIngRow"><td colspan="5" class="text-center py-3 text-muted"><i class="bi bi-arrow-up me-1"></i>Malzeme eklemek için yukarıdaki butonu kullanın</td></tr>';
+    document.getElementById('totalCostDisplay').textContent = '0,00 ₺';
+    document.getElementById('foodCostDisplay').textContent = '—';
+    rowIdx = 0;
+});
+
+document.getElementById('newRecipeBtn').addEventListener('click', function() {
+    document.getElementById('recipeForm').action = '@Url.Action("Create","Recipes")';
+});
+</script>
+}

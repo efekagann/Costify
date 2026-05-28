@@ -1,0 +1,153 @@
+@model Costify.Domain.Entities.Vendor
+@{
+    ViewData["Title"] = Model.Name;
+    var allProducts = Model.PurchaseOrders
+        .SelectMany(o => o.Items)
+        .GroupBy(i => new { i.ProductId, Name = i.Product?.Name ?? "—" })
+        .Select(g => new {
+            g.Key.ProductId,
+            g.Key.Name,
+            History = g.OrderBy(i => i.PurchaseOrder?.OrderDate)
+                       .Select(i => new { Date = i.PurchaseOrder?.OrderDate, i.UnitPrice })
+                       .ToList()
+        })
+        .OrderBy(p => p.Name)
+        .ToList();
+}
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">Tedarikçi Bilgileri</div>
+            <div class="card-body">
+                <dl class="row mb-0 small">
+                    <dt class="col-5 text-muted">Firma</dt>
+                    <dd class="col-7 fw-semibold">@Model.Name</dd>
+
+                    @if (!string.IsNullOrEmpty(Model.ContactPerson))
+                    {
+                        <dt class="col-5 text-muted">İletişim</dt>
+                        <dd class="col-7">@Model.ContactPerson</dd>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Phone))
+                    {
+                        <dt class="col-5 text-muted">Telefon</dt>
+                        <dd class="col-7"><a href="tel:@Model.Phone">@Model.Phone</a></dd>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.Email))
+                    {
+                        <dt class="col-5 text-muted">E-Posta</dt>
+                        <dd class="col-7"><a href="mailto:@Model.Email">@Model.Email</a></dd>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.TaxNumber))
+                    {
+                        <dt class="col-5 text-muted">Vergi No</dt>
+                        <dd class="col-7">@Model.TaxNumber</dd>
+                    }
+                    <dt class="col-5 text-muted">Durum</dt>
+                    <dd class="col-7">
+                        <span class="badge @(Model.IsActive ? "bg-success-soft" : "bg-secondary-soft")">
+                            @(Model.IsActive ? "Aktif" : "Pasif")
+                        </span>
+                    </dd>
+                    <dt class="col-5 text-muted">Toplam Sipariş</dt>
+                    <dd class="col-7 fw-bold">@Model.PurchaseOrders.Count</dd>
+                    <dt class="col-5 text-muted">Toplam Harcama</dt>
+                    <dd class="col-7 fw-bold">@Model.PurchaseOrders.Sum(o => o.TotalAmount).ToString("N2") ₺</dd>
+                </dl>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Geri</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <!-- Son Siparişler -->
+        <div class="card mb-3">
+            <div class="card-header">Son Siparişler</div>
+            <div class="card-body p-0">
+                @if (Model.PurchaseOrders.Any())
+                {
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Sipariş No</th>
+                                <th>Tarih</th>
+                                <th class="text-end">Toplam</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var o in Model.PurchaseOrders)
+                            {
+                                var (cls, lbl) = o.Status switch {
+                                    Costify.Domain.Enums.OrderStatus.Received  => ("bg-success-soft","Teslim Alındı"),
+                                    Costify.Domain.Enums.OrderStatus.Ordered   => ("bg-info-soft","Sipariş Verildi"),
+                                    Costify.Domain.Enums.OrderStatus.Cancelled => ("bg-danger-soft","İptal"),
+                                    _ => ("bg-secondary-soft","Diğer")
+                                };
+                                <tr>
+                                    <td>
+                                        <a asp-controller="PurchaseOrders" asp-action="Details" asp-route-id="@o.Id">@o.OrderNumber</a>
+                                    </td>
+                                    <td class="text-muted small">@o.OrderDate.ToString("dd.MM.yyyy")</td>
+                                    <td class="text-end fw-semibold">@o.TotalAmount.ToString("N2") ₺</td>
+                                    <td><span class="badge @cls">@lbl</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else { <div class="empty-state small"><i class="bi bi-cart"></i><div>Sipariş yok</div></div> }
+            </div>
+        </div>
+
+        <!-- Ürün Fiyat Geçmişi -->
+        @if (allProducts.Any())
+        {
+            <div class="card">
+                <div class="card-header">Ürün Fiyat Geçmişi</div>
+                <div class="card-body p-0">
+                    <table class="table table-sm mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Ürün</th>
+                                <th>Tarih</th>
+                                <th class="text-end">Birim Fiyat</th>
+                                <th class="text-end">Değişim</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in allProducts)
+                            {
+                                var history = p.History;
+                                for (int i = 0; i < history.Count; i++)
+                                {
+                                    var h = history[i];
+                                    var prev = i > 0 ? history[i - 1].UnitPrice : (decimal?)null;
+                                    var change = prev.HasValue ? h.UnitPrice - prev.Value : (decimal?)null;
+                                    var changeClass = change == null ? "" : change > 0 ? "text-danger" : change < 0 ? "text-success" : "text-muted";
+                                    <tr>
+                                        @if (i == 0) {
+                                            <td rowspan="@history.Count" class="fw-medium align-middle border-end">@p.Name</td>
+                                        }
+                                        <td class="text-muted small">@h.Date?.ToString("dd.MM.yyyy")</td>
+                                        <td class="text-end fw-semibold">@h.UnitPrice.ToString("N2") ₺</td>
+                                        <td class="text-end @changeClass small">
+                                            @if (change.HasValue && change != 0)
+                                            {
+                                                <span><i class="bi @(change > 0 ? "bi-arrow-up" : "bi-arrow-down")"></i> @Math.Abs(change.Value).ToString("N2") ₺</span>
+                                            }
+                                            else { <span class="text-muted">—</span> }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+    </div>
+</div>

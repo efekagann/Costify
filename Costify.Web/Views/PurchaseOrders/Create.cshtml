@@ -1,0 +1,159 @@
+@{
+    ViewData["Title"] = "Yeni Satın Alma Siparişi";
+}
+
+<div class="row justify-content-center">
+    <div class="col-xl-10">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-cart-plus me-1"></i>Yeni Sipariş</div>
+            <div class="card-body">
+                <form asp-action="Create" method="post" id="orderForm">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="All" class="alert alert-danger d-none" id="validationSummary"></div>
+
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">Tedarikçi <span class="text-danger">*</span></label>
+                            <select name="VendorId" class="form-select" required>
+                                <option value="">— Seçiniz —</option>
+                                @foreach (SelectListItem v in ViewBag.Vendors)
+                                {
+                                    <option value="@v.Value">@v.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Sipariş Tarihi <span class="text-danger">*</span></label>
+                            <input type="date" name="OrderDate" class="form-control"
+                                   value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label">Notlar</label>
+                            <textarea name="Notes" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+
+                    <h6 class="fw-semibold mb-3 border-bottom pb-2">
+                        <i class="bi bi-list-ul me-1"></i>Sipariş Kalemleri
+                    </h6>
+                    <table class="table align-middle" id="itemsTable">
+                        <thead class="table-light">
+                            <tr>
+                                <th style="min-width:200px">Ürün</th>
+                                <th style="width:130px">Miktar</th>
+                                <th style="width:150px">Birim Fiyat (₺)</th>
+                                <th style="width:130px">Toplam</th>
+                                <th style="width:50px"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="itemsBody">
+                            <tr id="emptyRow">
+                                <td colspan="5" class="text-center text-muted py-3">
+                                    Henüz ürün eklenmedi.
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-end fw-bold">Genel Toplam:</td>
+                                <td class="fw-bold" id="grandTotal">0,00 ₺</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+
+                    <button type="button" class="btn btn-outline-primary btn-sm mb-4" onclick="addRow()">
+                        <i class="bi bi-plus-circle me-1"></i>Ürün Ekle
+                    </button>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Siparişi Oluştur</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">İptal</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+<script>
+const products = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
+    (ViewBag.Products as IEnumerable<Costify.Domain.Entities.Product> ?? [])
+        .Select(p => new { p.Id, p.Name, unitSymbol = p.Unit?.Symbol ?? "", lastPrice = p.LastPurchasePrice })
+));
+
+let rowIndex = 0;
+
+function addRow() {
+    document.getElementById('emptyRow')?.remove();
+    const tbody = document.getElementById('itemsBody');
+    const i = rowIndex++;
+    const opts = products.map(p => `<option value="${p.Id}" data-price="${p.lastPrice}" data-unit="${p.unitSymbol}">${p.Name} (${p.unitSymbol})</option>`).join('');
+    const row = document.createElement('tr');
+    row.id = `row_${i}`;
+    row.innerHTML = `
+        <td>
+            <select name="productIds" class="form-select form-select-sm product-select" onchange="onProductChange(this, ${i})" required>
+                <option value="">— Ürün seç —</option>${opts}
+            </select>
+        </td>
+        <td>
+            <div class="input-group input-group-sm">
+                <input type="number" name="quantities" class="form-control qty-input" id="qty_${i}"
+                       step="0.01" min="0.01" value="1" required oninput="calcRow(${i})" />
+                <span class="input-group-text unit-span" id="unit_${i}"></span>
+            </div>
+        </td>
+        <td>
+            <div class="input-group input-group-sm">
+                <input type="number" name="unitPrices" class="form-control price-input" id="price_${i}"
+                       step="0.01" min="0" value="0" required oninput="calcRow(${i})" />
+                <span class="input-group-text">₺</span>
+            </div>
+        </td>
+        <td id="total_${i}" class="fw-semibold">0,00 ₺</td>
+        <td>
+            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeRow(${i})">
+                <i class="bi bi-trash"></i>
+            </button>
+        </td>`;
+    tbody.appendChild(row);
+}
+
+function onProductChange(sel, i) {
+    const opt = sel.options[sel.selectedIndex];
+    document.getElementById(`price_${i}`).value = opt.dataset.price || '0';
+    document.getElementById(`unit_${i}`).textContent = opt.dataset.unit || '';
+    calcRow(i);
+}
+
+function calcRow(i) {
+    const qty = parseFloat(document.getElementById(`qty_${i}`)?.value) || 0;
+    const price = parseFloat(document.getElementById(`price_${i}`)?.value) || 0;
+    const total = qty * price;
+    document.getElementById(`total_${i}`).textContent = total.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺';
+    calcGrandTotal();
+}
+
+function calcGrandTotal() {
+    let gt = 0;
+    document.querySelectorAll('[id^="total_"]').forEach(el => {
+        gt += parseFloat(el.textContent.replace(/[^0-9,]/g,'').replace(',','.')) || 0;
+    });
+    document.getElementById('grandTotal').textContent = gt.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺';
+}
+
+function removeRow(i) {
+    document.getElementById(`row_${i}`)?.remove();
+    calcGrandTotal();
+    if (!document.querySelector('#itemsBody tr:not(#emptyRow)')) {
+        const tbody = document.getElementById('itemsBody');
+        const empty = document.createElement('tr');
+        empty.id = 'emptyRow';
+        empty.innerHTML = '<td colspan="5" class="text-center text-muted py-3">Henüz ürün eklenmedi.</td>';
+        tbody.appendChild(empty);
+    }
+}
+</script>
+}

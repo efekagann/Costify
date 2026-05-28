@@ -1,0 +1,115 @@
+@model Costify.Domain.Entities.Recipe
+@{
+    ViewData["Title"] = Model.Name;
+    var fcpct = Model.FoodCostPercentage;
+    var fcColor = fcpct < 25 ? "#10b981" : fcpct < 35 ? "#f59e0b" : "#ef4444";
+    var fcLabel = fcpct < 25 ? "İdeal" : fcpct < 35 ? "Orta" : "Yüksek";
+}
+
+<div class="row g-3">
+    <div class="col-lg-4">
+        <div class="card">
+            <div class="card-header">Reçete Bilgileri</div>
+            <div class="card-body">
+                <dl class="row mb-0 small">
+                    <dt class="col-6 text-muted">Reçete Adı</dt>
+                    <dd class="col-6 fw-semibold">@Model.Name</dd>
+
+                    @if (!string.IsNullOrEmpty(Model.Category))
+                    {
+                        <dt class="col-6 text-muted">Kategori</dt>
+                        <dd class="col-6">@Model.Category</dd>
+                    }
+
+                    <dt class="col-6 text-muted">Satış Fiyatı</dt>
+                    <dd class="col-6 fw-bold fs-6">@Model.SellingPrice.ToString("N2") ₺</dd>
+
+                    <dt class="col-6 text-muted">Malzeme Maliyeti</dt>
+                    <dd class="col-6 fw-bold">@Model.TotalCost.ToString("N2") ₺</dd>
+
+                    <dt class="col-6 text-muted">Brüt Kâr</dt>
+                    <dd class="col-6 fw-bold text-success">@((Model.SellingPrice - Model.TotalCost).ToString("N2")) ₺</dd>
+
+                    <dt class="col-6 text-muted">Durum</dt>
+                    <dd class="col-6">
+                        <span class="badge @(Model.IsActive ? "bg-success-soft" : "bg-secondary-soft")">
+                            @(Model.IsActive ? "Aktif" : "Pasif")
+                        </span>
+                    </dd>
+                </dl>
+
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <div class="mt-3 p-2 bg-light rounded small text-muted">
+                        <i class="bi bi-chat-text me-1"></i>@Model.Description
+                    </div>
+                }
+
+                <div class="mt-4 p-3 rounded-3 text-center" style="background:#f8fafc;border:2px solid @fcColor">
+                    <div class="text-muted small mb-1">Gıda Maliyet Yüzdesi</div>
+                    <div class="fw-bold" style="font-size:2rem;color:@fcColor">%@fcpct.ToString("N1")</div>
+                    <span class="badge" style="background:rgba(0,0,0,.06);color:@fcColor;border:1px solid @fcColor">@fcLabel</span>
+                    <div class="mt-2" style="font-size:.75rem;color:#64748b">
+                        @if (fcpct < 25) { <span><i class="bi bi-check-circle me-1"></i>Hedef: %25 altı — mükemmel</span> }
+                        else if (fcpct < 35) { <span><i class="bi bi-info-circle me-1"></i>Hedef: %25 altına çekin</span> }
+                        else { <span><i class="bi bi-exclamation-triangle me-1"></i>Fiyatı artırın veya maliyeti düşürün</span> }
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Geri</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header">Malzeme Listesi</div>
+            <div class="card-body p-0">
+                <table class="table mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Ürün / Hammadde</th>
+                            <th class="text-center">Miktar</th>
+                            <th class="text-end">Birim Fiyat</th>
+                            <th class="text-end">Satır Maliyet</th>
+                            <th class="text-end">Maliyet Payı %</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ing in Model.Ingredients.OrderByDescending(i => i.TotalCost))
+                        {
+                            var share = Model.TotalCost > 0 ? (ing.TotalCost / Model.TotalCost * 100) : 0;
+                            <tr>
+                                <td>@ing.Product?.Name</td>
+                                <td class="text-center">
+                                    @ing.Quantity.ToString("N4")
+                                    <small class="text-muted">@ing.Product?.Unit?.Symbol</small>
+                                </td>
+                                <td class="text-end text-muted" style="font-size:.85rem">
+                                    @(ing.Product?.LastPurchasePrice.ToString("N2") ?? "—") ₺
+                                </td>
+                                <td class="text-end fw-semibold">@ing.TotalCost.ToString("N2") ₺</td>
+                                <td class="text-end" style="font-size:.85rem">
+                                    <div class="d-flex align-items-center justify-content-end gap-2">
+                                        <div style="width:60px;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden">
+                                            <div style="width:@share.ToString("0")%;height:100%;background:var(--primary);border-radius:3px"></div>
+                                        </div>
+                                        <span>%@share.ToString("N0")</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                    <tfoot class="table-light">
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Toplam Maliyet</td>
+                            <td class="text-end fw-bold fs-6">@Model.TotalCost.ToString("N2") ₺</td>
+                            <td></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,159 @@
+@model Costify.Web.ViewModels.DashboardViewModel
+@{
+    ViewData["Title"] = "Genel Bakış";
+}
+
+<!-- Stat Cards -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="stat-label">Toplam Ürün</div>
+                    <div class="stat-value">@Model.TotalProducts</div>
+                </div>
+                <div class="stat-icon" style="background:#eef2ff;color:#4f46e5">
+                    <i class="bi bi-box2"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card" style="border-left:3px solid @(Model.LowStockCount > 0 ? "#dc2626" : "#059669")">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="stat-label">Kritik Stok</div>
+                    <div class="stat-value @(Model.LowStockCount > 0 ? "text-danger" : "")">@Model.LowStockCount</div>
+                    @if (Model.LowStockCount > 0)
+                    {
+                        <div class="mt-1" style="font-size:.7rem;color:#dc2626;font-weight:600">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i>Acil sipariş gerekli
+                        </div>
+                    }
+                </div>
+                <div class="stat-icon" style="background:#fee2e2;color:#dc2626">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="stat-label">Tedarikçiler</div>
+                    <div class="stat-value">@Model.TotalVendors</div>
+                </div>
+                <div class="stat-icon" style="background:#f0fdf4;color:#059669">
+                    <i class="bi bi-truck"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <div class="stat-label">Bu Ay Harcama</div>
+                    <div class="stat-value" style="font-size:1.5rem">@Model.MonthlySpend.ToString("N0") ₺</div>
+                </div>
+                <div class="stat-icon" style="background:#fefce8;color:#d97706">
+                    <i class="bi bi-currency-dollar"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-3">
+    <!-- Kritik Stok -->
+    @if (Model.LowStockProducts.Any())
+    {
+        <div class="col-lg-5">
+            <div class="card h-100">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>Kritik Stok Uyarıları</span>
+                    <a asp-controller="Products" asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                        Tümünü Gör
+                    </a>
+                </div>
+                <div class="card-body p-0">
+                    @foreach (var p in Model.LowStockProducts)
+                    {
+                        var pct = p.MinimumStock > 0 ? (double)p.CurrentStock / (double)p.MinimumStock * 100 : 0;
+                        var barColor = pct <= 0 ? "#dc2626" : pct < 50 ? "#d97706" : "#059669";
+                        <div class="px-4 py-3 border-bottom">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="fw-semibold" style="font-size:.85rem">@p.Name</span>
+                                <span style="font-size:.8rem;color:#dc2626;font-weight:600">
+                                    @p.CurrentStock.ToString("N2") / @p.MinimumStock.ToString("N0") @p.Unit?.Symbol
+                                </span>
+                            </div>
+                            <div class="progress" style="height:5px;border-radius:10px;background:#f1f5f9">
+                                <div class="progress-bar" style="width:@(Math.Min(pct,100).ToString("F0"))%;background:@barColor;border-radius:10px"></div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Son Siparişler -->
+    <div class="col-lg-@(Model.LowStockProducts.Any() ? "7" : "12")">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span><i class="bi bi-cart-check me-2"></i>Son Siparişler</span>
+                <a asp-controller="PurchaseOrders" asp-action="Index" class="btn btn-sm btn-primary">
+                    <i class="bi bi-plus me-1"></i>Yeni Sipariş
+                </a>
+            </div>
+            <div class="card-body p-0">
+                @if (!Model.RecentOrders.Any())
+                {
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <div class="fw-medium">Henüz sipariş yok</div>
+                        <small>İlk satın alma siparişini oluşturun</small>
+                    </div>
+                }
+                else
+                {
+                    <table class="table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Sipariş No</th>
+                                <th>Tedarikçi</th>
+                                <th>Tarih</th>
+                                <th class="text-end">Tutar</th>
+                                <th>Durum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var o in Model.RecentOrders)
+                            {
+                                var (cls, lbl) = o.Status switch {
+                                    Costify.Domain.Enums.OrderStatus.Received          => ("bg-success-soft", "Teslim Alındı"),
+                                    Costify.Domain.Enums.OrderStatus.Ordered           => ("bg-info-soft", "Sipariş Verildi"),
+                                    Costify.Domain.Enums.OrderStatus.Cancelled         => ("bg-danger-soft", "İptal"),
+                                    Costify.Domain.Enums.OrderStatus.PartiallyReceived => ("bg-warning-soft", "Kısmi Teslim"),
+                                    _                                                  => ("bg-secondary-soft", "Taslak")
+                                };
+                                <tr>
+                                    <td>
+                                        <a asp-controller="PurchaseOrders" asp-action="Details" asp-route-id="@o.Id"
+                                           class="fw-semibold">@o.OrderNumber</a>
+                                    </td>
+                                    <td>@o.Vendor?.Name</td>
+                                    <td class="text-muted">@o.OrderDate.ToString("dd.MM.yyyy")</td>
+                                    <td class="text-end fw-semibold">@o.TotalAmount.ToString("N2") ₺</td>
+                                    <td><span class="badge @cls">@lbl</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    </div>
+</div>

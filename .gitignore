@@ -1,0 +1,54 @@
+## Node
+node_modules/
+npm-debug.log*
+package-lock.json
+yarn.lock
+.playwright/
+playwright-report/
+test-results/
+
+## .NET
+bin/
+obj/
+*.user
+.vs/
+.idea/
+*.suo
+*.userosscache
+*.sln.docstates
+*.ncrunchsolution
+.DS_Store
+
+## EF Core Migrations compiled output (keep .cs files)
+**/Migrations/**/*.dll
+
+## NuGet
+*.nupkg
+**/packages/
+!**/packages/build/
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Publish
+**/publish/
+PublishProfiles/
+
+## Runtime
+*.pid
+*.seed
+*.pid.lock
+
+## Environment-specific appsettings (production secrets)
+appsettings.Production.json
+appsettings.*.local.json

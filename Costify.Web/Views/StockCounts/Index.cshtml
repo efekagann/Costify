@@ -1,0 +1,107 @@
+@model IEnumerable<Costify.Domain.Entities.StockCount>
+@{
+    ViewData["Title"] = "Stok Sayımı";
+}
+
+<div class="page-header">
+    <div class="text-muted" style="font-size:.875rem">
+        <i class="bi bi-clipboard-check me-1"></i>@Model.Count() sayım
+    </div>
+    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newCountModal">
+        <i class="bi bi-plus-lg me-1"></i>Yeni Sayım Başlat
+    </button>
+</div>
+
+<div class="card">
+    <div class="card-body p-0">
+        <table class="table mb-0">
+            <thead>
+                <tr>
+                    <th>Tarih</th>
+                    <th class="text-center">Ürün Sayısı</th>
+                    <th class="text-center">Fark Var</th>
+                    <th>Not</th>
+                    <th>Durum</th>
+                    <th style="width:60px"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var sc in Model)
+                {
+                    var diffCount = sc.Items.Count(i => i.CountedQuantity != i.TheoreticalQuantity);
+                    <tr>
+                        <td class="fw-semibold">@sc.CountDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                        <td class="text-center text-muted">@sc.Items.Count</td>
+                        <td class="text-center">
+                            @if (diffCount > 0)
+                            {
+                                <span class="badge bg-warning-soft text-warning">@diffCount ürün</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success-soft text-success">Fark yok</span>
+                            }
+                        </td>
+                        <td class="text-muted" style="font-size:.85rem">@(sc.Notes ?? "—")</td>
+                        <td>
+                            @if (sc.Status == Costify.Domain.Enums.StockCountStatus.Completed)
+                            {
+                                <span class="badge bg-success-soft"><i class="bi bi-check-circle-fill me-1"></i>Tamamlandı</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info-soft"><i class="bi bi-hourglass-split me-1"></i>Devam Ediyor</span>
+                            }
+                        </td>
+                        <td>
+                            <a asp-action="Details" asp-route-id="@sc.Id"
+                               class="btn btn-sm btn-outline-secondary" title="Aç">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="bi bi-clipboard-check"></i>
+                                <div class="fw-medium">Henüz stok sayımı yok</div>
+                                <small>İlk sayımı başlatın, fiili stokları sisteme girin</small>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Yeni Sayım Modal -->
+<div class="modal fade" id="newCountModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-clipboard-plus me-2"></i>Yeni Stok Sayımı</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small">Sayım başlatıldığında sistemdeki mevcut stok miktarları teorik değer olarak kaydedilir. Ardından gerçek sayım değerlerini girersiniz.</p>
+                    <div class="mb-3">
+                        <label class="form-label">Not (opsiyonel)</label>
+                        <input type="text" name="notes" class="form-control" placeholder="Ocak ayı sayımı..." />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-play-circle me-1"></i>Sayım Başlat
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
