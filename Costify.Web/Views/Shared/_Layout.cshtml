@@ -43,6 +43,15 @@
         </a>
     </nav>
 
+    <div class="sidebar-section-label">TANIMLAR</div>
+    <nav class="sidebar-nav">
+        <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Definitions" ? "active" : "")"
+           asp-controller="Definitions" asp-action="Index">
+            <span class="sidebar-icon"><i class="bi bi-sliders"></i></span>
+            <span>Kategoriler & Birimler</span>
+        </a>
+    </nav>
+
     <div class="sidebar-section-label">OPERASYON</div>
     <nav class="sidebar-nav">
         <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Recipes" ? "active" : "")"
