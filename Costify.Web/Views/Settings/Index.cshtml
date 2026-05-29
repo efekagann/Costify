@@ -1,0 +1,84 @@
+@model Costify.Domain.Entities.Business
+@{
+    ViewData["Title"] = Localizer["Settings_Title"].Value;
+}
+
+<div class="page-header">
+    <div class="text-muted small"><i class="bi bi-building me-1"></i>@Model.Name</div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header">
+                <i class="bi bi-building me-2"></i>@Localizer["Settings_BusinessInfo"]
+            </div>
+            <div class="card-body">
+                <form asp-action="Update" asp-controller="Settings" method="post">
+                    @Html.AntiForgeryToken()
+
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["Settings_BusinessName"] <span class="text-danger">*</span></label>
+                        <input type="text" name="name" class="form-control" value="@Model.Name" required />
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">@Localizer["Common_Phone"]</label>
+                            <input type="text" name="phone" class="form-control" value="@Model.Phone" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">@Localizer["Common_Email"]</label>
+                            <input type="email" name="email" class="form-control" value="@Model.Email" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["Settings_TaxNumber"]</label>
+                        <input type="text" name="taxNumber" class="form-control" value="@Model.TaxNumber" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">@Localizer["Common_Address"]</label>
+                        <textarea name="address" class="form-control" rows="3">@Model.Address</textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">@Localizer["Settings_LogoUrl"]</label>
+                        <input type="url" name="logoUrl" class="form-control" value="@Model.LogoUrl" placeholder="https://..." />
+                        <div class="form-text">Sidebar'da gösterilecek logo URL'si.</div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg me-1"></i>@Localizer["Common_Update"]
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-5">
+        <div class="card">
+            <div class="card-header"><i class="bi bi-info-circle me-2"></i>Bilgi</div>
+            <div class="card-body">
+                <dl class="row mb-0" style="font-size:.875rem">
+                    <dt class="col-5 text-muted">İşletme ID</dt>
+                    <dd class="col-7">@Model.Id</dd>
+                    <dt class="col-5 text-muted">Oluşturulma</dt>
+                    <dd class="col-7">@Model.CreatedAt.ToString("dd.MM.yyyy")</dd>
+                    <dt class="col-5 text-muted">Durum</dt>
+                    <dd class="col-7">
+                        @if (Model.IsActive)
+                        {
+                            <span class="badge bg-success-soft text-success">@Localizer["Common_Active"]</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger-soft text-danger">@Localizer["Common_Inactive"]</span>
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

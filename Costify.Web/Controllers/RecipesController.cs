@@ -4,8 +4,8 @@ using Costify.Infrastructure.Data;
 using Costify.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace Costify.Web.Controllers;
 
@@ -15,12 +15,18 @@ public class RecipesController : Controller
     private readonly IRecipeRepository _recipes;
     private readonly CostifyDbContext _context;
     private readonly ICurrentBusinessService _currentBusiness;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public RecipesController(IRecipeRepository recipes, CostifyDbContext context, ICurrentBusinessService currentBusiness)
+    public RecipesController(
+        IRecipeRepository recipes,
+        CostifyDbContext context,
+        ICurrentBusinessService currentBusiness,
+        IStringLocalizer<SharedResource> localizer)
     {
         _recipes = recipes;
         _context = context;
         _currentBusiness = currentBusiness;
+        _localizer = localizer;
     }
 
     public async Task<IActionResult> Index()
@@ -42,7 +48,7 @@ public class RecipesController : Controller
     {
         if (!ModelState.IsValid || productIds.Length == 0)
         {
-            TempData["Error"] = "En az bir malzeme eklemelisiniz.";
+            TempData["Error"] = _localizer["Recipes_AtLeastOneIngredient"].Value;
             return RedirectToAction(nameof(Index));
         }
 
@@ -54,7 +60,7 @@ public class RecipesController : Controller
         }).ToList();
 
         await _recipes.AddAsync(recipe);
-        TempData["Success"] = $"'{recipe.Name}' reçetesi oluşturuldu.";
+        TempData["Success"] = string.Format(_localizer["Recipes_Created"].Value, recipe.Name);
         return RedirectToAction(nameof(Index));
     }
 
@@ -70,7 +76,6 @@ public class RecipesController : Controller
         existing.SellingPrice = recipe.SellingPrice;
         existing.IsActive = recipe.IsActive;
 
-        // Eski malzemeleri sil, yenileri ekle
         _context.RecipeIngredients.RemoveRange(existing.Ingredients);
         existing.Ingredients = productIds.Select((pid, i) => new RecipeIngredient
         {
@@ -79,7 +84,7 @@ public class RecipesController : Controller
         }).ToList();
 
         await _recipes.UpdateAsync(existing);
-        TempData["Success"] = $"'{existing.Name}' reçetesi güncellendi.";
+        TempData["Success"] = string.Format(_localizer["Recipes_Updated"].Value, existing.Name);
         return RedirectToAction(nameof(Index));
     }
 
@@ -98,7 +103,7 @@ public class RecipesController : Controller
         var recipe = await _recipes.GetByIdAsync(id);
         if (recipe is null) return NotFound();
         await _recipes.DeleteAsync(recipe);
-        TempData["Success"] = "Reçete silindi.";
+        TempData["Success"] = _localizer["Recipes_Deleted"].Value;
         return RedirectToAction(nameof(Index));
     }
 
@@ -110,5 +115,13 @@ public class RecipesController : Controller
             .OrderBy(p => p.Name)
             .ToListAsync();
         ViewBag.Products = products;
+
+        var categories = await _context.Recipes
+            .Where(r => r.Category != null && r.Category != "")
+            .Select(r => r.Category!)
+            .Distinct()
+            .OrderBy(c => c)
+            .ToListAsync();
+        ViewBag.RecipeCategories = categories;
     }
 }

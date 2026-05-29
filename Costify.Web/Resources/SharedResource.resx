@@ -297,4 +297,159 @@
   <data name="Reports_GMPct" xml:space="preserve"><value>G.M.%</value></data>
   <data name="Reports_NoRecipes" xml:space="preserve"><value>Reçete yok — önce reçete oluşturun</value></data>
   <data name="Reports_Months" xml:space="preserve"><value>Oca,Şub,Mar,Nis,May,Haz,Tem,Ağu,Eyl,Eki,Kas,Ara</value></data>
+
+  <!-- Stock Transaction -->
+  <data name="Products_AddTransaction" xml:space="preserve"><value>Stok Hareketi Ekle</value></data>
+  <data name="Products_TransactionType" xml:space="preserve"><value>Hareket Türü</value></data>
+  <data name="Products_TransactionAdded" xml:space="preserve"><value>Stok hareketi kaydedildi.</value></data>
+  <data name="Products_QtyLabel" xml:space="preserve"><value>Miktar</value></data>
+  <data name="Products_NoteOptional" xml:space="preserve"><value>Opsiyonel not...</value></data>
+  <data name="Products_StockNote" xml:space="preserve"><value>Kullanım/Fire için negatif, İade için pozitif</value></data>
+  <data name="Products_UnitCostOptional" xml:space="preserve"><value>Birim Maliyet (opsiyonel)</value></data>
+  <data name="Products_TransactionError" xml:space="preserve"><value>Geçersiz miktar. Sıfırdan farklı bir değer girin.</value></data>
+
+  <!-- Vendors search -->
+  <data name="Vendors_SearchPlaceholder" xml:space="preserve"><value>Firma veya kişi ara...</value></data>
+
+  <!-- PurchaseOrders filters -->
+  <data name="PO_AllStatuses" xml:space="preserve"><value>Tüm Durumlar</value></data>
+  <data name="PO_FilterFrom" xml:space="preserve"><value>Başlangıç</value></data>
+  <data name="PO_FilterTo" xml:space="preserve"><value>Bitiş</value></data>
+
+  <!-- Pagination -->
+  <data name="Pagination_Items" xml:space="preserve"><value>kayıt</value></data>
+
+  <!-- Excel Export Headers -->
+  <data name="Excel_PurchaseSheet" xml:space="preserve"><value>Satın Alma</value></data>
+  <data name="Excel_StockSheet" xml:space="preserve"><value>Stok Durumu</value></data>
+  <data name="Excel_RecipeSummarySheet" xml:space="preserve"><value>Özet</value></data>
+  <data name="Excel_RecipeDetailSheet" xml:space="preserve"><value>Malzeme Detayı</value></data>
+  <data name="Excel_OrderNo" xml:space="preserve"><value>Sipariş No</value></data>
+  <data name="Excel_Vendor" xml:space="preserve"><value>Tedarikçi</value></data>
+  <data name="Excel_Date" xml:space="preserve"><value>Tarih</value></data>
+  <data name="Excel_Product" xml:space="preserve"><value>Ürün</value></data>
+  <data name="Excel_Qty" xml:space="preserve"><value>Miktar</value></data>
+  <data name="Excel_Unit" xml:space="preserve"><value>Birim</value></data>
+  <data name="Excel_UnitPrice" xml:space="preserve"><value>Birim Fiyat (₺)</value></data>
+  <data name="Excel_LineTotal" xml:space="preserve"><value>Satır Toplam (₺)</value></data>
+  <data name="Excel_OrderTotal" xml:space="preserve"><value>Sipariş Toplamı (₺)</value></data>
+  <data name="Excel_Status" xml:space="preserve"><value>Durum</value></data>
+  <data name="Excel_GrandTotal" xml:space="preserve"><value>GENEL TOPLAM</value></data>
+  <data name="Excel_SKU" xml:space="preserve"><value>SKU</value></data>
+  <data name="Excel_Category" xml:space="preserve"><value>Kategori</value></data>
+  <data name="Excel_CurrentStock" xml:space="preserve"><value>Mevcut Stok</value></data>
+  <data name="Excel_MinStock" xml:space="preserve"><value>Min. Stok</value></data>
+  <data name="Excel_LastPrice" xml:space="preserve"><value>Son Alış Fiyatı (₺)</value></data>
+  <data name="Excel_StockValue" xml:space="preserve"><value>Stok Değeri (₺)</value></data>
+  <data name="Excel_StockStatus" xml:space="preserve"><value>Durum</value></data>
+  <data name="Excel_OutOfStock" xml:space="preserve"><value>Stoksuz</value></data>
+  <data name="Excel_Critical" xml:space="preserve"><value>Kritik</value></data>
+  <data name="Excel_Normal" xml:space="preserve"><value>Normal</value></data>
+  <data name="Excel_TotalStockValue" xml:space="preserve"><value>TOPLAM STOK DEĞERİ</value></data>
+  <data name="Excel_Recipe" xml:space="preserve"><value>Reçete</value></data>
+  <data name="Excel_SellingPrice" xml:space="preserve"><value>Satış Fiyatı (₺)</value></data>
+  <data name="Excel_IngredientCost" xml:space="preserve"><value>Malzeme Maliyeti (₺)</value></data>
+  <data name="Excel_GrossProfit" xml:space="preserve"><value>Brüt Kâr (₺)</value></data>
+  <data name="Excel_FoodCostPct" xml:space="preserve"><value>Gıda Maliyet %</value></data>
+  <data name="Excel_Evaluation" xml:space="preserve"><value>Değerlendirme</value></data>
+  <data name="Excel_Ideal" xml:space="preserve"><value>İdeal (&lt;%25)</value></data>
+  <data name="Excel_Moderate" xml:space="preserve"><value>Orta (%25-35)</value></data>
+  <data name="Excel_High" xml:space="preserve"><value>Yüksek (&gt;%35)</value></data>
+  <data name="Excel_Ingredient" xml:space="preserve"><value>Malzeme</value></data>
+  <data name="Excel_LineCost" xml:space="preserve"><value>Satır Maliyet (₺)</value></data>
+
+  <!-- Stock Transactions -->
+  <data name="ST_Title" xml:space="preserve"><value>Stok Hareketleri</value></data>
+  <data name="ST_AllTypes" xml:space="preserve"><value>Tüm Türler</value></data>
+  <data name="ST_AllProducts" xml:space="preserve"><value>Tüm Ürünler</value></data>
+  <data name="ST_NoTransactions" xml:space="preserve"><value>Stok hareketi bulunamadı.</value></data>
+  <data name="Nav_StockTransactions" xml:space="preserve"><value>Stok Hareketleri</value></data>
+
+  <!-- Settings -->
+  <data name="Settings_Title" xml:space="preserve"><value>İşletme Ayarları</value></data>
+  <data name="Settings_BusinessInfo" xml:space="preserve"><value>İşletme Bilgileri</value></data>
+  <data name="Settings_BusinessName" xml:space="preserve"><value>İşletme Adı</value></data>
+  <data name="Settings_TaxNumber" xml:space="preserve"><value>Vergi Numarası</value></data>
+  <data name="Settings_LogoUrl" xml:space="preserve"><value>Logo URL</value></data>
+  <data name="Settings_Updated" xml:space="preserve"><value>İşletme bilgileri güncellendi.</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Ayarlar</value></data>
+
+  <!-- Register -->
+  <data name="Register_Title" xml:space="preserve"><value>Kayıt Ol</value></data>
+  <data name="Register_DisplayName" xml:space="preserve"><value>Ad Soyad</value></data>
+  <data name="Register_Username" xml:space="preserve"><value>Kullanıcı Adı</value></data>
+  <data name="Register_Password" xml:space="preserve"><value>Şifre</value></data>
+  <data name="Register_ConfirmPassword" xml:space="preserve"><value>Şifre Tekrar</value></data>
+  <data name="Register_Submit" xml:space="preserve"><value>Hesap Oluştur</value></data>
+  <data name="Register_HasAccount" xml:space="preserve"><value>Zaten hesabın var mı?</value></data>
+  <data name="Register_LoginLink" xml:space="preserve"><value>Giriş yap</value></data>
+  <data name="Login_NoAccount" xml:space="preserve"><value>Hesabın yok mu?</value></data>
+  <data name="Login_Register" xml:space="preserve"><value>Kayıt ol</value></data>
+
+  <!-- Profile -->
+  <data name="Profile_Title" xml:space="preserve"><value>Profil</value></data>
+  <data name="Profile_UpdateInfo" xml:space="preserve"><value>Bilgileri Güncelle</value></data>
+  <data name="Profile_ChangePassword" xml:space="preserve"><value>Şifre Değiştir</value></data>
+  <data name="Profile_CurrentPassword" xml:space="preserve"><value>Mevcut Şifre</value></data>
+  <data name="Profile_NewPassword" xml:space="preserve"><value>Yeni Şifre</value></data>
+  <data name="Profile_ConfirmPassword" xml:space="preserve"><value>Şifre Tekrar</value></data>
+
+  <!-- Controller Messages -->
+  <data name="Auth_InvalidCredentials" xml:space="preserve"><value>Kullanıcı adı veya şifre hatalı.</value></data>
+  <data name="Auth_LockedOut" xml:space="preserve"><value>Çok fazla başarısız deneme. Hesap 15 dakika kilitlendi.</value></data>
+  <data name="Auth_RegisterSuccess" xml:space="preserve"><value>Hesap başarıyla oluşturuldu.</value></data>
+  <data name="Auth_UsernameTaken" xml:space="preserve"><value>Bu kullanıcı adı zaten alınmış.</value></data>
+  <data name="Auth_PasswordMismatch" xml:space="preserve"><value>Şifreler eşleşmiyor.</value></data>
+  <data name="Auth_ProfileUpdated" xml:space="preserve"><value>Profil güncellendi.</value></data>
+  <data name="Auth_PasswordChanged" xml:space="preserve"><value>Şifre başarıyla değiştirildi.</value></data>
+  <data name="Auth_WrongCurrentPassword" xml:space="preserve"><value>Mevcut şifre hatalı.</value></data>
+  <data name="Auth_PasswordChangeFailed" xml:space="preserve"><value>Şifre değiştirilemedi.</value></data>
+
+  <data name="Def_CategoryNameRequired" xml:space="preserve"><value>Kategori adı zorunludur.</value></data>
+  <data name="Def_CategoryAdded" xml:space="preserve"><value>'{0}' kategorisi eklendi.</value></data>
+  <data name="Def_CategoryUpdated" xml:space="preserve"><value>'{0}' güncellendi.</value></data>
+  <data name="Def_CategoryHasProducts" xml:space="preserve"><value>Bu kategoride ürünler var, önce ürünleri başka kategoriye taşıyın.</value></data>
+  <data name="Def_CategoryDeleted" xml:space="preserve"><value>Kategori silindi.</value></data>
+  <data name="Def_UnitNameSymbolRequired" xml:space="preserve"><value>Ad ve sembol zorunludur.</value></data>
+  <data name="Def_UnitAdded" xml:space="preserve"><value>'{0}' birimi eklendi.</value></data>
+  <data name="Def_UnitUpdated" xml:space="preserve"><value>'{0}' birimi güncellendi.</value></data>
+  <data name="Def_UnitInUse" xml:space="preserve"><value>Bu birim ürünlerde kullanılıyor, silinemez.</value></data>
+  <data name="Def_UnitDeleted" xml:space="preserve"><value>Birim silindi.</value></data>
+
+  <data name="Products_Added" xml:space="preserve"><value>'{0}' ürünü başarıyla eklendi.</value></data>
+  <data name="Products_Updated" xml:space="preserve"><value>'{0}' güncellendi.</value></data>
+  <data name="Products_Deleted" xml:space="preserve"><value>'{0}' silindi.</value></data>
+
+  <data name="Vendors_Added" xml:space="preserve"><value>'{0}' tedarikçisi eklendi.</value></data>
+  <data name="Vendors_Updated" xml:space="preserve"><value>'{0}' güncellendi.</value></data>
+  <data name="Vendors_Deleted" xml:space="preserve"><value>Tedarikçi silindi.</value></data>
+
+  <data name="PO_AtLeastOneProduct" xml:space="preserve"><value>En az bir ürün eklemelisiniz.</value></data>
+  <data name="PO_Created" xml:space="preserve"><value>Sipariş {0} oluşturuldu.</value></data>
+  <data name="PO_AlreadyReceived" xml:space="preserve"><value>Bu sipariş zaten teslim alındı.</value></data>
+  <data name="PO_ReceivedSuccess" xml:space="preserve"><value>Sipariş teslim alındı, stoklar güncellendi.</value></data>
+  <data name="PO_Cancel" xml:space="preserve"><value>İptal Et</value></data>
+  <data name="PO_CancelConfirm" xml:space="preserve"><value>Siparişi iptal etmek istediğinizden emin misiniz?</value></data>
+  <data name="PO_Cancelled" xml:space="preserve"><value>Sipariş iptal edildi.</value></data>
+  <data name="PO_CannotCancel" xml:space="preserve"><value>Bu sipariş iptal edilemez (teslim alınmış veya zaten iptal).</value></data>
+  <data name="PO_PartialReceive" xml:space="preserve"><value>Kısmi Teslim</value></data>
+  <data name="PO_PartialReceived" xml:space="preserve"><value>Kısmi teslim kaydedildi, stoklar güncellendi.</value></data>
+  <data name="PO_ReceivedQty" xml:space="preserve"><value>Teslim Alınan</value></data>
+  <data name="PO_Edit" xml:space="preserve"><value>Sipariş Düzenle</value></data>
+  <data name="PO_Updated" xml:space="preserve"><value>Sipariş {0} güncellendi.</value></data>
+  <data name="PO_CannotEdit" xml:space="preserve"><value>Bu sipariş düzenlenemez.</value></data>
+
+  <data name="Recipes_AtLeastOneIngredient" xml:space="preserve"><value>En az bir malzeme eklemelisiniz.</value></data>
+  <data name="Recipes_Created" xml:space="preserve"><value>'{0}' reçetesi oluşturuldu.</value></data>
+  <data name="Recipes_Updated" xml:space="preserve"><value>'{0}' reçetesi güncellendi.</value></data>
+  <data name="Recipes_Deleted" xml:space="preserve"><value>Reçete silindi.</value></data>
+
+  <data name="SC_Created" xml:space="preserve"><value>Yeni stok sayımı oluşturuldu. Sayım değerlerini giriniz.</value></data>
+  <data name="SC_CompletedCannotEdit" xml:space="preserve"><value>Tamamlanmış sayım düzenlenemez.</value></data>
+  <data name="SC_ValuesSaved" xml:space="preserve"><value>Sayım değerleri kaydedildi.</value></data>
+  <data name="SC_AlreadyCompleted" xml:space="preserve"><value>Bu sayım zaten tamamlandı.</value></data>
+  <data name="SC_Finalized" xml:space="preserve"><value>Sayım tamamlandı, stoklar güncellendi.</value></data>
+  <data name="SC_DeleteConfirm" xml:space="preserve"><value>Bu sayımı silmek istediğinizden emin misiniz?</value></data>
+  <data name="SC_Deleted" xml:space="preserve"><value>Sayım silindi.</value></data>
+  <data name="SC_CannotDelete" xml:space="preserve"><value>Tamamlanmış sayımlar silinemez.</value></data>
 </root>

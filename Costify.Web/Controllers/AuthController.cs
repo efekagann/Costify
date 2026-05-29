@@ -1,66 +1,167 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Costify.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using Microsoft.Extensions.Localization;
 
 namespace Costify.Web.Controllers;
 
-[AllowAnonymous]
 public class AuthController : Controller
 {
-    private readonly IConfiguration _config;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public AuthController(IConfiguration config)
+    public AuthController(
+        SignInManager<ApplicationUser> signInManager,
+        UserManager<ApplicationUser> userManager,
+        IStringLocalizer<SharedResource> localizer)
     {
-        _config = config;
+        _signInManager = signInManager;
+        _userManager = userManager;
+        _localizer = localizer;
     }
 
-    [HttpGet]
+    // ── Login ──────────────────────────────────────────────────────────────
+
+    [AllowAnonymous, HttpGet]
     public IActionResult Login(string? returnUrl)
     {
-        if (User.Identity?.IsAuthenticated == true)
+        if (_signInManager.IsSignedIn(User))
             return RedirectToAction("Index", "Dashboard");
 
         ViewBag.ReturnUrl = returnUrl;
         return View();
     }
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(string username, string password, string? returnUrl)
     {
-        var adminUser = _config["AdminCredentials:Username"];
-        var adminPass = _config["AdminCredentials:Password"];
+        var result = await _signInManager.PasswordSignInAsync(
+            username, password,
+            isPersistent: true,
+            lockoutOnFailure: true);
 
-        if (username != adminUser || password != adminPass)
+        if (!result.Succeeded)
         {
-            ViewBag.Error = "Kullanıcı adı veya şifre hatalı.";
+            ViewBag.Error = result.IsLockedOut
+                ? _localizer["Auth_LockedOut"].Value
+                : _localizer["Auth_InvalidCredentials"].Value;
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
 
-        var claims = new List<Claim>
-        {
-            new(ClaimTypes.Name, username),
-            new(ClaimTypes.Role, "Admin"),
-            new("BusinessId", "1")
-        };
-
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-        var principal = new ClaimsPrincipal(identity);
-
-        await HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            principal,
-            new AuthenticationProperties { IsPersistent = true });
-
         return LocalRedirect(string.IsNullOrEmpty(returnUrl) ? "/" : returnUrl);
     }
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [Authorize, HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Logout()
     {
-        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        await _signInManager.SignOutAsync();
         return RedirectToAction(nameof(Login));
+    }
+
+    // ── Register ───────────────────────────────────────────────────────────
+
+    [AllowAnonymous, HttpGet]
+    public IActionResult Register()
+    {
+        if (_signInManager.IsSignedIn(User))
+            return RedirectToAction("Index", "Dashboard");
+        return View();
+    }
+
+    [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Register(
+        string displayName, string username, string password, string confirmPassword)
+    {
+        if (password != confirmPassword)
+        {
+            ViewBag.Error = _localizer["Auth_PasswordMismatch"].Value;
+            return View();
+        }
+
+        if (await _userManager.FindByNameAsync(username) is not null)
+        {
+            ViewBag.Error = _localizer["Auth_UsernameTaken"].Value;
+            return View();
+        }
+
+        var user = new ApplicationUser
+        {
+            UserName = username,
+            DisplayName = displayName,
+            EmailConfirmed = true,
+            BusinessId = 1
+        };
+
+        var result = await _userManager.CreateAsync(user, password);
+        if (!result.Succeeded)
+        {
+            ViewBag.Error = string.Join(" ", result.Errors.Select(e => e.Description));
+            return View();
+        }
+
+        await _signInManager.SignInAsync(user, isPersistent: true);
+        TempData["Success"] = _localizer["Auth_RegisterSuccess"].Value;
+        return RedirectToAction("Index", "Dashboard");
+    }
+
+    // ── Profile ────────────────────────────────────────────────────────────
+
+    [Authorize, HttpGet]
+    public async Task<IActionResult> Profile()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null) return RedirectToAction(nameof(Login));
+
+        ViewBag.DisplayName = user.DisplayName;
+        ViewBag.Username = user.UserName;
+        ViewBag.Email = user.Email;
+        return View();
+    }
+
+    [Authorize, HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> UpdateProfile(string displayName, string? email)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null) return RedirectToAction(nameof(Login));
+
+        user.DisplayName = displayName;
+        if (!string.IsNullOrWhiteSpace(email))
+            user.Email = email;
+
+        await _userManager.UpdateAsync(user);
+        await _signInManager.RefreshSignInAsync(user);
+        TempData["Success"] = _localizer["Auth_ProfileUpdated"].Value;
+        return RedirectToAction(nameof(Profile));
+    }
+
+    [Authorize, HttpPost, ValidateAntiForgeryToken]
+    public async Task<IActionResult> ChangePassword(
+        string currentPassword, string newPassword, string confirmPassword)
+    {
+        if (newPassword != confirmPassword)
+        {
+            TempData["Error"] = _localizer["Auth_PasswordMismatch"].Value;
+            return RedirectToAction(nameof(Profile));
+        }
+
+        var user = await _userManager.GetUserAsync(User);
+        if (user is null) return RedirectToAction(nameof(Login));
+
+        var result = await _userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+        if (!result.Succeeded)
+        {
+            var isWrongCurrent = result.Errors.Any(e => e.Code == "PasswordMismatch");
+            TempData["Error"] = isWrongCurrent
+                ? _localizer["Auth_WrongCurrentPassword"].Value
+                : _localizer["Auth_PasswordChangeFailed"].Value;
+            return RedirectToAction(nameof(Profile));
+        }
+
+        await _signInManager.RefreshSignInAsync(user);
+        TempData["Success"] = _localizer["Auth_PasswordChanged"].Value;
+        return RedirectToAction(nameof(Profile));
     }
 }

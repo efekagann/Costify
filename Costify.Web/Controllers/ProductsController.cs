@@ -7,29 +7,36 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace Costify.Web.Controllers;
 
 [Authorize]
-
 public class ProductsController : Controller
 {
     private readonly IProductRepository _products;
     private readonly CostifyDbContext _context;
     private readonly ICurrentBusinessService _currentBusiness;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
     public ProductsController(
         IProductRepository products,
         CostifyDbContext context,
-        ICurrentBusinessService currentBusiness)
+        ICurrentBusinessService currentBusiness,
+        IStringLocalizer<SharedResource> localizer)
     {
         _products = products;
         _context = context;
         _currentBusiness = currentBusiness;
+        _localizer = localizer;
     }
 
-    public async Task<IActionResult> Index(string? search, int? categoryId)
+    private const int PageSize = 20;
+
+    public async Task<IActionResult> Index(string? search, int? categoryId, int page = 1)
     {
+        page = PaginatedList<object>.ClampPage(page);
+
         var query = _products.Query()
             .Include(p => p.Category)
             .Include(p => p.Unit)
@@ -41,9 +48,10 @@ public class ProductsController : Controller
         if (categoryId.HasValue)
             query = query.Where(p => p.CategoryId == categoryId.Value);
 
-        var products = await query.OrderBy(p => p.Name).ToListAsync();
-        var categories = await _context.Categories.ToListAsync();
+        var paginated = await PaginatedList<Product>.CreateAsync(
+            query.OrderBy(p => p.Name), page, PageSize);
 
+        var categories = await _context.Categories.ToListAsync();
         var allUnits = await _context.Units.ToListAsync();
 
         ViewBag.Search = search;
@@ -52,7 +60,7 @@ public class ProductsController : Controller
         ViewBag.AllCategories = categories;
         ViewBag.AllUnits = allUnits;
 
-        return View(products);
+        return View(paginated);
     }
 
     public async Task<IActionResult> Details(int id)
@@ -93,7 +101,7 @@ public class ProductsController : Controller
         };
 
         await _products.AddAsync(product);
-        TempData["Success"] = $"'{product.Name}' ürünü başarıyla eklendi.";
+        TempData["Success"] = string.Format(_localizer["Products_Added"].Value, product.Name);
         return RedirectToAction(nameof(Index));
     }
 
@@ -131,7 +139,7 @@ public class ProductsController : Controller
         product.IsActive = vm.IsActive;
 
         await _products.UpdateAsync(product);
-        TempData["Success"] = $"'{product.Name}' güncellendi.";
+        TempData["Success"] = string.Format(_localizer["Products_Updated"].Value, product.Name);
         return RedirectToAction(nameof(Index));
     }
 
@@ -142,7 +150,7 @@ public class ProductsController : Controller
         if (product is null) return NotFound();
 
         await _products.DeleteAsync(product);
-        TempData["Success"] = $"'{product.Name}' silindi.";
+        TempData["Success"] = string.Format(_localizer["Products_Deleted"].Value, product.Name);
         return RedirectToAction(nameof(Index));
     }
 

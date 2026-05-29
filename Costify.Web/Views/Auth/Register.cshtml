@@ -2,19 +2,18 @@
 @inject IHtmlLocalizer<SharedResource> Localizer
 @{
     Layout = null;
-    ViewData["Title"] = Localizer["Login_Title"].Value;
+    ViewData["Title"] = Localizer["Register_Title"].Value;
 }
 <!DOCTYPE html>
 <html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Costify — @Localizer["Login_Title"]</title>
+    <title>Costify — @Localizer["Register_Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <style>
         :root { --primary: #4f46e5; --primary-dark: #4338ca; }
-
         body {
             background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
             min-height: 100vh;
@@ -23,7 +22,6 @@
             justify-content: center;
             font-family: 'Segoe UI', system-ui, sans-serif;
         }
-
         .login-card {
             background: white;
             border-radius: 1.25rem;
@@ -32,16 +30,6 @@
             max-width: 420px;
             box-shadow: 0 25px 50px rgba(0,0,0,.35);
         }
-
-        .brand-icon {
-            width: 56px; height: 56px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 14px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; color: white;
-            box-shadow: 0 8px 20px rgba(79,70,229,.35);
-        }
-
         .form-control {
             border: 1.5px solid #e2e8f0;
             border-radius: 0.625rem;
@@ -52,7 +40,6 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(79,70,229,.15);
         }
-
         .input-group-text {
             border: 1.5px solid #e2e8f0;
             background: #f8fafc;
@@ -61,7 +48,6 @@
         }
         .input-group .form-control { border-radius: 0 0.625rem 0.625rem 0; border-left: none; }
         .input-group:focus-within .input-group-text { border-color: var(--primary); }
-
         .btn-login {
             background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border: none;
@@ -74,22 +60,9 @@
         }
         .btn-login:hover { opacity: .92; transform: translateY(-1px); }
         .btn-login:active { transform: translateY(0); }
-
-        .lang-switcher { position: absolute; top: 1rem; right: 1rem; }
-
-        .dots {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            pointer-events: none; overflow: hidden; z-index: 0;
-        }
-        .dot {
-            position: absolute; border-radius: 50%;
-            background: rgba(255,255,255,.05);
-            animation: float 8s ease-in-out infinite;
-        }
-        @@keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(180deg); }
-        }
+        .dots { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+        .dot { position: absolute; border-radius: 50%; background: rgba(255,255,255,.05); animation: float 8s ease-in-out infinite; }
+        @@keyframes float { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(180deg); } }
     </style>
 </head>
 <body>
@@ -100,37 +73,13 @@
         <div class="dot" style="width:160px;height:160px;top:20%;left:70%;animation-delay:1s"></div>
     </div>
 
-    <!-- Language switcher -->
-    @{
-        var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
-        var returnUrl = "/Auth/Login";
-        var isTrLogin = currentCulture.StartsWith("tr");
-    }
-    <div style="position:fixed;top:1rem;right:1rem;z-index:10">
-        <div class="btn-group" role="group">
-            <a href="/Language/Set?culture=tr-TR&returnUrl=@Uri.EscapeDataString(returnUrl)"
-               class="btn btn-sm @(isTrLogin ? "btn-light" : "btn-outline-light")"
-               style="font-size:.72rem;padding:.28rem .65rem;font-weight:600;letter-spacing:.03em;border-radius:6px 0 0 6px;opacity:@(isTrLogin ? "1" : ".75")">
-                🇹🇷 TR
-            </a>
-            <a href="/Language/Set?culture=en-US&returnUrl=@Uri.EscapeDataString(returnUrl)"
-               class="btn btn-sm @(!isTrLogin ? "btn-light" : "btn-outline-light")"
-               style="font-size:.72rem;padding:.28rem .65rem;font-weight:600;letter-spacing:.03em;border-radius:0 6px 6px 0;opacity:@(!isTrLogin ? "1" : ".75")">
-                🇺🇸 US
-            </a>
-        </div>
-    </div>
-
     <div class="login-card position-relative" style="z-index:1">
         <div class="text-center mb-4">
-            <div class="brand-icon mx-auto mb-3" style="background:none;box-shadow:none;width:160px;height:160px">
-                <img src="/images/logo.png" alt="Costify" style="width:160px;height:160px;object-fit:contain" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
-                <span style="display:none;width:250px;height:160px;background:linear-gradient(135deg,#4f46e5,#4338ca);border-radius:28px;align-items:center;justify-content:center;font-size:3.5rem;color:white">
-                    <i class="bi bi-box-seam"></i>
-                </span>
+            <div class="mx-auto mb-3" style="width:56px;height:56px;background:linear-gradient(135deg,#4f46e5,#4338ca);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.5rem;color:white;box-shadow:0 8px 20px rgba(79,70,229,.35)">
+                <i class="bi bi-person-plus"></i>
             </div>
-            <h4 class="fw-bold mb-1" style="color:#1e293b">Costify</h4>
-            <p class="text-muted small mb-0">@Localizer["Login_Subtitle"]</p>
+            <h4 class="fw-bold mb-1" style="color:#1e293b">@Localizer["Register_Title"]</h4>
+            <p class="text-muted small mb-0">Costify</p>
         </div>
 
         @if (!string.IsNullOrEmpty(ViewBag.Error as string))
@@ -141,60 +90,73 @@
             </div>
         }
 
-        <form asp-action="Login" asp-controller="Auth" method="post">
+        <form asp-action="Register" asp-controller="Auth" method="post">
             @Html.AntiForgeryToken()
-            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
 
             <div class="mb-3">
-                <label class="form-label fw-medium small" style="color:#374151">@Localizer["Login_Username"]</label>
+                <label class="form-label fw-medium small" style="color:#374151">@Localizer["Register_DisplayName"]</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-person-badge"></i></span>
+                    <input type="text" name="displayName" class="form-control" required autofocus />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-medium small" style="color:#374151">@Localizer["Register_Username"]</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-person"></i></span>
-                    <input type="text" name="username" class="form-control" placeholder="admin"
-                           autocomplete="username" required autofocus />
+                    <input type="text" name="username" class="form-control" autocomplete="username" required />
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-medium small" style="color:#374151">@Localizer["Register_Password"]</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                    <input type="password" name="password" id="passwordInput" class="form-control"
+                           autocomplete="new-password" required />
+                    <button type="button" class="btn btn-outline-secondary border-start-0"
+                            style="border:1.5px solid #e2e8f0;border-radius:0 0.625rem 0.625rem 0"
+                            onclick="togglePass('passwordInput','eye1')">
+                        <i class="bi bi-eye" id="eye1"></i>
+                    </button>
                 </div>
             </div>
 
             <div class="mb-4">
-                <label class="form-label fw-medium small" style="color:#374151">@Localizer["Login_Password"]</label>
+                <label class="form-label fw-medium small" style="color:#374151">@Localizer["Register_ConfirmPassword"]</label>
                 <div class="input-group">
-                    <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                    <input type="password" name="password" id="passwordInput" class="form-control"
-                           placeholder="••••••••" autocomplete="current-password" required />
+                    <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
+                    <input type="password" name="confirmPassword" id="confirmInput" class="form-control"
+                           autocomplete="new-password" required />
                     <button type="button" class="btn btn-outline-secondary border-start-0"
                             style="border:1.5px solid #e2e8f0;border-radius:0 0.625rem 0.625rem 0"
-                            onclick="togglePass()">
-                        <i class="bi bi-eye" id="eyeIcon"></i>
+                            onclick="togglePass('confirmInput','eye2')">
+                        <i class="bi bi-eye" id="eye2"></i>
                     </button>
                 </div>
             </div>
 
             <button type="submit" class="btn btn-login btn-primary w-100 text-white">
-                <i class="bi bi-box-arrow-in-right me-2"></i>@Localizer["Login_Submit"]
+                <i class="bi bi-person-check me-2"></i>@Localizer["Register_Submit"]
             </button>
         </form>
 
-        <div class="text-center mt-3">
+        <div class="text-center mt-4 pt-3 border-top">
             <span class="text-muted small">
-                @Localizer["Login_NoAccount"]
-                <a asp-action="Register" asp-controller="Auth" class="fw-semibold" style="color:var(--primary)">
-                    @Localizer["Login_Register"]
+                @Localizer["Register_HasAccount"]
+                <a asp-action="Login" asp-controller="Auth" class="fw-semibold" style="color:var(--primary)">
+                    @Localizer["Register_LoginLink"]
                 </a>
-            </span>
-        </div>
-
-        <div class="text-center mt-3 pt-3 border-top">
-            <span class="text-muted" style="font-size:.75rem">
-                <i class="bi bi-shield-check me-1" style="color:#10b981"></i>
-                @Localizer["Login_SecureNote"]
             </span>
         </div>
     </div>
 
     <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    function togglePass() {
-        const input = document.getElementById('passwordInput');
-        const icon = document.getElementById('eyeIcon');
+    function togglePass(inputId, iconId) {
+        const input = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
         if (input.type === 'password') {
             input.type = 'text';
             icon.className = 'bi bi-eye-slash';

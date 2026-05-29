@@ -1,4 +1,3 @@
-using System.Text;
 using ClosedXML.Excel;
 using Costify.Infrastructure.Data;
 using Costify.Infrastructure.Services;
@@ -6,6 +5,7 @@ using Costify.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace Costify.Web.Controllers;
 
@@ -14,11 +14,16 @@ public class ReportsController : Controller
 {
     private readonly CostifyDbContext _context;
     private readonly ICurrentBusinessService _currentBusiness;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public ReportsController(CostifyDbContext context, ICurrentBusinessService currentBusiness)
+    public ReportsController(
+        CostifyDbContext context,
+        ICurrentBusinessService currentBusiness,
+        IStringLocalizer<SharedResource> localizer)
     {
         _context = context;
         _currentBusiness = currentBusiness;
+        _localizer = localizer;
     }
 
     public async Task<IActionResult> Index()
@@ -42,11 +47,15 @@ public class ReportsController : Controller
             .ToListAsync();
 
         using var wb = new XLWorkbook();
-        var ws = wb.Worksheets.Add("Satın Alma");
+        var ws = wb.Worksheets.Add(_localizer["Excel_PurchaseSheet"].Value);
 
-        // Başlık satırı
-        string[] headers = ["Sipariş No", "Tedarikçi", "Tarih", "Ürün", "Miktar", "Birim",
-                             "Birim Fiyat (₺)", "Satır Toplam (₺)", "Sipariş Toplamı (₺)", "Durum"];
+        string[] headers = [
+            _localizer["Excel_OrderNo"].Value, _localizer["Excel_Vendor"].Value,
+            _localizer["Excel_Date"].Value, _localizer["Excel_Product"].Value,
+            _localizer["Excel_Qty"].Value, _localizer["Excel_Unit"].Value,
+            _localizer["Excel_UnitPrice"].Value, _localizer["Excel_LineTotal"].Value,
+            _localizer["Excel_OrderTotal"].Value, _localizer["Excel_Status"].Value
+        ];
         StyleHeader(ws, headers);
 
         int row = 2;
@@ -71,10 +80,9 @@ public class ReportsController : Controller
             }
         }
 
-        // Özet satırı
         if (row > 2)
         {
-            ws.Cell(row, 7).Value = "GENEL TOPLAM";
+            ws.Cell(row, 7).Value = _localizer["Excel_GrandTotal"].Value;
             ws.Cell(row, 8).FormulaA1 = $"=SUM(H2:H{row - 1})";
             ws.Cell(row, 9).FormulaA1 = $"=SUM(I2:I{row - 1})";
             ws.Row(row).Style.Font.Bold = true;
@@ -98,19 +106,23 @@ public class ReportsController : Controller
             .ToListAsync();
 
         using var wb = new XLWorkbook();
-        var ws = wb.Worksheets.Add("Stok Durumu");
+        var ws = wb.Worksheets.Add(_localizer["Excel_StockSheet"].Value);
 
-        string[] headers = ["Ürün Adı", "SKU", "Kategori", "Birim",
-                             "Mevcut Stok", "Min. Stok",
-                             "Son Alış Fiyatı (₺)", "Stok Değeri (₺)", "Durum"];
+        string[] headers = [
+            _localizer["Common_Name"].Value, _localizer["Excel_SKU"].Value,
+            _localizer["Excel_Category"].Value, _localizer["Excel_Unit"].Value,
+            _localizer["Excel_CurrentStock"].Value, _localizer["Excel_MinStock"].Value,
+            _localizer["Excel_LastPrice"].Value, _localizer["Excel_StockValue"].Value,
+            _localizer["Excel_StockStatus"].Value
+        ];
         StyleHeader(ws, headers);
 
         int row = 2;
         foreach (var p in products)
         {
-            var status = p.CurrentStock <= 0 ? "Stoksuz"
-                       : p.CurrentStock < p.MinimumStock ? "Kritik"
-                       : "Normal";
+            var status = p.CurrentStock <= 0 ? _localizer["Excel_OutOfStock"].Value
+                       : p.CurrentStock < p.MinimumStock ? _localizer["Excel_Critical"].Value
+                       : _localizer["Excel_Normal"].Value;
 
             ws.Cell(row, 1).Value = p.Name;
             ws.Cell(row, 2).Value = p.SKU ?? "";
@@ -122,10 +134,9 @@ public class ReportsController : Controller
             ws.Cell(row, 8).Value = (double)(p.CurrentStock * p.LastPurchasePrice);
             ws.Cell(row, 9).Value = status;
 
-            // Kritik/Stoksuz = kırmızı arka plan
-            if (status == "Stoksuz")
+            if (status == _localizer["Excel_OutOfStock"].Value)
                 ws.Row(row).Style.Fill.BackgroundColor = XLColor.FromHtml("#FEE2E2");
-            else if (status == "Kritik")
+            else if (status == _localizer["Excel_Critical"].Value)
                 ws.Row(row).Style.Fill.BackgroundColor = XLColor.FromHtml("#FEF3C7");
             else if (row % 2 == 0)
                 AlternateRow(ws, row, headers.Length);
@@ -134,10 +145,9 @@ public class ReportsController : Controller
             row++;
         }
 
-        // Toplam değer
         if (row > 2)
         {
-            ws.Cell(row, 7).Value = "TOPLAM STOK DEĞERİ";
+            ws.Cell(row, 7).Value = _localizer["Excel_TotalStockValue"].Value;
             ws.Cell(row, 8).FormulaA1 = $"=SUM(H2:H{row - 1})";
             ws.Row(row).Style.Font.Bold = true;
             ws.Row(row).Style.Fill.BackgroundColor = XLColor.FromHtml("#EEF2FF");
@@ -159,10 +169,13 @@ public class ReportsController : Controller
 
         using var wb = new XLWorkbook();
 
-        // --- Sekme 1: Özet ---
-        var ws1 = wb.Worksheets.Add("Özet");
-        string[] sumHeaders = ["Reçete", "Kategori", "Satış Fiyatı (₺)", "Malzeme Maliyeti (₺)",
-                                "Brüt Kâr (₺)", "Gıda Maliyet %", "Değerlendirme"];
+        var ws1 = wb.Worksheets.Add(_localizer["Excel_RecipeSummarySheet"].Value);
+        string[] sumHeaders = [
+            _localizer["Excel_Recipe"].Value, _localizer["Excel_Category"].Value,
+            _localizer["Excel_SellingPrice"].Value, _localizer["Excel_IngredientCost"].Value,
+            _localizer["Excel_GrossProfit"].Value, _localizer["Excel_FoodCostPct"].Value,
+            _localizer["Excel_Evaluation"].Value
+        ];
         StyleHeader(ws1, sumHeaders);
 
         int r1 = 2;
@@ -174,9 +187,9 @@ public class ReportsController : Controller
             ws1.Cell(r1, 4).Value = (double)rec.TotalCost;
             ws1.Cell(r1, 5).Value = (double)(rec.SellingPrice - rec.TotalCost);
             ws1.Cell(r1, 6).Value = (double)rec.FoodCostPercentage / 100;
-            ws1.Cell(r1, 7).Value = rec.FoodCostPercentage < 25 ? "İdeal (<%25)"
-                                  : rec.FoodCostPercentage < 35 ? "Orta (%25-35)"
-                                  : "Yüksek (>%35)";
+            ws1.Cell(r1, 7).Value = rec.FoodCostPercentage < 25 ? _localizer["Excel_Ideal"].Value
+                                  : rec.FoodCostPercentage < 35 ? _localizer["Excel_Moderate"].Value
+                                  : _localizer["Excel_High"].Value;
 
             ws1.Cell(r1, 6).Style.NumberFormat.Format = "0.0%";
             ApplyNumberFormat(ws1, r1, new[] { 3, 4, 5 });
@@ -193,10 +206,13 @@ public class ReportsController : Controller
         }
         FinishSheet(ws1, sumHeaders.Length, r1);
 
-        // --- Sekme 2: Malzeme Detayı ---
-        var ws2 = wb.Worksheets.Add("Malzeme Detayı");
-        string[] detHeaders = ["Reçete", "Kategori", "Malzeme", "Miktar", "Birim",
-                                "Birim Fiyat (₺)", "Satır Maliyet (₺)"];
+        var ws2 = wb.Worksheets.Add(_localizer["Excel_RecipeDetailSheet"].Value);
+        string[] detHeaders = [
+            _localizer["Excel_Recipe"].Value, _localizer["Excel_Category"].Value,
+            _localizer["Excel_Ingredient"].Value, _localizer["Excel_Qty"].Value,
+            _localizer["Excel_Unit"].Value, _localizer["Excel_UnitPrice"].Value,
+            _localizer["Excel_LineCost"].Value
+        ];
         StyleHeader(ws2, detHeaders);
 
         int r2 = 2;
@@ -284,13 +300,13 @@ public class ReportsController : Controller
         };
     }
 
-    private static string GetStatusLabel(Costify.Domain.Enums.OrderStatus status) => status switch
+    private string GetStatusLabel(Costify.Domain.Enums.OrderStatus status) => status switch
     {
-        Costify.Domain.Enums.OrderStatus.Received          => "Teslim Alındı",
-        Costify.Domain.Enums.OrderStatus.Ordered           => "Sipariş Verildi",
-        Costify.Domain.Enums.OrderStatus.Cancelled         => "İptal",
-        Costify.Domain.Enums.OrderStatus.PartiallyReceived => "Kısmi Teslim",
-        _                                                  => "Taslak"
+        Costify.Domain.Enums.OrderStatus.Received          => _localizer["Common_Received"].Value,
+        Costify.Domain.Enums.OrderStatus.Ordered           => _localizer["Common_Ordered"].Value,
+        Costify.Domain.Enums.OrderStatus.Cancelled         => _localizer["Common_Cancelled"].Value,
+        Costify.Domain.Enums.OrderStatus.PartiallyReceived => _localizer["Common_PartiallyReceived"].Value,
+        _                                                  => _localizer["Common_Draft"].Value
     };
 
     private async Task<ReportViewModel> BuildReportAsync(DateTime from, DateTime to)

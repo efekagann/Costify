@@ -4,6 +4,7 @@ using Costify.Infrastructure.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 
 namespace Costify.Web.Controllers;
 
@@ -12,11 +13,16 @@ public class DefinitionsController : Controller
 {
     private readonly CostifyDbContext _context;
     private readonly ICurrentBusinessService _currentBusiness;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public DefinitionsController(CostifyDbContext context, ICurrentBusinessService currentBusiness)
+    public DefinitionsController(
+        CostifyDbContext context,
+        ICurrentBusinessService currentBusiness,
+        IStringLocalizer<SharedResource> localizer)
     {
         _context = context;
         _currentBusiness = currentBusiness;
+        _localizer = localizer;
     }
 
     public async Task<IActionResult> Index(string tab = "categories")
@@ -38,7 +44,7 @@ public class DefinitionsController : Controller
     {
         if (string.IsNullOrWhiteSpace(name))
         {
-            TempData["Error"] = "Kategori adı zorunludur.";
+            TempData["Error"] = _localizer["Def_CategoryNameRequired"].Value;
             return RedirectToAction(nameof(Index), new { tab = "categories" });
         }
 
@@ -50,7 +56,7 @@ public class DefinitionsController : Controller
             ColorHex = string.IsNullOrEmpty(colorHex) ? "#6b7280" : colorHex
         });
         await _context.SaveChangesAsync();
-        TempData["Success"] = $"'{name}' kategorisi eklendi.";
+        TempData["Success"] = string.Format(_localizer["Def_CategoryAdded"].Value, name);
         return RedirectToAction(nameof(Index), new { tab = "categories" });
     }
 
@@ -65,7 +71,7 @@ public class DefinitionsController : Controller
         cat.ColorHex = string.IsNullOrEmpty(colorHex) ? cat.ColorHex : colorHex;
         cat.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
-        TempData["Success"] = $"'{cat.Name}' güncellendi.";
+        TempData["Success"] = string.Format(_localizer["Def_CategoryUpdated"].Value, cat.Name);
         return RedirectToAction(nameof(Index), new { tab = "categories" });
     }
 
@@ -75,7 +81,7 @@ public class DefinitionsController : Controller
         var inUse = await _context.Products.AnyAsync(p => p.CategoryId == id);
         if (inUse)
         {
-            TempData["Error"] = "Bu kategoride ürünler var, önce ürünleri başka kategoriye taşıyın.";
+            TempData["Error"] = _localizer["Def_CategoryHasProducts"].Value;
             return RedirectToAction(nameof(Index), new { tab = "categories" });
         }
 
@@ -84,7 +90,7 @@ public class DefinitionsController : Controller
         cat.IsDeleted = true;
         cat.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
-        TempData["Success"] = "Kategori silindi.";
+        TempData["Success"] = _localizer["Def_CategoryDeleted"].Value;
         return RedirectToAction(nameof(Index), new { tab = "categories" });
     }
 
@@ -95,7 +101,7 @@ public class DefinitionsController : Controller
     {
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(symbol))
         {
-            TempData["Error"] = "Ad ve sembol zorunludur.";
+            TempData["Error"] = _localizer["Def_UnitNameSymbolRequired"].Value;
             return RedirectToAction(nameof(Index), new { tab = "units" });
         }
 
@@ -105,7 +111,7 @@ public class DefinitionsController : Controller
             Symbol = symbol.Trim()
         });
         await _context.SaveChangesAsync();
-        TempData["Success"] = $"'{name}' birimi eklendi.";
+        TempData["Success"] = string.Format(_localizer["Def_UnitAdded"].Value, name);
         return RedirectToAction(nameof(Index), new { tab = "units" });
     }
 
@@ -119,7 +125,7 @@ public class DefinitionsController : Controller
         unit.Symbol = symbol.Trim();
         unit.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
-        TempData["Success"] = $"'{unit.Name}' birimi güncellendi.";
+        TempData["Success"] = string.Format(_localizer["Def_UnitUpdated"].Value, unit.Name);
         return RedirectToAction(nameof(Index), new { tab = "units" });
     }
 
@@ -129,7 +135,7 @@ public class DefinitionsController : Controller
         var inUse = await _context.Products.AnyAsync(p => p.UnitId == id);
         if (inUse)
         {
-            TempData["Error"] = "Bu birim ürünlerde kullanılıyor, silinemez.";
+            TempData["Error"] = _localizer["Def_UnitInUse"].Value;
             return RedirectToAction(nameof(Index), new { tab = "units" });
         }
 
@@ -138,7 +144,7 @@ public class DefinitionsController : Controller
         unit.IsDeleted = true;
         unit.UpdatedAt = DateTime.UtcNow;
         await _context.SaveChangesAsync();
-        TempData["Success"] = "Birim silindi.";
+        TempData["Success"] = _localizer["Def_UnitDeleted"].Value;
         return RedirectToAction(nameof(Index), new { tab = "units" });
     }
 }

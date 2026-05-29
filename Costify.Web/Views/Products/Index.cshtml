@@ -1,4 +1,4 @@
-@model IEnumerable<Costify.Domain.Entities.Product>
+@model Costify.Web.ViewModels.PaginatedList<Costify.Domain.Entities.Product>
 @{
     ViewData["Title"] = Localizer["Products_Title"].Value;
 }
@@ -39,7 +39,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var p in Model)
+                @foreach (var p in Model.Items)
                 {
                     var isLow = p.CurrentStock <= p.MinimumStock;
                     <tr>
@@ -98,7 +98,7 @@
                         </td>
                     </tr>
                 }
-                @if (!Model.Any())
+                @if (!Model.Items.Any())
                 {
                     <tr>
                         <td colspan="7">
@@ -114,6 +114,8 @@
         </table>
     </div>
 </div>
+
+@await Html.PartialAsync("_Pagination", (Costify.Web.ViewModels.IPaginatedResult)Model)
 
 <!-- Create / Edit Modal -->
 <div class="modal fade" id="productModal" tabindex="-1">

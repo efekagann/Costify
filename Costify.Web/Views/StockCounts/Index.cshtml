@@ -1,11 +1,11 @@
-@model IEnumerable<Costify.Domain.Entities.StockCount>
+@model Costify.Web.ViewModels.PaginatedList<Costify.Domain.Entities.StockCount>
 @{
     ViewData["Title"] = Localizer["SC_Title"].Value;
 }
 
 <div class="page-header">
     <div class="text-muted" style="font-size:.875rem">
-        <i class="bi bi-clipboard-check me-1"></i>@Model.Count() @Localizer["SC_Count"]
+        <i class="bi bi-clipboard-check me-1"></i>@Model.TotalCount @Localizer["SC_Count"]
     </div>
     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newCountModal">
         <i class="bi bi-plus-lg me-1"></i>@Localizer["SC_StartNew"]
@@ -26,7 +26,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var sc in Model)
+                @foreach (var sc in Model.Items)
                 {
                     var diffCount = sc.Items.Count(i => i.CountedQuantity != i.TheoreticalQuantity);
                     <tr>
@@ -54,14 +54,26 @@
                             }
                         </td>
                         <td>
-                            <a asp-action="Details" asp-route-id="@sc.Id"
-                               class="btn btn-sm btn-outline-secondary" title="@Localizer["Common_Detail"]">
-                                <i class="bi bi-eye"></i>
-                            </a>
+                            <div class="d-flex gap-1">
+                                <a asp-action="Details" asp-route-id="@sc.Id"
+                                   class="btn btn-sm btn-outline-secondary" title="@Localizer["Common_Detail"]">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                @if (sc.Status == Costify.Domain.Enums.StockCountStatus.InProgress)
+                                {
+                                    <form asp-action="Delete" asp-route-id="@sc.Id" method="post"
+                                          onsubmit="return confirm('@Html.Raw(Localizer["SC_DeleteConfirm"].Value.Replace("'", "\\'"))')">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="@Localizer["Common_Delete"]">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </form>
+                                }
+                            </div>
                         </td>
                     </tr>
                 }
-                @if (!Model.Any())
+                @if (!Model.Items.Any())
                 {
                     <tr>
                         <td colspan="6">
@@ -77,6 +89,8 @@
         </table>
     </div>
 </div>
+
+@await Html.PartialAsync("_Pagination", (Costify.Web.ViewModels.IPaginatedResult)Model)
 
 <!-- New Count Modal -->
 <div class="modal fade" id="newCountModal" tabindex="-1">

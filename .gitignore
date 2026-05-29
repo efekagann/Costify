@@ -52,3 +52,11 @@ PublishProfiles/
 ## Environment-specific appsettings (production secrets)
 appsettings.Production.json
 appsettings.*.local.json
+
+## ASP.NET Core User Secrets
+**/secrets.json
+
+## SQLite local dev database
+*.db
+*.db-shm
+*.db-wal

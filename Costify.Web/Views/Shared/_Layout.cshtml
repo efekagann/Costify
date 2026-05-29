@@ -64,6 +64,11 @@
             <span class="sidebar-icon"><i class="bi bi-clipboard-check"></i></span>
             <span>@Localizer["Nav_StockCount"]</span>
         </a>
+        <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "StockTransactions" ? "active" : "")"
+           asp-controller="StockTransactions" asp-action="Index">
+            <span class="sidebar-icon"><i class="bi bi-arrow-left-right"></i></span>
+            <span>@Localizer["Nav_StockTransactions"]</span>
+        </a>
     </nav>
 
     <div class="sidebar-section-label">@Localizer["Nav_Analysis"]</div>
@@ -75,14 +80,25 @@
         </a>
     </nav>
 
+    <div class="sidebar-section-label">@Localizer["Nav_Settings"]</div>
+    <nav class="sidebar-nav">
+        <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Settings" ? "active" : "")"
+           asp-controller="Settings" asp-action="Index">
+            <span class="sidebar-icon"><i class="bi bi-gear"></i></span>
+            <span>@Localizer["Nav_Settings"]</span>
+        </a>
+    </nav>
+
     <div class="sidebar-footer">
         <div class="sidebar-user">
-            <div class="sidebar-avatar">
+            <a asp-controller="Auth" asp-action="Profile" class="sidebar-avatar text-decoration-none" title="@Localizer["Profile_Title"]">
                 <i class="bi bi-person-fill"></i>
-            </div>
+            </a>
             <div class="sidebar-user-info">
-                <div class="sidebar-user-name">@User.Identity?.Name</div>
-                <div class="sidebar-user-role">@Localizer["Nav_Admin"]</div>
+                <a asp-controller="Auth" asp-action="Profile" class="sidebar-user-name text-decoration-none">
+                    @(User.FindFirst("DisplayName")?.Value ?? User.Identity?.Name)
+                </a>
+                <div class="sidebar-user-role">@User.Identity?.Name</div>
             </div>
             <form asp-controller="Auth" asp-action="Logout" method="post" class="ms-auto">
                 @Html.AntiForgeryToken()

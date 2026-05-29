@@ -1,11 +1,11 @@
-﻿@model IEnumerable<Costify.Domain.Entities.Vendor>
+﻿@model Costify.Web.ViewModels.PaginatedList<Costify.Domain.Entities.Vendor>
 @{
     ViewData["Title"] = Localizer["Vendors_Title"].Value;
 }
 
 <div class="page-header">
     <div class="text-muted" style="font-size:.875rem">
-        <i class="bi bi-truck me-1"></i>@Model.Count() @Localizer["Vendors_Count"]
+        <i class="bi bi-truck me-1"></i>@Model.TotalCount @Localizer["Vendors_Count"]
     </div>
     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#vendorModal">
         <i class="bi bi-plus-lg me-1"></i>@Localizer["Vendors_NewVendor"]
@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var v in Model)
+                @foreach (var v in Model.Items)
                 {
                     <tr>
                         <td>
@@ -76,7 +76,7 @@
                         </td>
                     </tr>
                 }
-                @if (!Model.Any())
+                @if (!Model.Items.Any())
                 {
                     <tr>
                         <td colspan="7">
@@ -92,6 +92,8 @@
         </table>
     </div>
 </div>
+
+@await Html.PartialAsync("_Pagination", (Costify.Web.ViewModels.IPaginatedResult)Model)
 
 <!-- Create / Edit Modal -->
 <div class="modal fade" id="vendorModal" tabindex="-1">

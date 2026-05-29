@@ -4,6 +4,7 @@ using Costify.Infrastructure.Services;
 using Costify.Web.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Localization;
 
 namespace Costify.Web.Controllers;
 
@@ -12,17 +13,26 @@ public class VendorsController : Controller
 {
     private readonly IVendorRepository _vendors;
     private readonly ICurrentBusinessService _currentBusiness;
+    private readonly IStringLocalizer<SharedResource> _localizer;
 
-    public VendorsController(IVendorRepository vendors, ICurrentBusinessService currentBusiness)
+    public VendorsController(
+        IVendorRepository vendors,
+        ICurrentBusinessService currentBusiness,
+        IStringLocalizer<SharedResource> localizer)
     {
         _vendors = vendors;
         _currentBusiness = currentBusiness;
+        _localizer = localizer;
     }
 
-    public async Task<IActionResult> Index()
+    private const int PageSize = 25;
+
+    public async Task<IActionResult> Index(int page = 1)
     {
-        var vendors = await _vendors.GetAllAsync();
-        return View(vendors);
+        page = PaginatedList<object>.ClampPage(page);
+        var query = _vendors.Query().OrderBy(v => v.Name);
+        var paginated = await PaginatedList<Vendor>.CreateAsync(query, page, PageSize);
+        return View(paginated);
     }
 
     public async Task<IActionResult> Details(int id)
@@ -52,7 +62,7 @@ public class VendorsController : Controller
         };
 
         await _vendors.AddAsync(vendor);
-        TempData["Success"] = $"'{vendor.Name}' tedarikçisi eklendi.";
+        TempData["Success"] = string.Format(_localizer["Vendors_Added"].Value, vendor.Name);
         return RedirectToAction(nameof(Index));
     }
 
@@ -81,7 +91,7 @@ public class VendorsController : Controller
         vendor.IsActive = vm.IsActive;
 
         await _vendors.UpdateAsync(vendor);
-        TempData["Success"] = $"'{vendor.Name}' güncellendi.";
+        TempData["Success"] = string.Format(_localizer["Vendors_Updated"].Value, vendor.Name);
         return RedirectToAction(nameof(Index));
     }
 
@@ -91,7 +101,7 @@ public class VendorsController : Controller
         var vendor = await _vendors.GetByIdAsync(id);
         if (vendor is null) return NotFound();
         await _vendors.DeleteAsync(vendor);
-        TempData["Success"] = "Tedarikçi silindi.";
+        TempData["Success"] = _localizer["Vendors_Deleted"].Value;
         return RedirectToAction(nameof(Index));
     }
 }

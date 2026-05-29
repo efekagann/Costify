@@ -1,4 +1,5 @@
 @model Costify.Domain.Entities.PurchaseOrder
+@using Microsoft.AspNetCore.Mvc.Rendering
 @{
     ViewData["Title"] = Model.OrderNumber;
     var (badgeClass, statusLabel) = Model.Status switch {
@@ -45,7 +46,7 @@
                     </div>
                 }
             </div>
-            <div class="card-footer d-flex gap-2">
+            <div class="card-footer d-flex gap-2 flex-wrap">
                 @if (Model.Status == Costify.Domain.Enums.OrderStatus.Ordered ||
                      Model.Status == Costify.Domain.Enums.OrderStatus.PartiallyReceived)
                 {
@@ -56,8 +57,23 @@
                             <i class="bi bi-check2-circle me-1"></i>@Localizer["PO_Receive"]
                         </button>
                     </form>
+                    <button type="button" class="btn btn-sm btn-outline-warning"
+                            data-bs-toggle="modal" data-bs-target="#partialModal">
+                        <i class="bi bi-box-arrow-in-down-right me-1"></i>@Localizer["PO_PartialReceive"]
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-primary"
+                            data-bs-toggle="modal" data-bs-target="#editModal">
+                        <i class="bi bi-pencil me-1"></i>@Localizer["PO_Edit"]
+                    </button>
+                    <form asp-action="Cancel" asp-route-id="@Model.Id" method="post"
+                          onsubmit="return confirm('@Html.Raw(Localizer["PO_CancelConfirm"].Value.Replace("'", "\\'"))')">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                            <i class="bi bi-x-circle me-1"></i>@Localizer["PO_Cancel"]
+                        </button>
+                    </form>
                 }
-                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">@Localizer["Common_Back"]</a>
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary ms-auto">@Localizer["Common_Back"]</a>
             </div>
         </div>
     </div>
@@ -71,6 +87,7 @@
                         <tr>
                             <th>@Localizer["Common_Product"]</th>
                             <th class="text-end">@Localizer["Common_Quantity"]</th>
+                            <th class="text-end">@Localizer["PO_ReceivedQty"]</th>
                             <th class="text-end">@Localizer["Common_UnitPrice"]</th>
                             <th class="text-end">@Localizer["Common_Total"]</th>
                         </tr>
@@ -78,11 +95,24 @@
                     <tbody>
                         @foreach (var item in Model.Items)
                         {
-                            <tr>
+                            var fullyReceived = item.ReceivedQuantity >= item.Quantity;
+                            <tr class="@(fullyReceived && Model.Status != Costify.Domain.Enums.OrderStatus.Ordered ? "table-success" : "")">
                                 <td>@item.Product?.Name</td>
                                 <td class="text-end">
                                     @item.Quantity.ToString("N4")
                                     <small class="text-muted">@item.Product?.Unit?.Symbol</small>
+                                </td>
+                                <td class="text-end">
+                                    @if (item.ReceivedQuantity > 0)
+                                    {
+                                        <span class="fw-semibold @(fullyReceived ? "text-success" : "text-warning")">
+                                            @item.ReceivedQuantity.ToString("N4")
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">—</span>
+                                    }
                                 </td>
                                 <td class="text-end">@item.UnitPrice.ToString("N2") ₺</td>
                                 <td class="text-end fw-semibold">@item.TotalPrice.ToString("N2") ₺</td>
@@ -91,7 +121,7 @@
                     </tbody>
                     <tfoot class="table-light">
                         <tr>
-                            <td colspan="3" class="text-end fw-bold">@Localizer["Common_GrandTotal"]</td>
+                            <td colspan="4" class="text-end fw-bold">@Localizer["Common_GrandTotal"]</td>
                             <td class="text-end fw-bold fs-5">@Model.TotalAmount.ToString("N2") ₺</td>
                         </tr>
                     </tfoot>
@@ -100,3 +130,253 @@
         </div>
     </div>
 </div>
+
+@if (Model.Status == Costify.Domain.Enums.OrderStatus.Ordered ||
+     Model.Status == Costify.Domain.Enums.OrderStatus.PartiallyReceived)
+{
+    var editProducts = ViewBag.Products as IEnumerable<Costify.Domain.Entities.Product> ?? [];
+    var editVendors = ViewBag.Vendors as SelectList;
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <form asp-action="Edit" asp-route-id="@Model.Id" method="post" id="editForm">
+                    @Html.AntiForgeryToken()
+                    <div class="modal-header">
+                        <h5 class="modal-title"><i class="bi bi-pencil me-2"></i>@Localizer["PO_Edit"] — @Model.OrderNumber</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label class="form-label">@Localizer["Common_Vendor"] <span class="text-danger">*</span></label>
+                                <select name="VendorId" class="form-select" required>
+                                    @if (editVendors is not null)
+                                    {
+                                        foreach (SelectListItem v in editVendors)
+                                        {
+                                            if (v.Value == Model.VendorId.ToString())
+                                            {
+                                                <option value="@v.Value" selected>@v.Text</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@v.Value">@v.Text</option>
+                                            }
+                                        }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">@Localizer["PO_OrderDate"] <span class="text-danger">*</span></label>
+                                <input type="date" name="OrderDate" class="form-control"
+                                       value="@Model.OrderDate.ToString("yyyy-MM-dd")" required />
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">@Localizer["PO_Notes"]</label>
+                                <textarea name="Notes" class="form-control" rows="2">@Model.Notes</textarea>
+                            </div>
+                        </div>
+
+                        <h6 class="fw-semibold mb-3 border-bottom pb-2">
+                            <i class="bi bi-list-ul me-1"></i>@Localizer["PO_OrderItems"]
+                        </h6>
+                        <table class="table align-middle" id="editItemsTable">
+                            <thead class="table-light">
+                                <tr>
+                                    <th style="min-width:200px">@Localizer["Common_Product"]</th>
+                                    <th style="width:130px">@Localizer["Common_Quantity"]</th>
+                                    <th style="width:150px">@Localizer["PO_UnitPriceLabel"]</th>
+                                    <th style="width:130px">@Localizer["Common_Total"]</th>
+                                    <th style="width:50px"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="editItemsBody">
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr class="edit-item-row">
+                                        <td>
+                                            <select name="productIds" class="form-select form-select-sm edit-product-select" required>
+                                                @foreach (var p in editProducts)
+                                                {
+                                                    if (p.Id == item.ProductId)
+                                                    {
+                                                        <option value="@p.Id" data-price="@p.LastPurchasePrice.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"
+                                                                data-unit="@(p.Unit?.Symbol ?? "")" selected>@p.Name (@(p.Unit?.Symbol ?? ""))</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@p.Id" data-price="@p.LastPurchasePrice.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)"
+                                                                data-unit="@(p.Unit?.Symbol ?? "")">@p.Name (@(p.Unit?.Symbol ?? ""))</option>
+                                                    }
+                                                }
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input type="number" name="quantities" class="form-control form-control-sm edit-qty"
+                                                   step="0.0001" min="0.0001" value="@item.Quantity.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture)" required />
+                                        </td>
+                                        <td>
+                                            <div class="input-group input-group-sm">
+                                                <input type="number" name="unitPrices" class="form-control edit-price"
+                                                       step="0.01" min="0" value="@item.UnitPrice.ToString("0.00", System.Globalization.CultureInfo.InvariantCulture)" required />
+                                                <span class="input-group-text">₺</span>
+                                            </div>
+                                        </td>
+                                        <td class="edit-row-total fw-semibold">@item.TotalPrice.ToString("N2") ₺</td>
+                                        <td>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="removeEditRow(this)">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="3" class="text-end fw-bold">@Localizer["PO_GrandTotalLabel"]</td>
+                                    <td class="fw-bold" id="editGrandTotal">@Model.TotalAmount.ToString("N2") ₺</td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <button type="button" class="btn btn-outline-primary btn-sm mb-2" onclick="addEditRow()">
+                            <i class="bi bi-plus-circle me-1"></i>@Localizer["PO_AddProduct"]
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@Localizer["Common_Cancel"]</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-1"></i>@Localizer["Common_Update"]
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kısmi Teslim Modal -->
+    <div class="modal fade" id="partialModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form asp-action="PartialReceive" asp-route-id="@Model.Id" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-box-arrow-in-down-right me-2"></i>@Localizer["PO_PartialReceive"]
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-0">
+                        <table class="table mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>@Localizer["Common_Product"]</th>
+                                    <th class="text-end">@Localizer["Common_Quantity"]</th>
+                                    <th style="width:180px">@Localizer["PO_ReceivedQty"]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <input type="hidden" name="itemIds" value="@item.Id" />
+                                        <td>@item.Product?.Name <small class="text-muted">@item.Product?.Unit?.Symbol</small></td>
+                                        <td class="text-end">@item.Quantity.ToString("N4")</td>
+                                        <td>
+                                            <input type="number" name="receivedQtys" class="form-control form-control-sm"
+                                                   step="0.0001" min="0" max="@item.Quantity.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture)"
+                                                   value="@item.ReceivedQuantity.ToString("0.0000", System.Globalization.CultureInfo.InvariantCulture)" />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@Localizer["Common_Cancel"]</button>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-check-lg me-1"></i>@Localizer["Common_Save"]
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@if (Model.Status == Costify.Domain.Enums.OrderStatus.Ordered ||
+     Model.Status == Costify.Domain.Enums.OrderStatus.Draft)
+{
+    var jsProducts = (ViewBag.Products as IEnumerable<Costify.Domain.Entities.Product> ?? [])
+        .Select(p => new { p.Id, p.Name, unitSymbol = p.Unit?.Symbol ?? "", lastPrice = p.LastPurchasePrice });
+
+    @section Scripts {
+    <script>
+    const editProducts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(jsProducts));
+    const selectHint = '@Html.Raw(Localizer["PO_SelectProduct"].Value.Replace("'", "\\'"))';
+
+    function addEditRow() {
+        const tbody = document.getElementById('editItemsBody');
+        const opts = editProducts.map(p =>
+            `<option value="${p.id}" data-price="${p.lastPrice}" data-unit="${p.unitSymbol}">${p.name} (${p.unitSymbol})</option>`
+        ).join('');
+        const tr = document.createElement('tr');
+        tr.className = 'edit-item-row';
+        tr.innerHTML = `
+            <td><select name="productIds" class="form-select form-select-sm edit-product-select" required>
+                <option value="">${selectHint}</option>${opts}</select></td>
+            <td><input type="number" name="quantities" class="form-control form-control-sm edit-qty"
+                step="0.0001" min="0.0001" value="1" required /></td>
+            <td><div class="input-group input-group-sm">
+                <input type="number" name="unitPrices" class="form-control edit-price" step="0.01" min="0" value="0" required />
+                <span class="input-group-text">₺</span></div></td>
+            <td class="edit-row-total fw-semibold">0,00 ₺</td>
+            <td><button type="button" class="btn btn-outline-danger btn-sm" onclick="removeEditRow(this)">
+                <i class="bi bi-trash"></i></button></td>`;
+        tbody.appendChild(tr);
+        bindEditRow(tr);
+        calcEditGrand();
+    }
+
+    function removeEditRow(btn) {
+        btn.closest('tr').remove();
+        calcEditGrand();
+    }
+
+    function calcEditRowTotal(row) {
+        const qty = parseFloat(row.querySelector('.edit-qty')?.value) || 0;
+        const price = parseFloat(row.querySelector('.edit-price')?.value) || 0;
+        const totalEl = row.querySelector('.edit-row-total');
+        if (totalEl) totalEl.textContent = (qty * price).toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺';
+    }
+
+    function calcEditGrand() {
+        let gt = 0;
+        document.querySelectorAll('.edit-item-row').forEach(row => {
+            const qty = parseFloat(row.querySelector('.edit-qty')?.value) || 0;
+            const price = parseFloat(row.querySelector('.edit-price')?.value) || 0;
+            gt += qty * price;
+        });
+        document.getElementById('editGrandTotal').textContent =
+            gt.toLocaleString('tr-TR', {minimumFractionDigits:2}) + ' ₺';
+    }
+
+    function bindEditRow(row) {
+        row.querySelector('.edit-product-select')?.addEventListener('change', function() {
+            const opt = this.options[this.selectedIndex];
+            const priceInput = this.closest('tr').querySelector('.edit-price');
+            if (priceInput && opt.dataset.price) priceInput.value = opt.dataset.price;
+            calcEditRowTotal(this.closest('tr'));
+            calcEditGrand();
+        });
+        row.querySelectorAll('.edit-qty, .edit-price').forEach(el =>
+            el.addEventListener('input', () => { calcEditRowTotal(el.closest('tr')); calcEditGrand(); })
+        );
+    }
+
+    document.querySelectorAll('.edit-item-row').forEach(bindEditRow);
+    </script>
+    }
+}

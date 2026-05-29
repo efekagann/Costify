@@ -1,11 +1,11 @@
-﻿@model IEnumerable<Costify.Domain.Entities.PurchaseOrder>
+﻿@model Costify.Web.ViewModels.PaginatedList<Costify.Domain.Entities.PurchaseOrder>
 @{
     ViewData["Title"] = Localizer["PO_Title"].Value;
 }
 
 <div class="page-header">
     <div class="text-muted" style="font-size:.875rem">
-        <i class="bi bi-cart-check me-1"></i>@Model.Count() @Localizer["PO_Count"]
+        <i class="bi bi-cart-check me-1"></i>@Model.TotalCount @Localizer["PO_Count"]
     </div>
     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#orderModal">
         <i class="bi bi-plus-lg me-1"></i>@Localizer["PO_NewOrder"]
@@ -27,7 +27,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var o in Model)
+                @foreach (var o in Model.Items)
                 {
                     var (cls, lbl, icon) = o.Status switch {
                         Costify.Domain.Enums.OrderStatus.Received          => ("bg-success-soft", Localizer["Common_Received"].Value,          "bi-check-circle-fill"),
@@ -53,7 +53,7 @@
                         </td>
                     </tr>
                 }
-                @if (!Model.Any())
+                @if (!Model.Items.Any())
                 {
                     <tr>
                         <td colspan="7">
@@ -69,6 +69,8 @@
         </table>
     </div>
 </div>
+
+@await Html.PartialAsync("_Pagination", (Costify.Web.ViewModels.IPaginatedResult)Model)
 
 <!-- New Order Modal -->
 <div class="modal fade" id="orderModal" tabindex="-1">

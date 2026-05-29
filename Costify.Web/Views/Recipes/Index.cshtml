@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = Localizer["Recipes_Title"].Value;
     var products = ViewBag.Products as IEnumerable<Costify.Domain.Entities.Product> ?? [];
+    var recipeCategories = ViewBag.RecipeCategories as IEnumerable<string> ?? [];
 }
 
 <div class="page-header">
@@ -116,7 +117,7 @@ else
                             <label class="form-label">@Localizer["Common_Category"]</label>
                             <input type="text" name="Category" id="r_Category" class="form-control" list="categoryList" placeholder="@Localizer["Common_Optional"]" />
                             <datalist id="categoryList">
-                                @foreach (var c in new[]{"Sıcak İçecek","Soğuk İçecek","Atıştırmalık","Tatlı","Ana Yemek","Kahvaltı"})
+                                @foreach (var c in recipeCategories)
                                 {
                                     <option value="@c" />
                                 }

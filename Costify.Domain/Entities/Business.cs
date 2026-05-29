@@ -18,4 +18,6 @@ public class Business : BaseEntity
     public ICollection<Vendor> Vendors { get; set; } = new List<Vendor>();
     public ICollection<PurchaseOrder> PurchaseOrders { get; set; } = new List<PurchaseOrder>();
     public ICollection<StockTransaction> StockTransactions { get; set; } = new List<StockTransaction>();
+    public ICollection<Recipe> Recipes { get; set; } = new List<Recipe>();
+    public ICollection<StockCount> StockCounts { get; set; } = new List<StockCount>();
 }
