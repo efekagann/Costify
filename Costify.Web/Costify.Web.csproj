@@ -5,6 +5,7 @@
     <ProjectReference Include="..\Costify.Domain\Costify.Domain.csproj" />
   </ItemGroup>
 
+
   <ItemGroup>
     <PackageReference Include="ClosedXML" Version="0.102.3" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.5" />

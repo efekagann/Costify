@@ -3,37 +3,37 @@
     ViewData["Title"] = Model.Name;
     var fcpct = Model.FoodCostPercentage;
     var fcColor = fcpct < 25 ? "#10b981" : fcpct < 35 ? "#f59e0b" : "#ef4444";
-    var fcLabel = fcpct < 25 ? "İdeal" : fcpct < 35 ? "Orta" : "Yüksek";
+    var fcLabel = fcpct < 25 ? Localizer["Recipes_Ideal"].Value : fcpct < 35 ? Localizer["Recipes_Moderate"].Value : Localizer["Recipes_High"].Value;
 }
 
 <div class="row g-3">
     <div class="col-lg-4">
         <div class="card">
-            <div class="card-header">Reçete Bilgileri</div>
+            <div class="card-header">@Localizer["Recipes_Info"]</div>
             <div class="card-body">
                 <dl class="row mb-0 small">
-                    <dt class="col-6 text-muted">Reçete Adı</dt>
+                    <dt class="col-6 text-muted">@Localizer["Recipes_RecipeName"]</dt>
                     <dd class="col-6 fw-semibold">@Model.Name</dd>
 
                     @if (!string.IsNullOrEmpty(Model.Category))
                     {
-                        <dt class="col-6 text-muted">Kategori</dt>
+                        <dt class="col-6 text-muted">@Localizer["Common_Category"]</dt>
                         <dd class="col-6">@Model.Category</dd>
                     }
 
-                    <dt class="col-6 text-muted">Satış Fiyatı</dt>
+                    <dt class="col-6 text-muted">@Localizer["Recipes_SellingPrice"]</dt>
                     <dd class="col-6 fw-bold fs-6">@Model.SellingPrice.ToString("N2") ₺</dd>
 
-                    <dt class="col-6 text-muted">Malzeme Maliyeti</dt>
+                    <dt class="col-6 text-muted">@Localizer["Recipes_IngredientCost"]</dt>
                     <dd class="col-6 fw-bold">@Model.TotalCost.ToString("N2") ₺</dd>
 
-                    <dt class="col-6 text-muted">Brüt Kâr</dt>
+                    <dt class="col-6 text-muted">@Localizer["Recipes_GrossProfit"]</dt>
                     <dd class="col-6 fw-bold text-success">@((Model.SellingPrice - Model.TotalCost).ToString("N2")) ₺</dd>
 
-                    <dt class="col-6 text-muted">Durum</dt>
+                    <dt class="col-6 text-muted">@Localizer["Common_Status"]</dt>
                     <dd class="col-6">
                         <span class="badge @(Model.IsActive ? "bg-success-soft" : "bg-secondary-soft")">
-                            @(Model.IsActive ? "Aktif" : "Pasif")
+                            @(Model.IsActive ? Localizer["Common_Active"].Value : Localizer["Common_Inactive"].Value)
                         </span>
                     </dd>
                 </dl>
@@ -46,34 +46,34 @@
                 }
 
                 <div class="mt-4 p-3 rounded-3 text-center" style="background:#f8fafc;border:2px solid @fcColor">
-                    <div class="text-muted small mb-1">Gıda Maliyet Yüzdesi</div>
+                    <div class="text-muted small mb-1">@Localizer["Recipes_FoodCostPercentage"]</div>
                     <div class="fw-bold" style="font-size:2rem;color:@fcColor">%@fcpct.ToString("N1")</div>
                     <span class="badge" style="background:rgba(0,0,0,.06);color:@fcColor;border:1px solid @fcColor">@fcLabel</span>
                     <div class="mt-2" style="font-size:.75rem;color:#64748b">
-                        @if (fcpct < 25) { <span><i class="bi bi-check-circle me-1"></i>Hedef: %25 altı — mükemmel</span> }
-                        else if (fcpct < 35) { <span><i class="bi bi-info-circle me-1"></i>Hedef: %25 altına çekin</span> }
-                        else { <span><i class="bi bi-exclamation-triangle me-1"></i>Fiyatı artırın veya maliyeti düşürün</span> }
+                        @if (fcpct < 25) { <span><i class="bi bi-check-circle me-1"></i>@Localizer["Recipes_TargetExcellent"]</span> }
+                        else if (fcpct < 35) { <span><i class="bi bi-info-circle me-1"></i>@Localizer["Recipes_TargetBring"]</span> }
+                        else { <span><i class="bi bi-exclamation-triangle me-1"></i>@Localizer["Recipes_ReduceCost"]</span> }
                     </div>
                 </div>
             </div>
             <div class="card-footer">
-                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Geri</a>
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">@Localizer["Common_Back"]</a>
             </div>
         </div>
     </div>
 
     <div class="col-lg-8">
         <div class="card">
-            <div class="card-header">Malzeme Listesi</div>
+            <div class="card-header">@Localizer["Recipes_IngredientList"]</div>
             <div class="card-body p-0">
                 <table class="table mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Ürün / Hammadde</th>
-                            <th class="text-center">Miktar</th>
-                            <th class="text-end">Birim Fiyat</th>
-                            <th class="text-end">Satır Maliyet</th>
-                            <th class="text-end">Maliyet Payı %</th>
+                            <th>@Localizer["Recipes_ProductRawMaterial"]</th>
+                            <th class="text-center">@Localizer["Common_Quantity"]</th>
+                            <th class="text-end">@Localizer["Common_UnitPrice"]</th>
+                            <th class="text-end">@Localizer["Recipes_LineCost"]</th>
+                            <th class="text-end">@Localizer["Recipes_CostShare"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -103,7 +103,7 @@
                     </tbody>
                     <tfoot class="table-light">
                         <tr>
-                            <td colspan="3" class="text-end fw-bold">Toplam Maliyet</td>
+                            <td colspan="3" class="text-end fw-bold">@Localizer["Recipes_TotalCostLabel"]</td>
                             <td class="text-end fw-bold fs-6">@Model.TotalCost.ToString("N2") ₺</td>
                             <td></td>
                         </tr>

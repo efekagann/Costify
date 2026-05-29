@@ -1,14 +1,14 @@
-@model IEnumerable<Costify.Domain.Entities.Vendor>
+﻿@model IEnumerable<Costify.Domain.Entities.Vendor>
 @{
-    ViewData["Title"] = "Tedarikçiler";
+    ViewData["Title"] = Localizer["Vendors_Title"].Value;
 }
 
 <div class="page-header">
     <div class="text-muted" style="font-size:.875rem">
-        <i class="bi bi-truck me-1"></i>@Model.Count() tedarikçi
+        <i class="bi bi-truck me-1"></i>@Model.Count() @Localizer["Vendors_Count"]
     </div>
     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#vendorModal">
-        <i class="bi bi-plus-lg me-1"></i>Yeni Tedarikçi
+        <i class="bi bi-plus-lg me-1"></i>@Localizer["Vendors_NewVendor"]
     </button>
 </div>
 
@@ -17,12 +17,12 @@
         <table class="table mb-0">
             <thead>
                 <tr>
-                    <th>Firma</th>
-                    <th>İletişim</th>
-                    <th>Telefon</th>
-                    <th>E-Posta</th>
-                    <th>Vergi No</th>
-                    <th>Durum</th>
+                    <th>@Localizer["Vendors_Company"]</th>
+                    <th>@Localizer["Vendors_Contact"]</th>
+                    <th>@Localizer["Common_Phone"]</th>
+                    <th>@Localizer["Common_Email"]</th>
+                    <th>@Localizer["Vendors_TaxNo"]</th>
+                    <th>@Localizer["Common_Status"]</th>
                     <th style="width:80px"></th>
                 </tr>
             </thead>
@@ -51,13 +51,13 @@
                         <td class="text-muted" style="font-size:.82rem">@(v.TaxNumber ?? "—")</td>
                         <td>
                             <span class="badge @(v.IsActive ? "bg-success-soft" : "bg-secondary-soft")">
-                                @(v.IsActive ? "Aktif" : "Pasif")
+                                @(v.IsActive ? Localizer["Common_Active"].Value : Localizer["Common_Inactive"].Value)
                             </span>
                         </td>
                         <td>
                             <div class="d-flex gap-1 justify-content-end">
                                 <a asp-action="Details" asp-route-id="@v.Id"
-                                   class="btn btn-sm btn-outline-secondary" title="Detay">
+                                   class="btn btn-sm btn-outline-secondary" title="@Localizer["Common_Detail"]">
                                     <i class="bi bi-eye"></i>
                                 </a>
                                 <button class="btn btn-sm btn-outline-secondary btn-edit-vendor"
@@ -82,8 +82,8 @@
                         <td colspan="7">
                             <div class="empty-state">
                                 <i class="bi bi-truck"></i>
-                                <div class="fw-medium">Henüz tedarikçi yok</div>
-                                <small>İlk tedarikçiyi ekleyin</small>
+                                <div class="fw-medium">@Localizer["Vendors_NoVendors"]</div>
+                                <small>@Localizer["Vendors_AddFirst"]</small>
                             </div>
                         </td>
                     </tr>
@@ -101,53 +101,53 @@
                 @Html.AntiForgeryToken()
                 <input type="hidden" id="v_Id" name="Id" value="0" />
                 <div class="modal-header">
-                    <h5 class="modal-title" id="vendorModalTitle">Yeni Tedarikçi</h5>
+                    <h5 class="modal-title" id="vendorModalTitle">@Localizer["Vendors_NewVendor"]</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="form-label">Firma Adı <span class="text-danger">*</span></label>
+                            <label class="form-label">@Localizer["Vendors_CompanyName"] <span class="text-danger">*</span></label>
                             <input type="text" name="Name" id="v_Name" class="form-control"
-                                   placeholder="Tedarikçi firma adı" required />
+                                   placeholder="@Localizer["Vendors_CompanyPlaceholder"]" required />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">İletişim Kişisi</label>
+                            <label class="form-label">@Localizer["Vendors_ContactPerson"]</label>
                             <input type="text" name="ContactPerson" id="v_ContactPerson"
-                                   class="form-control" placeholder="Ad Soyad" />
+                                   class="form-control" placeholder="@Localizer["Vendors_FullName"]" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Telefon</label>
+                            <label class="form-label">@Localizer["Common_Phone"]</label>
                             <input type="tel" name="Phone" id="v_Phone"
                                    class="form-control" placeholder="0212 555 00 00" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">E-Posta</label>
+                            <label class="form-label">@Localizer["Common_Email"]</label>
                             <input type="email" name="Email" id="v_Email"
                                    class="form-control" placeholder="info@firma.com" />
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Vergi Numarası</label>
+                            <label class="form-label">@Localizer["Vendors_TaxNumber"]</label>
                             <input type="text" name="TaxNumber" id="v_TaxNumber"
                                    class="form-control" placeholder="1234567890" />
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Adres</label>
+                            <label class="form-label">@Localizer["Common_Address"]</label>
                             <textarea name="Address" id="v_Address"
-                                      class="form-control" rows="2" placeholder="Firma adresi..."></textarea>
+                                      class="form-control" rows="2" placeholder="@Localizer["Vendors_AddressPlaceholder"]"></textarea>
                         </div>
                         <div class="col-12">
                             <div class="form-check form-switch">
                                 <input type="checkbox" name="IsActive" id="v_IsActive"
                                        class="form-check-input" value="true" checked />
-                                <label class="form-check-label" for="v_IsActive">Aktif</label>
+                                <label class="form-check-label" for="v_IsActive">@Localizer["Common_Active"]</label>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Kaydet</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@Localizer["Common_Cancel"]</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>@Localizer["Common_Save"]</button>
                 </div>
             </form>
         </div>
@@ -161,12 +161,18 @@
 
 @section Scripts {
 <script>
+const i18n = {
+    newVendor: '@Html.Raw(Localizer["Vendors_NewVendor"].Value.Replace("'", "\\'"))',
+    editVendor: '@Html.Raw(Localizer["Vendors_EditVendor"].Value.Replace("'", "\\'"))',
+    deleteConfirm: '@Html.Raw(Localizer["Vendors_DeleteConfirm"].Value.Replace("'", "\\'"))'
+};
+
 const vendorModal = document.getElementById('vendorModal');
 const vendorForm  = document.getElementById('vendorForm');
 
 vendorModal.addEventListener('show.bs.modal', function(e) {
     if (!e.relatedTarget?.classList.contains('btn-edit-vendor')) {
-        document.getElementById('vendorModalTitle').textContent = 'Yeni Tedarikçi';
+        document.getElementById('vendorModalTitle').textContent = i18n.newVendor;
         vendorForm.action = '@Url.Action("Create","Vendors")';
         vendorForm.reset();
         document.getElementById('v_Id').value = '0';
@@ -176,7 +182,7 @@ vendorModal.addEventListener('show.bs.modal', function(e) {
 
 document.querySelectorAll('.btn-edit-vendor').forEach(btn => {
     btn.addEventListener('click', function() {
-        document.getElementById('vendorModalTitle').textContent = 'Tedarikçi Düzenle';
+        document.getElementById('vendorModalTitle').textContent = i18n.editVendor;
         vendorForm.action = '@Url.Action("Edit","Vendors")/' + this.dataset.id;
         document.getElementById('v_Id').value           = this.dataset.id;
         document.getElementById('v_Name').value         = this.dataset.name || '';
@@ -191,7 +197,7 @@ document.querySelectorAll('.btn-edit-vendor').forEach(btn => {
 });
 
 function confirmDeleteVendor(id, name) {
-    if (confirm(`"${name}" tedarikçisini silmek istediğinize emin misiniz?`)) {
+    if (confirm(`"${name}" — ${i18n.deleteConfirm}`)) {
         document.getElementById('deleteVendorId').value = id;
         document.getElementById('deleteVendorForm').submit();
     }

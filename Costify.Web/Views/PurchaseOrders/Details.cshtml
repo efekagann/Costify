@@ -2,39 +2,39 @@
 @{
     ViewData["Title"] = Model.OrderNumber;
     var (badgeClass, statusLabel) = Model.Status switch {
-        Costify.Domain.Enums.OrderStatus.Received => ("success", "Teslim Alındı"),
-        Costify.Domain.Enums.OrderStatus.Ordered => ("primary", "Sipariş Verildi"),
-        Costify.Domain.Enums.OrderStatus.Cancelled => ("danger", "İptal"),
-        Costify.Domain.Enums.OrderStatus.PartiallyReceived => ("warning text-dark", "Kısmi Teslim"),
-        _ => ("secondary", "Taslak")
+        Costify.Domain.Enums.OrderStatus.Received          => ("success",             Localizer["Common_Received"].Value),
+        Costify.Domain.Enums.OrderStatus.Ordered           => ("primary",             Localizer["Common_Ordered"].Value),
+        Costify.Domain.Enums.OrderStatus.Cancelled         => ("danger",              Localizer["Common_Cancelled"].Value),
+        Costify.Domain.Enums.OrderStatus.PartiallyReceived => ("warning text-dark",   Localizer["Common_PartiallyReceived"].Value),
+        _                                                  => ("secondary",           Localizer["Common_Draft"].Value)
     };
 }
 
 <div class="row g-3">
     <div class="col-lg-4">
         <div class="card">
-            <div class="card-header">Sipariş Bilgileri</div>
+            <div class="card-header">@Localizer["PO_Info"]</div>
             <div class="card-body">
                 <dl class="row mb-0 small">
-                    <dt class="col-5 text-muted">Sipariş No</dt>
+                    <dt class="col-5 text-muted">@Localizer["Common_OrderNo"]</dt>
                     <dd class="col-7 fw-semibold">@Model.OrderNumber</dd>
 
-                    <dt class="col-5 text-muted">Tedarikçi</dt>
+                    <dt class="col-5 text-muted">@Localizer["Common_Vendor"]</dt>
                     <dd class="col-7">@Model.Vendor?.Name</dd>
 
-                    <dt class="col-5 text-muted">Sipariş Tarihi</dt>
+                    <dt class="col-5 text-muted">@Localizer["PO_OrderDate"]</dt>
                     <dd class="col-7">@Model.OrderDate.ToString("dd.MM.yyyy")</dd>
 
                     @if (Model.DeliveryDate.HasValue)
                     {
-                        <dt class="col-5 text-muted">Teslim Tarihi</dt>
+                        <dt class="col-5 text-muted">@Localizer["PO_DeliveryDate"]</dt>
                         <dd class="col-7">@Model.DeliveryDate.Value.ToString("dd.MM.yyyy")</dd>
                     }
 
-                    <dt class="col-5 text-muted">Durum</dt>
+                    <dt class="col-5 text-muted">@Localizer["Common_Status"]</dt>
                     <dd class="col-7"><span class="badge bg-@badgeClass">@statusLabel</span></dd>
 
-                    <dt class="col-5 text-muted">Toplam Tutar</dt>
+                    <dt class="col-5 text-muted">@Localizer["PO_TotalAmount"]</dt>
                     <dd class="col-7 fs-5 fw-bold">@Model.TotalAmount.ToString("N2") ₺</dd>
                 </dl>
 
@@ -50,29 +50,29 @@
                      Model.Status == Costify.Domain.Enums.OrderStatus.PartiallyReceived)
                 {
                     <form asp-action="Receive" asp-route-id="@Model.Id" method="post"
-                          onsubmit="return confirm('Sipariş teslim alındı olarak işaretlenecek ve stoklar güncellenecek. Onaylıyor musunuz?')">
+                          onsubmit="return confirm('@Html.Raw(Localizer["PO_ReceiveConfirm"].Value.Replace("'", "\\'"))')">
                         @Html.AntiForgeryToken()
                         <button type="submit" class="btn btn-sm btn-success">
-                            <i class="bi bi-check2-circle me-1"></i>Teslim Al
+                            <i class="bi bi-check2-circle me-1"></i>@Localizer["PO_Receive"]
                         </button>
                     </form>
                 }
-                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Geri</a>
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">@Localizer["Common_Back"]</a>
             </div>
         </div>
     </div>
 
     <div class="col-lg-8">
         <div class="card">
-            <div class="card-header">Sipariş Kalemleri</div>
+            <div class="card-header">@Localizer["PO_OrderItems"]</div>
             <div class="card-body p-0">
                 <table class="table mb-0">
                     <thead class="table-light">
                         <tr>
-                            <th>Ürün</th>
-                            <th class="text-end">Miktar</th>
-                            <th class="text-end">Birim Fiyat</th>
-                            <th class="text-end">Toplam</th>
+                            <th>@Localizer["Common_Product"]</th>
+                            <th class="text-end">@Localizer["Common_Quantity"]</th>
+                            <th class="text-end">@Localizer["Common_UnitPrice"]</th>
+                            <th class="text-end">@Localizer["Common_Total"]</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -91,7 +91,7 @@
                     </tbody>
                     <tfoot class="table-light">
                         <tr>
-                            <td colspan="3" class="text-end fw-bold">Genel Toplam</td>
+                            <td colspan="3" class="text-end fw-bold">@Localizer["Common_GrandTotal"]</td>
                             <td class="text-end fw-bold fs-5">@Model.TotalAmount.ToString("N2") ₺</td>
                         </tr>
                     </tfoot>

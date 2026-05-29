@@ -1,14 +1,14 @@
 @model IEnumerable<Costify.Domain.Entities.StockCount>
 @{
-    ViewData["Title"] = "Stok Sayımı";
+    ViewData["Title"] = Localizer["SC_Title"].Value;
 }
 
 <div class="page-header">
     <div class="text-muted" style="font-size:.875rem">
-        <i class="bi bi-clipboard-check me-1"></i>@Model.Count() sayım
+        <i class="bi bi-clipboard-check me-1"></i>@Model.Count() @Localizer["SC_Count"]
     </div>
     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#newCountModal">
-        <i class="bi bi-plus-lg me-1"></i>Yeni Sayım Başlat
+        <i class="bi bi-plus-lg me-1"></i>@Localizer["SC_StartNew"]
     </button>
 </div>
 
@@ -17,11 +17,11 @@
         <table class="table mb-0">
             <thead>
                 <tr>
-                    <th>Tarih</th>
-                    <th class="text-center">Ürün Sayısı</th>
-                    <th class="text-center">Fark Var</th>
-                    <th>Not</th>
-                    <th>Durum</th>
+                    <th>@Localizer["Common_Date"]</th>
+                    <th class="text-center">@Localizer["Common_ProductCount"]</th>
+                    <th class="text-center">@Localizer["SC_HasDifference"]</th>
+                    <th>@Localizer["Common_Note"]</th>
+                    <th>@Localizer["Common_Status"]</th>
                     <th style="width:60px"></th>
                 </tr>
             </thead>
@@ -35,27 +35,27 @@
                         <td class="text-center">
                             @if (diffCount > 0)
                             {
-                                <span class="badge bg-warning-soft text-warning">@diffCount ürün</span>
+                                <span class="badge bg-warning-soft text-warning">@diffCount @Localizer["SC_Products"]</span>
                             }
                             else
                             {
-                                <span class="badge bg-success-soft text-success">Fark yok</span>
+                                <span class="badge bg-success-soft text-success">@Localizer["SC_NoDifference"]</span>
                             }
                         </td>
                         <td class="text-muted" style="font-size:.85rem">@(sc.Notes ?? "—")</td>
                         <td>
                             @if (sc.Status == Costify.Domain.Enums.StockCountStatus.Completed)
                             {
-                                <span class="badge bg-success-soft"><i class="bi bi-check-circle-fill me-1"></i>Tamamlandı</span>
+                                <span class="badge bg-success-soft"><i class="bi bi-check-circle-fill me-1"></i>@Localizer["SC_Completed"]</span>
                             }
                             else
                             {
-                                <span class="badge bg-info-soft"><i class="bi bi-hourglass-split me-1"></i>Devam Ediyor</span>
+                                <span class="badge bg-info-soft"><i class="bi bi-hourglass-split me-1"></i>@Localizer["SC_InProgress"]</span>
                             }
                         </td>
                         <td>
                             <a asp-action="Details" asp-route-id="@sc.Id"
-                               class="btn btn-sm btn-outline-secondary" title="Aç">
+                               class="btn btn-sm btn-outline-secondary" title="@Localizer["Common_Detail"]">
                                 <i class="bi bi-eye"></i>
                             </a>
                         </td>
@@ -67,8 +67,8 @@
                         <td colspan="6">
                             <div class="empty-state">
                                 <i class="bi bi-clipboard-check"></i>
-                                <div class="fw-medium">Henüz stok sayımı yok</div>
-                                <small>İlk sayımı başlatın, fiili stokları sisteme girin</small>
+                                <div class="fw-medium">@Localizer["SC_NoStockCounts"]</div>
+                                <small>@Localizer["SC_CreateFirst"]</small>
                             </div>
                         </td>
                     </tr>
@@ -78,27 +78,27 @@
     </div>
 </div>
 
-<!-- Yeni Sayım Modal -->
+<!-- New Count Modal -->
 <div class="modal fade" id="newCountModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <form asp-action="Create" method="post">
                 @Html.AntiForgeryToken()
                 <div class="modal-header">
-                    <h5 class="modal-title"><i class="bi bi-clipboard-plus me-2"></i>Yeni Stok Sayımı</h5>
+                    <h5 class="modal-title"><i class="bi bi-clipboard-plus me-2"></i>@Localizer["SC_NewStockCount"]</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="text-muted small">Sayım başlatıldığında sistemdeki mevcut stok miktarları teorik değer olarak kaydedilir. Ardından gerçek sayım değerlerini girersiniz.</p>
+                    <p class="text-muted small">@Localizer["SC_StartInfo"]</p>
                     <div class="mb-3">
-                        <label class="form-label">Not (opsiyonel)</label>
-                        <input type="text" name="notes" class="form-control" placeholder="Ocak ayı sayımı..." />
+                        <label class="form-label">@Localizer["SC_NoteOptional"]</label>
+                        <input type="text" name="notes" class="form-control" placeholder="@Localizer["SC_NotePlaceholder"]" />
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@Localizer["Common_Cancel"]</button>
                     <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-play-circle me-1"></i>Sayım Başlat
+                        <i class="bi bi-play-circle me-1"></i>@Localizer["SC_Start"]
                     </button>
                 </div>
             </form>

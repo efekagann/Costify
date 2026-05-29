@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="xml:space" use="optional" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Common -->
+  <data name="Common_Save" xml:space="preserve"><value>Kaydet</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>İptal</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>Düzenle</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>Sil</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>Geri</value></data>
+  <data name="Common_Update" xml:space="preserve"><value>Güncelle</value></data>
+  <data name="Common_Active" xml:space="preserve"><value>Aktif</value></data>
+  <data name="Common_Inactive" xml:space="preserve"><value>Pasif</value></data>
+  <data name="Common_Status" xml:space="preserve"><value>Durum</value></data>
+  <data name="Common_Date" xml:space="preserve"><value>Tarih</value></data>
+  <data name="Common_Product" xml:space="preserve"><value>Ürün</value></data>
+  <data name="Common_Category" xml:space="preserve"><value>Kategori</value></data>
+  <data name="Common_Unit" xml:space="preserve"><value>Birim</value></data>
+  <data name="Common_Quantity" xml:space="preserve"><value>Miktar</value></data>
+  <data name="Common_Total" xml:space="preserve"><value>Toplam</value></data>
+  <data name="Common_Price" xml:space="preserve"><value>Fiyat</value></data>
+  <data name="Common_Description" xml:space="preserve"><value>Açıklama</value></data>
+  <data name="Common_Name" xml:space="preserve"><value>Ad</value></data>
+  <data name="Common_NoData" xml:space="preserve"><value>Veri yok</value></data>
+  <data name="Common_Detail" xml:space="preserve"><value>Detay</value></data>
+  <data name="Common_ViewAll" xml:space="preserve"><value>Tümünü Gör</value></data>
+  <data name="Common_Search" xml:space="preserve"><value>Ara</value></data>
+  <data name="Common_Clear" xml:space="preserve"><value>Temizle</value></data>
+  <data name="Common_Note" xml:space="preserve"><value>Not</value></data>
+  <data name="Common_Address" xml:space="preserve"><value>Adres</value></data>
+  <data name="Common_Phone" xml:space="preserve"><value>Telefon</value></data>
+  <data name="Common_Email" xml:space="preserve"><value>E-Posta</value></data>
+  <data name="Common_GrandTotal" xml:space="preserve"><value>Genel Toplam</value></data>
+  <data name="Common_UnitPrice" xml:space="preserve"><value>Birim Fiyat</value></data>
+  <data name="Common_Received" xml:space="preserve"><value>Teslim Alındı</value></data>
+  <data name="Common_Ordered" xml:space="preserve"><value>Sipariş Verildi</value></data>
+  <data name="Common_Cancelled" xml:space="preserve"><value>İptal</value></data>
+  <data name="Common_PartiallyReceived" xml:space="preserve"><value>Kısmi Teslim</value></data>
+  <data name="Common_Draft" xml:space="preserve"><value>Taslak</value></data>
+  <data name="Common_OrderNo" xml:space="preserve"><value>Sipariş No</value></data>
+  <data name="Common_Vendor" xml:space="preserve"><value>Tedarikçi</value></data>
+  <data name="Common_Loading" xml:space="preserve"><value>Yükleniyor...</value></data>
+  <data name="Common_Symbol" xml:space="preserve"><value>Sembol</value></data>
+  <data name="Common_ProductCount" xml:space="preserve"><value>Ürün Sayısı</value></data>
+  <data name="Common_Color" xml:space="preserve"><value>Renk</value></data>
+  <data name="Common_Optional" xml:space="preserve"><value>Opsiyonel...</value></data>
+  <data name="Common_SelectOption" xml:space="preserve"><value>— Seçiniz —</value></data>
+  <data name="Common_Amount" xml:space="preserve"><value>Tutar</value></data>
+
+  <!-- Navigation -->
+  <data name="Nav_CafeRestaurant" xml:space="preserve"><value>Kafe &amp; Restoran</value></data>
+  <data name="Nav_Menu" xml:space="preserve"><value>MENÜ</value></data>
+  <data name="Nav_Overview" xml:space="preserve"><value>Genel Bakış</value></data>
+  <data name="Nav_ProductsStock" xml:space="preserve"><value>Ürünler &amp; Stok</value></data>
+  <data name="Nav_Vendors" xml:space="preserve"><value>Tedarikçiler</value></data>
+  <data name="Nav_Purchase" xml:space="preserve"><value>Satın Alma</value></data>
+  <data name="Nav_Definitions" xml:space="preserve"><value>TANIMLAR</value></data>
+  <data name="Nav_CategoriesUnits" xml:space="preserve"><value>Kategoriler &amp; Birimler</value></data>
+  <data name="Nav_Operation" xml:space="preserve"><value>OPERASYON</value></data>
+  <data name="Nav_Recipes" xml:space="preserve"><value>Reçeteler</value></data>
+  <data name="Nav_StockCount" xml:space="preserve"><value>Stok Sayımı</value></data>
+  <data name="Nav_Analysis" xml:space="preserve"><value>ANALİZ</value></data>
+  <data name="Nav_Reports" xml:space="preserve"><value>Raporlar</value></data>
+  <data name="Nav_Admin" xml:space="preserve"><value>Yönetici</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>Çıkış Yap</value></data>
+  <data name="Nav_DemoCafe" xml:space="preserve"><value>Demo Kafe</value></data>
+
+  <!-- Login -->
+  <data name="Login_Title" xml:space="preserve"><value>Giriş Yap</value></data>
+  <data name="Login_Subtitle" xml:space="preserve"><value>Kafe &amp; Restoran Maliyet Yönetimi</value></data>
+  <data name="Login_Username" xml:space="preserve"><value>Kullanıcı Adı</value></data>
+  <data name="Login_Password" xml:space="preserve"><value>Şifre</value></data>
+  <data name="Login_Submit" xml:space="preserve"><value>Giriş Yap</value></data>
+  <data name="Login_SecureNote" xml:space="preserve"><value>Güvenli bağlantı — yalnızca yetkili erişim</value></data>
+
+  <!-- Dashboard -->
+  <data name="Dashboard_Title" xml:space="preserve"><value>Genel Bakış</value></data>
+  <data name="Dashboard_TotalProducts" xml:space="preserve"><value>Toplam Ürün</value></data>
+  <data name="Dashboard_CriticalStock" xml:space="preserve"><value>Kritik Stok</value></data>
+  <data name="Dashboard_UrgentOrder" xml:space="preserve"><value>Acil sipariş gerekli</value></data>
+  <data name="Dashboard_Vendors" xml:space="preserve"><value>Tedarikçiler</value></data>
+  <data name="Dashboard_MonthlySpend" xml:space="preserve"><value>Bu Ay Harcama</value></data>
+  <data name="Dashboard_CriticalStockAlerts" xml:space="preserve"><value>Kritik Stok Uyarıları</value></data>
+  <data name="Dashboard_RecentOrders" xml:space="preserve"><value>Son Siparişler</value></data>
+  <data name="Dashboard_NewOrder" xml:space="preserve"><value>Yeni Sipariş</value></data>
+  <data name="Dashboard_NoOrders" xml:space="preserve"><value>Henüz sipariş yok</value></data>
+  <data name="Dashboard_CreateFirstOrder" xml:space="preserve"><value>İlk satın alma siparişini oluşturun</value></data>
+
+  <!-- Products -->
+  <data name="Products_Title" xml:space="preserve"><value>Ürünler &amp; Stok</value></data>
+  <data name="Products_SearchPlaceholder" xml:space="preserve"><value>Ürün adı veya SKU...</value></data>
+  <data name="Products_AllCategories" xml:space="preserve"><value>Tüm Kategoriler</value></data>
+  <data name="Products_NewProduct" xml:space="preserve"><value>Yeni Ürün</value></data>
+  <data name="Products_MinStock" xml:space="preserve"><value>Min. Stok</value></data>
+  <data name="Products_LastPrice" xml:space="preserve"><value>Son Fiyat</value></data>
+  <data name="Products_NotFound" xml:space="preserve"><value>Ürün bulunamadı</value></data>
+  <data name="Products_NotFoundHint" xml:space="preserve"><value>Arama kriterlerini değiştirin veya yeni ürün ekleyin</value></data>
+  <data name="Products_EditProduct" xml:space="preserve"><value>Ürün Düzenle</value></data>
+  <data name="Products_ProductName" xml:space="preserve"><value>Ürün Adı</value></data>
+  <data name="Products_CurrentStock" xml:space="preserve"><value>Mevcut Stok</value></data>
+  <data name="Products_MinStockThreshold" xml:space="preserve"><value>Min. Stok Uyarı Sınırı</value></data>
+  <data name="Products_MinStockHint" xml:space="preserve"><value>Bu değerin altına düşünce uyarı verilir</value></data>
+  <data name="Products_LastPurchasePrice" xml:space="preserve"><value>Son Alış Fiyatı</value></data>
+  <data name="Products_OptionalNotes" xml:space="preserve"><value>Opsiyonel notlar...</value></data>
+  <data name="Products_ProductInfo" xml:space="preserve"><value>Ürün Bilgileri</value></data>
+  <data name="Products_StockMovements" xml:space="preserve"><value>Son Stok Hareketleri</value></data>
+  <data name="Products_NoMovements" xml:space="preserve"><value>Henüz hareket yok.</value></data>
+  <data name="Products_Type" xml:space="preserve"><value>Tür</value></data>
+  <data name="Products_UnitCost" xml:space="preserve"><value>Birim Maliyet</value></data>
+  <data name="Products_Purchase" xml:space="preserve"><value>Satın Alma</value></data>
+  <data name="Products_Usage" xml:space="preserve"><value>Kullanım</value></data>
+  <data name="Products_Waste" xml:space="preserve"><value>Fire</value></data>
+  <data name="Products_Adjustment" xml:space="preserve"><value>Düzeltme</value></data>
+  <data name="Products_Return" xml:space="preserve"><value>İade</value></data>
+  <data name="Products_DeleteConfirm" xml:space="preserve"><value>ürününü silmek istediğinize emin misiniz?</value></data>
+  <data name="Products_Stock" xml:space="preserve"><value>Stok</value></data>
+  <data name="Products_NewProductTitle" xml:space="preserve"><value>Yeni Ürün Ekle</value></data>
+  <data name="Products_EditTitle" xml:space="preserve"><value>Ürün Düzenle</value></data>
+
+  <!-- Vendors -->
+  <data name="Vendors_Title" xml:space="preserve"><value>Tedarikçiler</value></data>
+  <data name="Vendors_NewVendor" xml:space="preserve"><value>Yeni Tedarikçi</value></data>
+  <data name="Vendors_Company" xml:space="preserve"><value>Firma</value></data>
+  <data name="Vendors_Contact" xml:space="preserve"><value>İletişim</value></data>
+  <data name="Vendors_TaxNo" xml:space="preserve"><value>Vergi No</value></data>
+  <data name="Vendors_NoVendors" xml:space="preserve"><value>Henüz tedarikçi yok</value></data>
+  <data name="Vendors_AddFirst" xml:space="preserve"><value>İlk tedarikçiyi ekleyin</value></data>
+  <data name="Vendors_EditVendor" xml:space="preserve"><value>Tedarikçi Düzenle</value></data>
+  <data name="Vendors_CompanyName" xml:space="preserve"><value>Firma Adı</value></data>
+  <data name="Vendors_CompanyPlaceholder" xml:space="preserve"><value>Tedarikçi firma adı</value></data>
+  <data name="Vendors_ContactPerson" xml:space="preserve"><value>İletişim Kişisi</value></data>
+  <data name="Vendors_FullName" xml:space="preserve"><value>Ad Soyad</value></data>
+  <data name="Vendors_AddressPlaceholder" xml:space="preserve"><value>Firma adresi...</value></data>
+  <data name="Vendors_TaxNumber" xml:space="preserve"><value>Vergi Numarası</value></data>
+  <data name="Vendors_DeleteConfirm" xml:space="preserve"><value>tedarikçisini silmek istediğinize emin misiniz?</value></data>
+  <data name="Vendors_Info" xml:space="preserve"><value>Tedarikçi Bilgileri</value></data>
+  <data name="Vendors_TotalOrders" xml:space="preserve"><value>Toplam Sipariş</value></data>
+  <data name="Vendors_TotalSpend" xml:space="preserve"><value>Toplam Harcama</value></data>
+  <data name="Vendors_NoOrders" xml:space="preserve"><value>Sipariş yok</value></data>
+  <data name="Vendors_ProductPriceHistory" xml:space="preserve"><value>Ürün Fiyat Geçmişi</value></data>
+  <data name="Vendors_Change" xml:space="preserve"><value>Değişim</value></data>
+  <data name="Vendors_Other" xml:space="preserve"><value>Diğer</value></data>
+  <data name="Vendors_RecentOrders" xml:space="preserve"><value>Son Siparişler</value></data>
+  <data name="Vendors_Count" xml:space="preserve"><value>tedarikçi</value></data>
+
+  <!-- PurchaseOrders -->
+  <data name="PO_Title" xml:space="preserve"><value>Satın Alma Siparişleri</value></data>
+  <data name="PO_NewOrder" xml:space="preserve"><value>Yeni Sipariş</value></data>
+  <data name="PO_OrderDate" xml:space="preserve"><value>Sipariş Tarihi</value></data>
+  <data name="PO_Items" xml:space="preserve"><value>Kalem</value></data>
+  <data name="PO_NoOrders" xml:space="preserve"><value>Henüz sipariş yok</value></data>
+  <data name="PO_CreateFirst" xml:space="preserve"><value>İlk satın alma siparişini oluşturun</value></data>
+  <data name="PO_NewPurchaseOrder" xml:space="preserve"><value>Yeni Satın Alma Siparişi</value></data>
+  <data name="PO_SelectVendor" xml:space="preserve"><value>— Tedarikçi seçin —</value></data>
+  <data name="PO_ExpectedDelivery" xml:space="preserve"><value>Beklenen Teslim</value></data>
+  <data name="PO_NoteOptional" xml:space="preserve"><value>Opsiyonel sipariş notu...</value></data>
+  <data name="PO_OrderItems" xml:space="preserve"><value>Sipariş Kalemleri</value></data>
+  <data name="PO_AddProduct" xml:space="preserve"><value>Ürün Ekle</value></data>
+  <data name="PO_AddProductHint" xml:space="preserve"><value>Ürün eklemek için yukarıdaki butonu kullanın</value></data>
+  <data name="PO_GrandTotalLabel" xml:space="preserve"><value>Genel Toplam:</value></data>
+  <data name="PO_CreateOrder" xml:space="preserve"><value>Siparişi Oluştur</value></data>
+  <data name="PO_Info" xml:space="preserve"><value>Sipariş Bilgileri</value></data>
+  <data name="PO_DeliveryDate" xml:space="preserve"><value>Teslim Tarihi</value></data>
+  <data name="PO_TotalAmount" xml:space="preserve"><value>Toplam Tutar</value></data>
+  <data name="PO_Receive" xml:space="preserve"><value>Teslim Al</value></data>
+  <data name="PO_ReceiveConfirm" xml:space="preserve"><value>Sipariş teslim alındı olarak işaretlenecek ve stoklar güncellenecek. Onaylıyor musunuz?</value></data>
+  <data name="PO_NoProductsAdded" xml:space="preserve"><value>Henüz ürün eklenmedi.</value></data>
+  <data name="PO_SelectProduct" xml:space="preserve"><value>— Ürün seç —</value></data>
+  <data name="PO_UnitPriceLabel" xml:space="preserve"><value>Birim Fiyat (₺)</value></data>
+  <data name="PO_Notes" xml:space="preserve"><value>Notlar</value></data>
+  <data name="PO_Count" xml:space="preserve"><value>sipariş</value></data>
+
+  <!-- Definitions -->
+  <data name="Def_Title" xml:space="preserve"><value>Tanımlar</value></data>
+  <data name="Def_Subtitle" xml:space="preserve"><value>Kategori ve birim tanımları</value></data>
+  <data name="Def_Categories" xml:space="preserve"><value>Kategoriler</value></data>
+  <data name="Def_Units" xml:space="preserve"><value>Birimler</value></data>
+  <data name="Def_ProductCategories" xml:space="preserve"><value>Ürün Kategorileri</value></data>
+  <data name="Def_NewCategory" xml:space="preserve"><value>Yeni Kategori</value></data>
+  <data name="Def_NoCategories" xml:space="preserve"><value>Henüz kategori yok</value></data>
+  <data name="Def_UnitsOfMeasurement" xml:space="preserve"><value>Ölçü Birimleri</value></data>
+  <data name="Def_NewUnit" xml:space="preserve"><value>Yeni Birim</value></data>
+  <data name="Def_NoUnits" xml:space="preserve"><value>Henüz birim yok</value></data>
+  <data name="Def_EditCategory" xml:space="preserve"><value>Kategori Düzenle</value></data>
+  <data name="Def_EditUnit" xml:space="preserve"><value>Birim Düzenle</value></data>
+  <data name="Def_CategoryName" xml:space="preserve"><value>Kategori Adı</value></data>
+  <data name="Def_UnitName" xml:space="preserve"><value>Birim Adı</value></data>
+  <data name="Def_SymbolHint" xml:space="preserve"><value>Ürün kartlarında ve raporlarda görünür</value></data>
+  <data name="Def_DeleteCategoryConfirm" xml:space="preserve"><value>kategorisini silmek istediğinize emin misiniz?</value></data>
+  <data name="Def_DeleteUnitConfirm" xml:space="preserve"><value>birimini silmek istediğinize emin misiniz?</value></data>
+
+  <!-- Recipes -->
+  <data name="Recipes_Title" xml:space="preserve"><value>Reçeteler</value></data>
+  <data name="Recipes_NewRecipe" xml:space="preserve"><value>Yeni Reçete</value></data>
+  <data name="Recipes_IngredientCost" xml:space="preserve"><value>Malzeme Maliyeti</value></data>
+  <data name="Recipes_SellingPrice" xml:space="preserve"><value>Satış Fiyatı</value></data>
+  <data name="Recipes_FoodCostPct" xml:space="preserve"><value>Gıda Maliyet %</value></data>
+  <data name="Recipes_Ingredients" xml:space="preserve"><value>Malzeme</value></data>
+  <data name="Recipes_NoRecipes" xml:space="preserve"><value>Henüz reçete yok</value></data>
+  <data name="Recipes_CreateFirst" xml:space="preserve"><value>İlk reçeteyi oluşturun ve maliyetleri hesaplayın</value></data>
+  <data name="Recipes_DeleteConfirm" xml:space="preserve"><value>reçetesini silmek istediğinize emin misiniz?</value></data>
+  <data name="Recipes_EditRecipe" xml:space="preserve"><value>Reçete Düzenle</value></data>
+  <data name="Recipes_RecipeName" xml:space="preserve"><value>Reçete Adı</value></data>
+  <data name="Recipes_SellingPriceLabel" xml:space="preserve"><value>Satış Fiyatı (₺)</value></data>
+  <data name="Recipes_EstimatedFoodCost" xml:space="preserve"><value>Tahmini Gıda Maliyet %</value></data>
+  <data name="Recipes_AddIngredient" xml:space="preserve"><value>Malzeme Ekle</value></data>
+  <data name="Recipes_ProductRawMaterial" xml:space="preserve"><value>Ürün / Hammadde</value></data>
+  <data name="Recipes_LineCost" xml:space="preserve"><value>Satır Maliyet</value></data>
+  <data name="Recipes_AddIngredientHint" xml:space="preserve"><value>Malzeme eklemek için yukarıdaki butonu kullanın</value></data>
+  <data name="Recipes_TotalCostColon" xml:space="preserve"><value>Toplam Maliyet:</value></data>
+  <data name="Recipes_Info" xml:space="preserve"><value>Reçete Bilgileri</value></data>
+  <data name="Recipes_GrossProfit" xml:space="preserve"><value>Brüt Kâr</value></data>
+  <data name="Recipes_FoodCostPercentage" xml:space="preserve"><value>Gıda Maliyet Yüzdesi</value></data>
+  <data name="Recipes_Ideal" xml:space="preserve"><value>İdeal</value></data>
+  <data name="Recipes_Moderate" xml:space="preserve"><value>Orta</value></data>
+  <data name="Recipes_High" xml:space="preserve"><value>Yüksek</value></data>
+  <data name="Recipes_TargetExcellent" xml:space="preserve"><value>Hedef: %25 altı — mükemmel</value></data>
+  <data name="Recipes_TargetBring" xml:space="preserve"><value>Hedef: %25 altına çekin</value></data>
+  <data name="Recipes_ReduceCost" xml:space="preserve"><value>Fiyatı artırın veya maliyeti düşürün</value></data>
+  <data name="Recipes_IngredientList" xml:space="preserve"><value>Malzeme Listesi</value></data>
+  <data name="Recipes_CostShare" xml:space="preserve"><value>Maliyet Payı %</value></data>
+  <data name="Recipes_TotalCostLabel" xml:space="preserve"><value>Toplam Maliyet</value></data>
+  <data name="Recipes_SelectProduct" xml:space="preserve"><value>— Ürün seçin —</value></data>
+  <data name="Recipes_Count" xml:space="preserve"><value>reçete</value></data>
+  <data name="Recipes_Uncategorized" xml:space="preserve"><value>Kategorisiz</value></data>
+
+  <!-- StockCounts -->
+  <data name="SC_Title" xml:space="preserve"><value>Stok Sayımı</value></data>
+  <data name="SC_StartNew" xml:space="preserve"><value>Yeni Sayım Başlat</value></data>
+  <data name="SC_HasDifference" xml:space="preserve"><value>Fark Var</value></data>
+  <data name="SC_NoDifference" xml:space="preserve"><value>Fark yok</value></data>
+  <data name="SC_Completed" xml:space="preserve"><value>Tamamlandı</value></data>
+  <data name="SC_InProgress" xml:space="preserve"><value>Devam Ediyor</value></data>
+  <data name="SC_NoStockCounts" xml:space="preserve"><value>Henüz stok sayımı yok</value></data>
+  <data name="SC_CreateFirst" xml:space="preserve"><value>İlk sayımı başlatın, fiili stokları sisteme girin</value></data>
+  <data name="SC_NewStockCount" xml:space="preserve"><value>Yeni Stok Sayımı</value></data>
+  <data name="SC_StartInfo" xml:space="preserve"><value>Sayım başlatıldığında sistemdeki mevcut stok miktarları teorik değer olarak kaydedilir. Ardından gerçek sayım değerlerini girersiniz.</value></data>
+  <data name="SC_NoteOptional" xml:space="preserve"><value>Not (opsiyonel)</value></data>
+  <data name="SC_NotePlaceholder" xml:space="preserve"><value>Ocak ayı sayımı...</value></data>
+  <data name="SC_Start" xml:space="preserve"><value>Sayım Başlat</value></data>
+  <data name="SC_ApproveApply" xml:space="preserve"><value>Sayımı Onayla &amp; Uygula</value></data>
+  <data name="SC_DiffAlertSuffix" xml:space="preserve"><value>ürün için fark tespit edildi. Onayladığınızda bu ürünlerin stokları düzeltilecek.</value></data>
+  <data name="SC_CountList" xml:space="preserve"><value>Sayım Listesi</value></data>
+  <data name="SC_SaveValues" xml:space="preserve"><value>Değerleri Kaydet</value></data>
+  <data name="SC_SystemStock" xml:space="preserve"><value>Sistem Stoğu</value></data>
+  <data name="SC_CountedQuantity" xml:space="preserve"><value>Sayılan Miktar</value></data>
+  <data name="SC_Difference" xml:space="preserve"><value>Fark</value></data>
+  <data name="SC_DiffValue" xml:space="preserve"><value>Fark Değeri</value></data>
+  <data name="SC_FinalizeConfirm" xml:space="preserve"><value>Sayım onaylandığında stoklar güncellenecek ve fark kayıtları oluşturulacak. Onaylıyor musunuz?</value></data>
+  <data name="SC_Count" xml:space="preserve"><value>sayım</value></data>
+  <data name="SC_Products" xml:space="preserve"><value>ürün</value></data>
+
+  <!-- Reports -->
+  <data name="Reports_Title" xml:space="preserve"><value>Raporlar</value></data>
+  <data name="Reports_TotalPurchases" xml:space="preserve"><value>Toplam Satın Alma (6 ay)</value></data>
+  <data name="Reports_StockValue" xml:space="preserve"><value>Stok Değeri</value></data>
+  <data name="Reports_ActiveRecipes" xml:space="preserve"><value>Aktif Reçete</value></data>
+  <data name="Reports_AvgFoodCost" xml:space="preserve"><value>Ort. Gıda Maliyet %</value></data>
+  <data name="Reports_DownloadExcel" xml:space="preserve"><value>Raporları İndir (Excel)</value></data>
+  <data name="Reports_ExcelHint" xml:space="preserve"><value>Excel (.xlsx) — doğrudan açılır</value></data>
+  <data name="Reports_PurchaseReport" xml:space="preserve"><value>Satın Alma Raporu</value></data>
+  <data name="Reports_Daily" xml:space="preserve"><value>Günlük</value></data>
+  <data name="Reports_Weekly" xml:space="preserve"><value>Haftalık</value></data>
+  <data name="Reports_Monthly" xml:space="preserve"><value>Aylık</value></data>
+  <data name="Reports_Yearly" xml:space="preserve"><value>Yıllık</value></data>
+  <data name="Reports_StockReport" xml:space="preserve"><value>Stok Raporu</value></data>
+  <data name="Reports_StockStatus" xml:space="preserve"><value>Stok Durumu</value></data>
+  <data name="Reports_StockHint" xml:space="preserve"><value>Anlık stok ve değer bilgisi</value></data>
+  <data name="Reports_RecipeCostReport" xml:space="preserve"><value>Reçete Maliyet Raporu</value></data>
+  <data name="Reports_AllRecipes" xml:space="preserve"><value>Tüm Reçeteler</value></data>
+  <data name="Reports_RecipeHint" xml:space="preserve"><value>Malzeme ve gıda maliyet analizi</value></data>
+  <data name="Reports_MonthlyPurchases" xml:space="preserve"><value>Aylık Satın Alma (Son 6 Ay)</value></data>
+  <data name="Reports_VendorSpend" xml:space="preserve"><value>Tedarikçi Bazlı Harcama</value></data>
+  <data name="Reports_StockByCategory" xml:space="preserve"><value>Stok Değeri (Kategoriye Göre)</value></data>
+  <data name="Reports_Value" xml:space="preserve"><value>Değer</value></data>
+  <data name="Reports_Share" xml:space="preserve"><value>Pay</value></data>
+  <data name="Reports_RecipeCostAnalysis" xml:space="preserve"><value>Reçete Gıda Maliyet Analizi</value></data>
+  <data name="Reports_Cost" xml:space="preserve"><value>Maliyet</value></data>
+  <data name="Reports_GMPct" xml:space="preserve"><value>G.M.%</value></data>
+  <data name="Reports_NoRecipes" xml:space="preserve"><value>Reçete yok — önce reçete oluşturun</value></data>
+  <data name="Reports_Months" xml:space="preserve"><value>Oca,Şub,Mar,Nis,May,Haz,Tem,Ağu,Eyl,Eki,Kas,Ara</value></data>
+</root>

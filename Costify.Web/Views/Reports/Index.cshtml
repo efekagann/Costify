@@ -1,11 +1,11 @@
 @model Costify.Web.ViewModels.ReportViewModel
 @{
-    ViewData["Title"] = "Raporlar";
+    ViewData["Title"] = Localizer["Reports_Title"].Value;
     var maxMonthly = Model.MonthlySpends.Count > 0 ? Model.MonthlySpends.Max(r => r.Amount) : 1;
-    string[] months = ["Oca","Şub","Mar","Nis","May","Haz","Tem","Ağu","Eyl","Eki","Kas","Ara"];
+    string[] months = Localizer["Reports_Months"].Value.Split(',');
 }
 
-<!-- KPI Özet -->
+<!-- KPI Summary -->
 <div class="row g-3 mb-4">
     <div class="col-md-3">
         <div class="stat-card">
@@ -13,7 +13,7 @@
                 <i class="bi bi-cart-check"></i>
             </div>
             <div class="stat-value">@Model.TotalSpend.ToString("N0") ₺</div>
-            <div class="stat-label">Toplam Satın Alma (6 ay)</div>
+            <div class="stat-label">@Localizer["Reports_TotalPurchases"]</div>
         </div>
     </div>
     <div class="col-md-3">
@@ -22,7 +22,7 @@
                 <i class="bi bi-boxes"></i>
             </div>
             <div class="stat-value">@Model.TotalInventoryValue.ToString("N0") ₺</div>
-            <div class="stat-label">Stok Değeri</div>
+            <div class="stat-label">@Localizer["Reports_StockValue"]</div>
         </div>
     </div>
     <div class="col-md-3">
@@ -31,7 +31,7 @@
                 <i class="bi bi-clipboard-data"></i>
             </div>
             <div class="stat-value">@Model.RecipeCount</div>
-            <div class="stat-label">Aktif Reçete</div>
+            <div class="stat-label">@Localizer["Reports_ActiveRecipes"]</div>
         </div>
     </div>
     <div class="col-md-3">
@@ -40,46 +40,46 @@
                 <i class="bi bi-percent"></i>
             </div>
             <div class="stat-value">%@Model.AvgFoodCostPct.ToString("N1")</div>
-            <div class="stat-label">Ort. Gıda Maliyet %</div>
+            <div class="stat-label">@Localizer["Reports_AvgFoodCost"]</div>
         </div>
     </div>
 </div>
 
-<!-- İndir butonları -->
+<!-- Download buttons -->
 <div class="card mb-4">
     <div class="card-header d-flex justify-content-between align-items-center">
-        <span><i class="bi bi-download me-2"></i>Raporları İndir (Excel)</span>
-        <span class="text-muted small">Excel (.xlsx) — doğrudan açılır</span>
+        <span><i class="bi bi-download me-2"></i>@Localizer["Reports_DownloadExcel"]</span>
+        <span class="text-muted small">@Localizer["Reports_ExcelHint"]</span>
     </div>
     <div class="card-body">
         <div class="row g-3">
             <div class="col-md-4">
                 <div class="p-3 rounded-3" style="background:#f8fafc;border:1px solid var(--border)">
-                    <div class="fw-semibold mb-2"><i class="bi bi-cart-check me-2 text-primary"></i>Satın Alma Raporu</div>
+                    <div class="fw-semibold mb-2"><i class="bi bi-cart-check me-2 text-primary"></i>@Localizer["Reports_PurchaseReport"]</div>
                     <div class="d-flex flex-wrap gap-2">
-                        <a asp-action="Export" asp-route-period="daily"   class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-day me-1"></i>Günlük</a>
-                        <a asp-action="Export" asp-route-period="weekly"  class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-week me-1"></i>Haftalık</a>
-                        <a asp-action="Export" asp-route-period="monthly" class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-month me-1"></i>Aylık</a>
-                        <a asp-action="Export" asp-route-period="yearly"  class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-range me-1"></i>Yıllık</a>
+                        <a asp-action="Export" asp-route-period="daily"   class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-day me-1"></i>@Localizer["Reports_Daily"]</a>
+                        <a asp-action="Export" asp-route-period="weekly"  class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-week me-1"></i>@Localizer["Reports_Weekly"]</a>
+                        <a asp-action="Export" asp-route-period="monthly" class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-month me-1"></i>@Localizer["Reports_Monthly"]</a>
+                        <a asp-action="Export" asp-route-period="yearly"  class="btn btn-outline-primary btn-sm"><i class="bi bi-calendar-range me-1"></i>@Localizer["Reports_Yearly"]</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="p-3 rounded-3" style="background:#f8fafc;border:1px solid var(--border)">
-                    <div class="fw-semibold mb-2"><i class="bi bi-boxes me-2 text-success"></i>Stok Raporu</div>
+                    <div class="fw-semibold mb-2"><i class="bi bi-boxes me-2 text-success"></i>@Localizer["Reports_StockReport"]</div>
                     <div class="d-flex flex-wrap gap-2">
-                        <a asp-action="ExportStock" asp-route-period="monthly" class="btn btn-outline-success btn-sm"><i class="bi bi-download me-1"></i>Stok Durumu</a>
+                        <a asp-action="ExportStock" asp-route-period="monthly" class="btn btn-outline-success btn-sm"><i class="bi bi-download me-1"></i>@Localizer["Reports_StockStatus"]</a>
                     </div>
-                    <div class="text-muted" style="font-size:.75rem;margin-top:.5rem">Anlık stok ve değer bilgisi</div>
+                    <div class="text-muted" style="font-size:.75rem;margin-top:.5rem">@Localizer["Reports_StockHint"]</div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="p-3 rounded-3" style="background:#f8fafc;border:1px solid var(--border)">
-                    <div class="fw-semibold mb-2"><i class="bi bi-clipboard-data me-2 text-warning"></i>Reçete Maliyet Raporu</div>
+                    <div class="fw-semibold mb-2"><i class="bi bi-clipboard-data me-2 text-warning"></i>@Localizer["Reports_RecipeCostReport"]</div>
                     <div class="d-flex flex-wrap gap-2">
-                        <a asp-action="ExportRecipes" class="btn btn-outline-warning btn-sm"><i class="bi bi-download me-1"></i>Tüm Reçeteler</a>
+                        <a asp-action="ExportRecipes" class="btn btn-outline-warning btn-sm"><i class="bi bi-download me-1"></i>@Localizer["Reports_AllRecipes"]</a>
                     </div>
-                    <div class="text-muted" style="font-size:.75rem;margin-top:.5rem">Malzeme ve gıda maliyet analizi</div>
+                    <div class="text-muted" style="font-size:.75rem;margin-top:.5rem">@Localizer["Reports_RecipeHint"]</div>
                 </div>
             </div>
         </div>
@@ -87,10 +87,10 @@
 </div>
 
 <div class="row g-3">
-    <!-- Aylık Satın Alma Grafiği -->
+    <!-- Monthly Purchases Chart -->
     <div class="col-lg-8">
         <div class="card h-100">
-            <div class="card-header">Aylık Satın Alma (Son 6 Ay)</div>
+            <div class="card-header">@Localizer["Reports_MonthlyPurchases"]</div>
             <div class="card-body">
                 @if (Model.MonthlySpends.Any())
                 {
@@ -108,16 +108,16 @@
                 }
                 else
                 {
-                    <div class="empty-state"><i class="bi bi-bar-chart"></i><div>Veri yok</div></div>
+                    <div class="empty-state"><i class="bi bi-bar-chart"></i><div>@Localizer["Common_NoData"]</div></div>
                 }
             </div>
         </div>
     </div>
 
-    <!-- Tedarikçi Harcamaları -->
+    <!-- Vendor Spend -->
     <div class="col-lg-4">
         <div class="card h-100">
-            <div class="card-header">Tedarikçi Bazlı Harcama</div>
+            <div class="card-header">@Localizer["Reports_VendorSpend"]</div>
             <div class="card-body">
                 @foreach (var v in Model.VendorSpends)
                 {
@@ -131,19 +131,23 @@
                         </div>
                     </div>
                 }
-                @if (!Model.VendorSpends.Any()) { <div class="empty-state small"><i class="bi bi-truck"></i><div>Veri yok</div></div> }
+                @if (!Model.VendorSpends.Any()) { <div class="empty-state small"><i class="bi bi-truck"></i><div>@Localizer["Common_NoData"]</div></div> }
             </div>
         </div>
     </div>
 
-    <!-- Stok Değeri Kategorilere Göre -->
+    <!-- Stock Value by Category -->
     <div class="col-lg-5">
         <div class="card">
-            <div class="card-header">Stok Değeri (Kategoriye Göre)</div>
+            <div class="card-header">@Localizer["Reports_StockByCategory"]</div>
             <div class="card-body p-0">
                 <table class="table table-sm mb-0">
                     <thead class="table-light">
-                        <tr><th>Kategori</th><th class="text-end">Değer</th><th class="text-end">Pay</th></tr>
+                        <tr>
+                            <th>@Localizer["Common_Category"]</th>
+                            <th class="text-end">@Localizer["Reports_Value"]</th>
+                            <th class="text-end">@Localizer["Reports_Share"]</th>
+                        </tr>
                     </thead>
                     <tbody>
                         @foreach (var sv in Model.StockValues)
@@ -157,7 +161,7 @@
                     </tbody>
                     <tfoot class="table-light">
                         <tr>
-                            <td class="fw-bold">Toplam</td>
+                            <td class="fw-bold">@Localizer["Common_Total"]</td>
                             <td class="text-end fw-bold">@Model.TotalInventoryValue.ToString("N2") ₺</td>
                             <td></td>
                         </tr>
@@ -167,21 +171,21 @@
         </div>
     </div>
 
-    <!-- Reçete Gıda Maliyet Analizi -->
+    <!-- Recipe Food Cost Analysis -->
     <div class="col-lg-7">
         <div class="card">
-            <div class="card-header">Reçete Gıda Maliyet Analizi</div>
+            <div class="card-header">@Localizer["Reports_RecipeCostAnalysis"]</div>
             <div class="card-body p-0">
                 @if (Model.RecipeCosts.Any())
                 {
                     <table class="table table-sm mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Reçete</th>
-                                <th>Kategori</th>
-                                <th class="text-end">Maliyet</th>
-                                <th class="text-end">Fiyat</th>
-                                <th class="text-end">G.M.%</th>
+                                <th>@Localizer["Recipes_Title"]</th>
+                                <th>@Localizer["Common_Category"]</th>
+                                <th class="text-end">@Localizer["Reports_Cost"]</th>
+                                <th class="text-end">@Localizer["Common_Price"]</th>
+                                <th class="text-end">@Localizer["Reports_GMPct"]</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -205,7 +209,7 @@
                 }
                 else
                 {
-                    <div class="empty-state"><i class="bi bi-clipboard-data"></i><div>Reçete yok — önce reçete oluşturun</div></div>
+                    <div class="empty-state"><i class="bi bi-clipboard-data"></i><div>@Localizer["Reports_NoRecipes"]</div></div>
                 }
             </div>
         </div>

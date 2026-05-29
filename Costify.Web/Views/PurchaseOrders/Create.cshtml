@@ -1,11 +1,11 @@
-@{
-    ViewData["Title"] = "Yeni Satın Alma Siparişi";
+﻿@{
+    ViewData["Title"] = Localizer["PO_NewPurchaseOrder"].Value;
 }
 
 <div class="row justify-content-center">
     <div class="col-xl-10">
         <div class="card">
-            <div class="card-header"><i class="bi bi-cart-plus me-1"></i>Yeni Sipariş</div>
+            <div class="card-header"><i class="bi bi-cart-plus me-1"></i>@Localizer["PO_NewOrder"]</div>
             <div class="card-body">
                 <form asp-action="Create" method="post" id="orderForm">
                     @Html.AntiForgeryToken()
@@ -13,9 +13,9 @@
 
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
-                            <label class="form-label">Tedarikçi <span class="text-danger">*</span></label>
+                            <label class="form-label">@Localizer["Common_Vendor"] <span class="text-danger">*</span></label>
                             <select name="VendorId" class="form-select" required>
-                                <option value="">— Seçiniz —</option>
+                                <option value="">@Localizer["Common_SelectOption"]</option>
                                 @foreach (SelectListItem v in ViewBag.Vendors)
                                 {
                                     <option value="@v.Value">@v.Text</option>
@@ -23,39 +23,39 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label">Sipariş Tarihi <span class="text-danger">*</span></label>
+                            <label class="form-label">@Localizer["PO_OrderDate"] <span class="text-danger">*</span></label>
                             <input type="date" name="OrderDate" class="form-control"
                                    value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Notlar</label>
+                            <label class="form-label">@Localizer["PO_Notes"]</label>
                             <textarea name="Notes" class="form-control" rows="2"></textarea>
                         </div>
                     </div>
 
                     <h6 class="fw-semibold mb-3 border-bottom pb-2">
-                        <i class="bi bi-list-ul me-1"></i>Sipariş Kalemleri
+                        <i class="bi bi-list-ul me-1"></i>@Localizer["PO_OrderItems"]
                     </h6>
                     <table class="table align-middle" id="itemsTable">
                         <thead class="table-light">
                             <tr>
-                                <th style="min-width:200px">Ürün</th>
-                                <th style="width:130px">Miktar</th>
-                                <th style="width:150px">Birim Fiyat (₺)</th>
-                                <th style="width:130px">Toplam</th>
+                                <th style="min-width:200px">@Localizer["Common_Product"]</th>
+                                <th style="width:130px">@Localizer["Common_Quantity"]</th>
+                                <th style="width:150px">@Localizer["PO_UnitPriceLabel"]</th>
+                                <th style="width:130px">@Localizer["Common_Total"]</th>
                                 <th style="width:50px"></th>
                             </tr>
                         </thead>
                         <tbody id="itemsBody">
                             <tr id="emptyRow">
                                 <td colspan="5" class="text-center text-muted py-3">
-                                    Henüz ürün eklenmedi.
+                                    @Localizer["PO_NoProductsAdded"]
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="3" class="text-end fw-bold">Genel Toplam:</td>
+                                <td colspan="3" class="text-end fw-bold">@Localizer["PO_GrandTotalLabel"]</td>
                                 <td class="fw-bold" id="grandTotal">0,00 ₺</td>
                                 <td></td>
                             </tr>
@@ -63,12 +63,12 @@
                     </table>
 
                     <button type="button" class="btn btn-outline-primary btn-sm mb-4" onclick="addRow()">
-                        <i class="bi bi-plus-circle me-1"></i>Ürün Ekle
+                        <i class="bi bi-plus-circle me-1"></i>@Localizer["PO_AddProduct"]
                     </button>
 
                     <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Siparişi Oluştur</button>
-                        <a asp-action="Index" class="btn btn-outline-secondary">İptal</a>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>@Localizer["PO_CreateOrder"]</button>
+                        <a asp-action="Index" class="btn btn-outline-secondary">@Localizer["Common_Cancel"]</a>
                     </div>
                 </form>
             </div>
@@ -83,6 +83,11 @@ const products = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
         .Select(p => new { p.Id, p.Name, unitSymbol = p.Unit?.Symbol ?? "", lastPrice = p.LastPurchasePrice })
 ));
 
+const i18n = {
+    selectProduct: '@Html.Raw(Localizer["PO_SelectProduct"].Value.Replace("'", "\\'"))',
+    noProducts: '@Html.Raw(Localizer["PO_NoProductsAdded"].Value.Replace("'", "\\'"))'
+};
+
 let rowIndex = 0;
 
 function addRow() {
@@ -95,7 +100,7 @@ function addRow() {
     row.innerHTML = `
         <td>
             <select name="productIds" class="form-select form-select-sm product-select" onchange="onProductChange(this, ${i})" required>
-                <option value="">— Ürün seç —</option>${opts}
+                <option value="">${i18n.selectProduct}</option>${opts}
             </select>
         </td>
         <td>
@@ -151,7 +156,7 @@ function removeRow(i) {
         const tbody = document.getElementById('itemsBody');
         const empty = document.createElement('tr');
         empty.id = 'emptyRow';
-        empty.innerHTML = '<td colspan="5" class="text-center text-muted py-3">Henüz ürün eklenmedi.</td>';
+        empty.innerHTML = `<td colspan="5" class="text-center text-muted py-3">${i18n.noProducts}</td>`;
         tbody.appendChild(empty);
     }
 }

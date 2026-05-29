@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -15,63 +15,63 @@
         <div class="sidebar-logo"><img src="~/images/logo.png" alt="Costify" style="width:40px;height:40px;object-fit:contain;border-radius:6px" /></div>
         <div>
             <div class="sidebar-title">Costify</div>
-            <div class="sidebar-sub">Kafe & Restoran</div>
+            <div class="sidebar-sub">@Localizer["Nav_CafeRestaurant"]</div>
         </div>
     </div>
 
-    <div class="sidebar-section-label">MENÜ</div>
+    <div class="sidebar-section-label">@Localizer["Nav_Menu"]</div>
     <nav class="sidebar-nav">
         <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Dashboard" ? "active" : "")"
            asp-controller="Dashboard" asp-action="Index">
             <span class="sidebar-icon"><i class="bi bi-speedometer2"></i></span>
-            <span>Genel Bakış</span>
+            <span>@Localizer["Nav_Overview"]</span>
         </a>
         <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Products" ? "active" : "")"
            asp-controller="Products" asp-action="Index">
             <span class="sidebar-icon"><i class="bi bi-box2"></i></span>
-            <span>Ürünler & Stok</span>
+            <span>@Localizer["Nav_ProductsStock"]</span>
         </a>
         <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Vendors" ? "active" : "")"
            asp-controller="Vendors" asp-action="Index">
             <span class="sidebar-icon"><i class="bi bi-truck"></i></span>
-            <span>Tedarikçiler</span>
+            <span>@Localizer["Nav_Vendors"]</span>
         </a>
         <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "PurchaseOrders" ? "active" : "")"
            asp-controller="PurchaseOrders" asp-action="Index">
             <span class="sidebar-icon"><i class="bi bi-cart-check"></i></span>
-            <span>Satın Alma</span>
+            <span>@Localizer["Nav_Purchase"]</span>
         </a>
     </nav>
 
-    <div class="sidebar-section-label">TANIMLAR</div>
+    <div class="sidebar-section-label">@Localizer["Nav_Definitions"]</div>
     <nav class="sidebar-nav">
         <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Definitions" ? "active" : "")"
            asp-controller="Definitions" asp-action="Index">
             <span class="sidebar-icon"><i class="bi bi-sliders"></i></span>
-            <span>Kategoriler & Birimler</span>
+            <span>@Localizer["Nav_CategoriesUnits"]</span>
         </a>
     </nav>
 
-    <div class="sidebar-section-label">OPERASYON</div>
+    <div class="sidebar-section-label">@Localizer["Nav_Operation"]</div>
     <nav class="sidebar-nav">
         <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Recipes" ? "active" : "")"
            asp-controller="Recipes" asp-action="Index">
             <span class="sidebar-icon"><i class="bi bi-clipboard-data"></i></span>
-            <span>Reçeteler</span>
+            <span>@Localizer["Nav_Recipes"]</span>
         </a>
         <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "StockCounts" ? "active" : "")"
            asp-controller="StockCounts" asp-action="Index">
             <span class="sidebar-icon"><i class="bi bi-clipboard-check"></i></span>
-            <span>Stok Sayımı</span>
+            <span>@Localizer["Nav_StockCount"]</span>
         </a>
     </nav>
 
-    <div class="sidebar-section-label">ANALİZ</div>
+    <div class="sidebar-section-label">@Localizer["Nav_Analysis"]</div>
     <nav class="sidebar-nav">
         <a class="sidebar-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Reports" ? "active" : "")"
            asp-controller="Reports" asp-action="Index">
             <span class="sidebar-icon"><i class="bi bi-bar-chart-line"></i></span>
-            <span>Raporlar</span>
+            <span>@Localizer["Nav_Reports"]</span>
         </a>
     </nav>
 
@@ -82,11 +82,11 @@
             </div>
             <div class="sidebar-user-info">
                 <div class="sidebar-user-name">@User.Identity?.Name</div>
-                <div class="sidebar-user-role">Yönetici</div>
+                <div class="sidebar-user-role">@Localizer["Nav_Admin"]</div>
             </div>
             <form asp-controller="Auth" asp-action="Logout" method="post" class="ms-auto">
                 @Html.AntiForgeryToken()
-                <button type="submit" class="sidebar-logout" title="Çıkış Yap">
+                <button type="submit" class="sidebar-logout" title="@Localizer["Nav_Logout"]">
                     <i class="bi bi-box-arrow-right"></i>
                 </button>
             </form>
@@ -101,12 +101,32 @@
         </button>
         <div class="topbar-breadcrumb">
             <i class="bi bi-house-door me-1 text-muted" style="font-size:.8rem"></i>
-            <span class="text-muted" style="font-size:.8rem">Demo Kafe</span>
+            <span class="text-muted" style="font-size:.8rem">@Localizer["Nav_DemoCafe"]</span>
             <i class="bi bi-chevron-right mx-1 text-muted" style="font-size:.65rem"></i>
             <span style="font-size:.8rem;font-weight:600;color:#1e293b">@ViewData["Title"]</span>
         </div>
         <div class="ms-auto d-flex align-items-center gap-2">
-            <span class="badge-business"><i class="bi bi-building me-1"></i>Demo Kafe</span>
+            <span class="badge-business"><i class="bi bi-building me-1"></i>@Localizer["Nav_DemoCafe"]</span>
+            <!-- Language switcher -->
+            @{
+                var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+                var returnUrl = Context.Request.Path + Context.Request.QueryString;
+                var isTr = currentCulture.StartsWith("tr");
+            }
+            <div class="btn-group lang-switcher" role="group" aria-label="Language">
+                <a asp-controller="Language" asp-action="Set"
+                   asp-route-culture="tr-TR" asp-route-returnUrl="@returnUrl"
+                   class="btn btn-sm @(isTr ? "btn-primary" : "btn-outline-secondary")"
+                   style="font-size:.72rem;padding:.28rem .65rem;font-weight:600;letter-spacing:.03em;border-radius:6px 0 0 6px">
+                    🇹🇷 TR
+                </a>
+                <a asp-controller="Language" asp-action="Set"
+                   asp-route-culture="en-US" asp-route-returnUrl="@returnUrl"
+                   class="btn btn-sm @(!isTr ? "btn-primary" : "btn-outline-secondary")"
+                   style="font-size:.72rem;padding:.28rem .65rem;font-weight:600;letter-spacing:.03em;border-radius:0 6px 6px 0">
+                    🇺🇸 US
+                </a>
+            </div>
         </div>
     </div>
 

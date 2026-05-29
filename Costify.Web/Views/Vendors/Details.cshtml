@@ -18,74 +18,74 @@
 <div class="row g-3">
     <div class="col-lg-4">
         <div class="card">
-            <div class="card-header">Tedarikçi Bilgileri</div>
+            <div class="card-header">@Localizer["Vendors_Info"]</div>
             <div class="card-body">
                 <dl class="row mb-0 small">
-                    <dt class="col-5 text-muted">Firma</dt>
+                    <dt class="col-5 text-muted">@Localizer["Vendors_Company"]</dt>
                     <dd class="col-7 fw-semibold">@Model.Name</dd>
 
                     @if (!string.IsNullOrEmpty(Model.ContactPerson))
                     {
-                        <dt class="col-5 text-muted">İletişim</dt>
+                        <dt class="col-5 text-muted">@Localizer["Vendors_Contact"]</dt>
                         <dd class="col-7">@Model.ContactPerson</dd>
                     }
                     @if (!string.IsNullOrEmpty(Model.Phone))
                     {
-                        <dt class="col-5 text-muted">Telefon</dt>
+                        <dt class="col-5 text-muted">@Localizer["Common_Phone"]</dt>
                         <dd class="col-7"><a href="tel:@Model.Phone">@Model.Phone</a></dd>
                     }
                     @if (!string.IsNullOrEmpty(Model.Email))
                     {
-                        <dt class="col-5 text-muted">E-Posta</dt>
+                        <dt class="col-5 text-muted">@Localizer["Common_Email"]</dt>
                         <dd class="col-7"><a href="mailto:@Model.Email">@Model.Email</a></dd>
                     }
                     @if (!string.IsNullOrEmpty(Model.TaxNumber))
                     {
-                        <dt class="col-5 text-muted">Vergi No</dt>
+                        <dt class="col-5 text-muted">@Localizer["Vendors_TaxNo"]</dt>
                         <dd class="col-7">@Model.TaxNumber</dd>
                     }
-                    <dt class="col-5 text-muted">Durum</dt>
+                    <dt class="col-5 text-muted">@Localizer["Common_Status"]</dt>
                     <dd class="col-7">
                         <span class="badge @(Model.IsActive ? "bg-success-soft" : "bg-secondary-soft")">
-                            @(Model.IsActive ? "Aktif" : "Pasif")
+                            @(Model.IsActive ? Localizer["Common_Active"].Value : Localizer["Common_Inactive"].Value)
                         </span>
                     </dd>
-                    <dt class="col-5 text-muted">Toplam Sipariş</dt>
+                    <dt class="col-5 text-muted">@Localizer["Vendors_TotalOrders"]</dt>
                     <dd class="col-7 fw-bold">@Model.PurchaseOrders.Count</dd>
-                    <dt class="col-5 text-muted">Toplam Harcama</dt>
+                    <dt class="col-5 text-muted">@Localizer["Vendors_TotalSpend"]</dt>
                     <dd class="col-7 fw-bold">@Model.PurchaseOrders.Sum(o => o.TotalAmount).ToString("N2") ₺</dd>
                 </dl>
             </div>
             <div class="card-footer">
-                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Geri</a>
+                <a asp-action="Index" class="btn btn-sm btn-outline-secondary">@Localizer["Common_Back"]</a>
             </div>
         </div>
     </div>
 
     <div class="col-lg-8">
-        <!-- Son Siparişler -->
+        <!-- Recent Orders -->
         <div class="card mb-3">
-            <div class="card-header">Son Siparişler</div>
+            <div class="card-header">@Localizer["Vendors_RecentOrders"]</div>
             <div class="card-body p-0">
                 @if (Model.PurchaseOrders.Any())
                 {
                     <table class="table table-sm mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Sipariş No</th>
-                                <th>Tarih</th>
-                                <th class="text-end">Toplam</th>
-                                <th>Durum</th>
+                                <th>@Localizer["Common_OrderNo"]</th>
+                                <th>@Localizer["Common_Date"]</th>
+                                <th class="text-end">@Localizer["Common_Total"]</th>
+                                <th>@Localizer["Common_Status"]</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var o in Model.PurchaseOrders)
                             {
                                 var (cls, lbl) = o.Status switch {
-                                    Costify.Domain.Enums.OrderStatus.Received  => ("bg-success-soft","Teslim Alındı"),
-                                    Costify.Domain.Enums.OrderStatus.Ordered   => ("bg-info-soft","Sipariş Verildi"),
-                                    Costify.Domain.Enums.OrderStatus.Cancelled => ("bg-danger-soft","İptal"),
-                                    _ => ("bg-secondary-soft","Diğer")
+                                    Costify.Domain.Enums.OrderStatus.Received  => ("bg-success-soft", Localizer["Common_Received"].Value),
+                                    Costify.Domain.Enums.OrderStatus.Ordered   => ("bg-info-soft",    Localizer["Common_Ordered"].Value),
+                                    Costify.Domain.Enums.OrderStatus.Cancelled => ("bg-danger-soft",  Localizer["Common_Cancelled"].Value),
+                                    _ => ("bg-secondary-soft", Localizer["Vendors_Other"].Value)
                                 };
                                 <tr>
                                     <td>
@@ -99,23 +99,23 @@
                         </tbody>
                     </table>
                 }
-                else { <div class="empty-state small"><i class="bi bi-cart"></i><div>Sipariş yok</div></div> }
+                else { <div class="empty-state small"><i class="bi bi-cart"></i><div>@Localizer["Vendors_NoOrders"]</div></div> }
             </div>
         </div>
 
-        <!-- Ürün Fiyat Geçmişi -->
+        <!-- Product Price History -->
         @if (allProducts.Any())
         {
             <div class="card">
-                <div class="card-header">Ürün Fiyat Geçmişi</div>
+                <div class="card-header">@Localizer["Vendors_ProductPriceHistory"]</div>
                 <div class="card-body p-0">
                     <table class="table table-sm mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Ürün</th>
-                                <th>Tarih</th>
-                                <th class="text-end">Birim Fiyat</th>
-                                <th class="text-end">Değişim</th>
+                                <th>@Localizer["Common_Product"]</th>
+                                <th>@Localizer["Common_Date"]</th>
+                                <th class="text-end">@Localizer["Common_UnitPrice"]</th>
+                                <th class="text-end">@Localizer["Vendors_Change"]</th>
                             </tr>
                         </thead>
                         <tbody>

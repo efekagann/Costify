@@ -1,15 +1,15 @@
-@model IEnumerable<Costify.Domain.Entities.Recipe>
+﻿@model IEnumerable<Costify.Domain.Entities.Recipe>
 @{
-    ViewData["Title"] = "Reçeteler";
+    ViewData["Title"] = Localizer["Recipes_Title"].Value;
     var products = ViewBag.Products as IEnumerable<Costify.Domain.Entities.Product> ?? [];
 }
 
 <div class="page-header">
     <div class="text-muted" style="font-size:.875rem">
-        <i class="bi bi-clipboard-data me-1"></i>@Model.Count() reçete
+        <i class="bi bi-clipboard-data me-1"></i>@Model.Count() @Localizer["Recipes_Count"]
     </div>
     <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#recipeModal" id="newRecipeBtn">
-        <i class="bi bi-plus-lg me-1"></i>Yeni Reçete
+        <i class="bi bi-plus-lg me-1"></i>@Localizer["Recipes_NewRecipe"]
     </button>
 </div>
 
@@ -19,9 +19,9 @@
 
 @if (Model.Any())
 {
-    foreach (var cat in categories.DefaultIfEmpty("Kategorisiz"))
+    foreach (var cat in categories.DefaultIfEmpty(Localizer["Recipes_Uncategorized"].Value))
     {
-        var group = Model.Where(r => (r.Category ?? "Kategorisiz") == cat).ToList();
+        var group = Model.Where(r => (r.Category ?? Localizer["Recipes_Uncategorized"].Value) == cat).ToList();
         <div class="card mb-3">
             <div class="card-header" style="font-size:.8rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:#64748b">
                 <i class="bi bi-tag me-1"></i>@cat
@@ -30,11 +30,11 @@
                 <table class="table mb-0">
                     <thead>
                         <tr>
-                            <th>Reçete</th>
-                            <th class="text-end">Malzeme Maliyeti</th>
-                            <th class="text-end">Satış Fiyatı</th>
-                            <th class="text-center">Gıda Maliyet %</th>
-                            <th class="text-center">Malzeme</th>
+                            <th>@Localizer["Recipes_Title"]</th>
+                            <th class="text-end">@Localizer["Recipes_IngredientCost"]</th>
+                            <th class="text-end">@Localizer["Recipes_SellingPrice"]</th>
+                            <th class="text-center">@Localizer["Recipes_FoodCostPct"]</th>
+                            <th class="text-center">@Localizer["Recipes_Ingredients"]</th>
                             <th style="width:90px"></th>
                         </tr>
                     </thead>
@@ -48,7 +48,7 @@
                             <tr>
                                 <td>
                                     <a asp-action="Details" asp-route-id="@r.Id" class="fw-semibold text-decoration-none">@r.Name</a>
-                                    @if (!r.IsActive) { <span class="badge bg-secondary-soft ms-1">Pasif</span> }
+                                    @if (!r.IsActive) { <span class="badge bg-secondary-soft ms-1">@Localizer["Common_Inactive"]</span> }
                                 </td>
                                 <td class="text-end">@r.TotalCost.ToString("N2") ₺</td>
                                 <td class="text-end fw-semibold">@r.SellingPrice.ToString("N2") ₺</td>
@@ -59,7 +59,7 @@
                                 <td>
                                     <div class="d-flex gap-1 justify-content-end">
                                         <a asp-action="Details" asp-route-id="@r.Id"
-                                           class="btn btn-sm btn-outline-secondary" title="Detay">
+                                           class="btn btn-sm btn-outline-secondary" title="@Localizer["Common_Detail"]">
                                             <i class="bi bi-eye"></i>
                                         </a>
                                         <button class="btn btn-sm btn-outline-secondary btn-edit-recipe"
@@ -70,7 +70,7 @@
                                             <i class="bi bi-pencil"></i>
                                         </button>
                                         <form asp-action="Delete" asp-route-id="@r.Id" method="post" style="display:inline"
-                                              onsubmit="return confirm('@Html.Raw(r.Name.Replace("'","\\'")) reçetesini silmek istediğinize emin misiniz?')">
+                                              onsubmit="return confirm('@Html.Raw(Localizer["Recipes_DeleteConfirm"].Value.Replace("'", "\\'"))')">
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                                         </form>
@@ -89,8 +89,8 @@ else
     <div class="card"><div class="card-body">
         <div class="empty-state">
             <i class="bi bi-clipboard-data"></i>
-            <div class="fw-medium">Henüz reçete yok</div>
-            <small>İlk reçeteyi oluşturun ve maliyetleri hesaplayın</small>
+            <div class="fw-medium">@Localizer["Recipes_NoRecipes"]</div>
+            <small>@Localizer["Recipes_CreateFirst"]</small>
         </div>
     </div></div>
 }
@@ -103,18 +103,18 @@ else
                 @Html.AntiForgeryToken()
                 <input type="hidden" id="r_Id" name="Id" value="0" />
                 <div class="modal-header">
-                    <h5 class="modal-title" id="recipeModalTitle"><i class="bi bi-clipboard-plus me-2"></i>Yeni Reçete</h5>
+                    <h5 class="modal-title" id="recipeModalTitle"><i class="bi bi-clipboard-plus me-2"></i>@Localizer["Recipes_NewRecipe"]</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row g-3 mb-4 pb-3" style="border-bottom:1px solid var(--border)">
                         <div class="col-md-5">
-                            <label class="form-label">Reçete Adı <span class="text-danger">*</span></label>
+                            <label class="form-label">@Localizer["Recipes_RecipeName"] <span class="text-danger">*</span></label>
                             <input type="text" name="Name" id="r_Name" class="form-control" placeholder="Espresso, Latte..." required />
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label">Kategori</label>
-                            <input type="text" name="Category" id="r_Category" class="form-control" list="categoryList" placeholder="Sıcak İçecek..." />
+                            <label class="form-label">@Localizer["Common_Category"]</label>
+                            <input type="text" name="Category" id="r_Category" class="form-control" list="categoryList" placeholder="@Localizer["Common_Optional"]" />
                             <datalist id="categoryList">
                                 @foreach (var c in new[]{"Sıcak İçecek","Soğuk İçecek","Atıştırmalık","Tatlı","Ana Yemek","Kahvaltı"})
                                 {
@@ -123,55 +123,55 @@ else
                             </datalist>
                         </div>
                         <div class="col-md-3">
-                            <label class="form-label">Satış Fiyatı (₺) <span class="text-danger">*</span></label>
+                            <label class="form-label">@Localizer["Recipes_SellingPriceLabel"] <span class="text-danger">*</span></label>
                             <input type="number" name="SellingPrice" id="r_SellingPrice" class="form-control"
                                    step="0.01" min="0" required oninput="updateFoodCost()" />
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Açıklama</label>
-                            <input type="text" name="Description" id="r_Description" class="form-control" placeholder="Opsiyonel..." />
+                            <label class="form-label">@Localizer["Common_Description"]</label>
+                            <input type="text" name="Description" id="r_Description" class="form-control" placeholder="@Localizer["Common_Optional"]" />
                         </div>
                         <div class="col-auto">
                             <div class="form-check form-switch mt-2">
                                 <input class="form-check-input" type="checkbox" name="IsActive" id="r_IsActive" value="true" checked />
-                                <label class="form-check-label" for="r_IsActive">Aktif</label>
+                                <label class="form-check-label" for="r_IsActive">@Localizer["Common_Active"]</label>
                             </div>
                         </div>
                         <div class="col-auto ms-auto d-flex align-items-center">
                             <div class="text-end">
-                                <div class="text-muted small">Tahmini Gıda Maliyet %</div>
+                                <div class="text-muted small">@Localizer["Recipes_EstimatedFoodCost"]</div>
                                 <div class="fw-bold fs-5" id="foodCostDisplay" style="color:var(--primary)">—</div>
                             </div>
                         </div>
                     </div>
 
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="fw-semibold" style="font-size:.875rem"><i class="bi bi-list-ul me-1"></i>Malzemeler</span>
+                        <span class="fw-semibold" style="font-size:.875rem"><i class="bi bi-list-ul me-1"></i>@Localizer["Recipes_Ingredients"]</span>
                         <button type="button" class="btn btn-outline-primary btn-sm" onclick="addIngredientRow()">
-                            <i class="bi bi-plus-circle me-1"></i>Malzeme Ekle
+                            <i class="bi bi-plus-circle me-1"></i>@Localizer["Recipes_AddIngredient"]
                         </button>
                     </div>
 
                     <table class="table table-sm" id="ingredientsTable">
                         <thead>
                             <tr style="background:#f8fafc">
-                                <th style="min-width:220px">Ürün / Hammadde</th>
-                                <th style="width:160px">Miktar</th>
-                                <th style="width:120px" class="text-end">Birim Maliyet</th>
-                                <th style="width:120px" class="text-end">Satır Maliyet</th>
+                                <th style="min-width:220px">@Localizer["Recipes_ProductRawMaterial"]</th>
+                                <th style="width:160px">@Localizer["Common_Quantity"]</th>
+                                <th style="width:120px" class="text-end">@Localizer["Products_UnitCost"]</th>
+                                <th style="width:120px" class="text-end">@Localizer["Recipes_LineCost"]</th>
                                 <th style="width:40px"></th>
                             </tr>
                         </thead>
                         <tbody id="ingredientsBody">
                             <tr id="emptyIngRow">
                                 <td colspan="5" class="text-center py-3 text-muted" style="font-size:.85rem">
-                                    <i class="bi bi-arrow-up me-1"></i>Malzeme eklemek için yukarıdaki butonu kullanın
+                                    <i class="bi bi-arrow-up me-1"></i>@Localizer["Recipes_AddIngredientHint"]
                                 </td>
                             </tr>
                         </tbody>
                         <tfoot>
                             <tr>
-                                <td colspan="3" class="text-end fw-bold" style="font-size:.9rem">Toplam Maliyet:</td>
+                                <td colspan="3" class="text-end fw-bold" style="font-size:.9rem">@Localizer["Recipes_TotalCostColon"]</td>
                                 <td class="text-end fw-bold" id="totalCostDisplay" style="font-size:1rem;color:var(--primary)">0,00 ₺</td>
                                 <td></td>
                             </tr>
@@ -179,8 +179,8 @@ else
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Kaydet</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@Localizer["Common_Cancel"]</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>@Localizer["Common_Save"]</button>
                 </div>
             </form>
         </div>
@@ -197,6 +197,14 @@ const allProducts = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(
     })
 ));
 
+const i18n = {
+    newRecipe: '@Html.Raw(Localizer["Recipes_NewRecipe"].Value.Replace("'", "\\'"))',
+    editRecipe: '@Html.Raw(Localizer["Recipes_EditRecipe"].Value.Replace("'", "\\'"))',
+    loading: '@Html.Raw(Localizer["Common_Loading"].Value.Replace("'", "\\'"))',
+    addIngredientHint: '@Html.Raw(Localizer["Recipes_AddIngredientHint"].Value.Replace("'", "\\'"))',
+    selectProduct: '@Html.Raw(Localizer["Recipes_SelectProduct"].Value.Replace("'", "\\'"))'
+};
+
 let rowIdx = 0;
 
 function addIngredientRow(pid, qty) {
@@ -211,7 +219,7 @@ function addIngredientRow(pid, qty) {
     tr.innerHTML = `
         <td>
             <select name="productIds" class="form-select form-select-sm" required onchange="onIngChange(this,${i})">
-                <option value="">— Ürün seçin —</option>${opts}
+                <option value="">${i18n.selectProduct}</option>${opts}
             </select>
         </td>
         <td>
@@ -295,16 +303,15 @@ function removeIng(i) {
     if (!document.querySelector('#ingredientsBody tr:not(#emptyIngRow)')) {
         const empty = document.createElement('tr');
         empty.id = 'emptyIngRow';
-        empty.innerHTML = '<td colspan="5" class="text-center py-3 text-muted"><i class="bi bi-arrow-up me-1"></i>Malzeme eklemek için yukarıdaki butonu kullanın</td>';
+        empty.innerHTML = `<td colspan="5" class="text-center py-3 text-muted"><i class="bi bi-arrow-up me-1"></i>${i18n.addIngredientHint}</td>`;
         document.getElementById('ingredientsBody').appendChild(empty);
     }
 }
 
-// Edit button
 document.querySelectorAll('.btn-edit-recipe').forEach(btn => {
     btn.addEventListener('click', function() {
         const modal = document.getElementById('recipeModal');
-        document.getElementById('recipeModalTitle').innerHTML = '<i class="bi bi-pencil me-2"></i>Reçete Düzenle';
+        document.getElementById('recipeModalTitle').innerHTML = `<i class="bi bi-pencil me-2"></i>${i18n.editRecipe}`;
         document.getElementById('recipeForm').action = '/Recipes/Edit/' + this.dataset.id;
         document.getElementById('r_Id').value = this.dataset.id;
         document.getElementById('r_Name').value = this.dataset.name || '';
@@ -313,9 +320,8 @@ document.querySelectorAll('.btn-edit-recipe').forEach(btn => {
         document.getElementById('r_SellingPrice').value = this.dataset.sellingprice || '';
         document.getElementById('r_IsActive').checked = this.dataset.isactive === 'true';
 
-        // Mevcut malzemeleri sil ve yeniden yükle (fetch ile)
         const tbody = document.getElementById('ingredientsBody');
-        tbody.innerHTML = '<tr id="emptyIngRow"><td colspan="5" class="text-center py-3 text-muted">Yükleniyor...</td></tr>';
+        tbody.innerHTML = `<tr id="emptyIngRow"><td colspan="5" class="text-center py-3 text-muted">${i18n.loading}</td></tr>`;
         rowIdx = 0;
 
         fetch('/Recipes/GetIngredients/' + this.dataset.id)
@@ -324,7 +330,7 @@ document.querySelectorAll('.btn-edit-recipe').forEach(btn => {
                 tbody.innerHTML = '';
                 rowIdx = 0;
                 if (ings.length === 0) {
-                    tbody.innerHTML = '<tr id="emptyIngRow"><td colspan="5" class="text-center py-3 text-muted"><i class="bi bi-arrow-up me-1"></i>Malzeme eklemek için yukarıdaki butonu kullanın</td></tr>';
+                    tbody.innerHTML = `<tr id="emptyIngRow"><td colspan="5" class="text-center py-3 text-muted"><i class="bi bi-arrow-up me-1"></i>${i18n.addIngredientHint}</td></tr>`;
                 } else {
                     ings.forEach(ing => addIngredientRow(ing.productId, ing.quantity));
                 }
@@ -339,9 +345,9 @@ document.getElementById('recipeModal').addEventListener('hidden.bs.modal', funct
     document.getElementById('recipeForm').reset();
     document.getElementById('recipeForm').action = '@Url.Action("Create","Recipes")';
     document.getElementById('r_Id').value = '0';
-    document.getElementById('recipeModalTitle').innerHTML = '<i class="bi bi-clipboard-plus me-2"></i>Yeni Reçete';
+    document.getElementById('recipeModalTitle').innerHTML = `<i class="bi bi-clipboard-plus me-2"></i>${i18n.newRecipe}`;
     document.getElementById('ingredientsBody').innerHTML =
-        '<tr id="emptyIngRow"><td colspan="5" class="text-center py-3 text-muted"><i class="bi bi-arrow-up me-1"></i>Malzeme eklemek için yukarıdaki butonu kullanın</td></tr>';
+        `<tr id="emptyIngRow"><td colspan="5" class="text-center py-3 text-muted"><i class="bi bi-arrow-up me-1"></i>${i18n.addIngredientHint}</td></tr>`;
     document.getElementById('totalCostDisplay').textContent = '0,00 ₺';
     document.getElementById('foodCostDisplay').textContent = '—';
     rowIdx = 0;

@@ -1,5 +1,5 @@
-@{
-    ViewData["Title"] = "Tanımlar";
+﻿@{
+    ViewData["Title"] = Localizer["Def_Title"].Value;
     var categories = ViewBag.Categories as IEnumerable<Costify.Domain.Entities.Category> ?? [];
     var units = ViewBag.Units as IEnumerable<Costify.Domain.Entities.Unit> ?? [];
     var activeTab = ViewBag.ActiveTab as string ?? "categories";
@@ -7,23 +7,22 @@
 
 <div class="page-header">
     <div class="text-muted" style="font-size:.875rem">
-        <i class="bi bi-sliders me-1"></i>Kategori ve birim tanımları
+        <i class="bi bi-sliders me-1"></i>@Localizer["Def_Subtitle"]
     </div>
 </div>
 
-<!-- Sekmeler -->
 <ul class="nav nav-tabs mb-3" id="defTabs" role="tablist">
     <li class="nav-item">
         <button class="nav-link @(activeTab=="categories"?"active":"")"
                 data-bs-toggle="tab" data-bs-target="#tabCategories" type="button">
-            <i class="bi bi-tag me-1"></i>Kategoriler
+            <i class="bi bi-tag me-1"></i>@Localizer["Def_Categories"]
             <span class="badge bg-secondary-soft ms-1">@categories.Count()</span>
         </button>
     </li>
     <li class="nav-item">
         <button class="nav-link @(activeTab=="units"?"active":"")"
                 data-bs-toggle="tab" data-bs-target="#tabUnits" type="button">
-            <i class="bi bi-rulers me-1"></i>Birimler
+            <i class="bi bi-rulers me-1"></i>@Localizer["Def_Units"]
             <span class="badge bg-secondary-soft ms-1">@units.Count()</span>
         </button>
     </li>
@@ -31,14 +30,14 @@
 
 <div class="tab-content">
 
-    <!-- ══ KATEGORİLER ══════════════════════════════════════════════════ -->
+    <!-- CATEGORIES -->
     <div class="tab-pane fade @(activeTab=="categories"?"show active":"")" id="tabCategories">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span>Ürün Kategorileri</span>
+                <span>@Localizer["Def_ProductCategories"]</span>
                 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#catModal"
                         onclick="openCatModal()">
-                    <i class="bi bi-plus-lg me-1"></i>Yeni Kategori
+                    <i class="bi bi-plus-lg me-1"></i>@Localizer["Def_NewCategory"]
                 </button>
             </div>
             <div class="card-body p-0">
@@ -46,9 +45,9 @@
                     <thead>
                         <tr>
                             <th style="width:20px"></th>
-                            <th>Ad</th>
-                            <th>Açıklama</th>
-                            <th class="text-center">Ürün Sayısı</th>
+                            <th>@Localizer["Common_Name"]</th>
+                            <th>@Localizer["Common_Description"]</th>
+                            <th class="text-center">@Localizer["Common_ProductCount"]</th>
                             <th style="width:80px"></th>
                         </tr>
                     </thead>
@@ -69,7 +68,7 @@
                                             <i class="bi bi-pencil"></i>
                                         </button>
                                         <form asp-action="DeleteCategory" asp-route-id="@cat.Id" method="post" style="display:inline"
-                                              onsubmit="return confirm('@Html.Raw(cat.Name.Replace("'","\\'")) kategorisini silmek istediğinize emin misiniz?')">
+                                              onsubmit="return confirm('@Html.Raw(Localizer["Def_DeleteCategoryConfirm"].Value.Replace("'", "\\'"))')">
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                                         </form>
@@ -79,7 +78,7 @@
                         }
                         @if (!categories.Any())
                         {
-                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-tag"></i><div>Henüz kategori yok</div></div></td></tr>
+                            <tr><td colspan="5"><div class="empty-state"><i class="bi bi-tag"></i><div>@Localizer["Def_NoCategories"]</div></div></td></tr>
                         }
                     </tbody>
                 </table>
@@ -87,23 +86,23 @@
         </div>
     </div>
 
-    <!-- ══ BİRİMLER ════════════════════════════════════════════════════ -->
+    <!-- UNITS -->
     <div class="tab-pane fade @(activeTab=="units"?"show active":"")" id="tabUnits">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <span>Ölçü Birimleri</span>
+                <span>@Localizer["Def_UnitsOfMeasurement"]</span>
                 <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#unitModal"
                         onclick="openUnitModal()">
-                    <i class="bi bi-plus-lg me-1"></i>Yeni Birim
+                    <i class="bi bi-plus-lg me-1"></i>@Localizer["Def_NewUnit"]
                 </button>
             </div>
             <div class="card-body p-0">
                 <table class="table mb-0">
                     <thead>
                         <tr>
-                            <th>Birim Adı</th>
-                            <th>Sembol</th>
-                            <th class="text-center">Ürün Sayısı</th>
+                            <th>@Localizer["Def_UnitName"]</th>
+                            <th>@Localizer["Common_Symbol"]</th>
+                            <th class="text-center">@Localizer["Common_ProductCount"]</th>
                             <th style="width:80px"></th>
                         </tr>
                     </thead>
@@ -123,7 +122,7 @@
                                             <i class="bi bi-pencil"></i>
                                         </button>
                                         <form asp-action="DeleteUnit" asp-route-id="@unit.Id" method="post" style="display:inline"
-                                              onsubmit="return confirm('@unit.Symbol birimini silmek istediğinize emin misiniz?')">
+                                              onsubmit="return confirm('@Html.Raw(Localizer["Def_DeleteUnitConfirm"].Value.Replace("'", "\\'"))')">
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
                                         </form>
@@ -133,7 +132,7 @@
                         }
                         @if (!units.Any())
                         {
-                            <tr><td colspan="4"><div class="empty-state"><i class="bi bi-rulers"></i><div>Henüz birim yok</div></div></td></tr>
+                            <tr><td colspan="4"><div class="empty-state"><i class="bi bi-rulers"></i><div>@Localizer["Def_NoUnits"]</div></div></td></tr>
                         }
                     </tbody>
                 </table>
@@ -142,30 +141,30 @@
     </div>
 </div>
 
-<!-- ══ KATEGORİ MODAL ═══════════════════════════════════════════════════ -->
+<!-- CATEGORY MODAL -->
 <div class="modal fade" id="catModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="catForm" method="post">
                 @Html.AntiForgeryToken()
                 <div class="modal-header">
-                    <h5 class="modal-title" id="catModalTitle"><i class="bi bi-tag me-2"></i>Yeni Kategori</h5>
+                    <h5 class="modal-title" id="catModalTitle"><i class="bi bi-tag me-2"></i>@Localizer["Def_NewCategory"]</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="form-label">Kategori Adı <span class="text-danger">*</span></label>
+                            <label class="form-label">@Localizer["Def_CategoryName"] <span class="text-danger">*</span></label>
                             <input type="text" name="name" id="cat_Name" class="form-control"
-                                   placeholder="İçecek Hammaddesi, Ambalaj..." required />
+                                   placeholder="@Localizer["Common_Optional"]" required />
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Açıklama</label>
+                            <label class="form-label">@Localizer["Common_Description"]</label>
                             <input type="text" name="description" id="cat_Desc" class="form-control"
-                                   placeholder="Opsiyonel..." />
+                                   placeholder="@Localizer["Common_Optional"]" />
                         </div>
                         <div class="col-12">
-                            <label class="form-label">Renk</label>
+                            <label class="form-label">@Localizer["Common_Color"]</label>
                             <div class="d-flex align-items-center gap-3">
                                 <input type="color" name="colorHex" id="cat_Color" class="form-control form-control-color"
                                        value="#4f46e5" style="width:56px;height:40px;padding:2px;cursor:pointer" />
@@ -182,40 +181,40 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Kaydet</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@Localizer["Common_Cancel"]</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>@Localizer["Common_Save"]</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<!-- ══ BİRİM MODAL ══════════════════════════════════════════════════════ -->
+<!-- UNIT MODAL -->
 <div class="modal fade" id="unitModal" tabindex="-1">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
             <form id="unitForm" method="post">
                 @Html.AntiForgeryToken()
                 <div class="modal-header">
-                    <h5 class="modal-title" id="unitModalTitle"><i class="bi bi-rulers me-2"></i>Yeni Birim</h5>
+                    <h5 class="modal-title" id="unitModalTitle"><i class="bi bi-rulers me-2"></i>@Localizer["Def_NewUnit"]</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Birim Adı <span class="text-danger">*</span></label>
+                        <label class="form-label">@Localizer["Def_UnitName"] <span class="text-danger">*</span></label>
                         <input type="text" name="name" id="unit_Name" class="form-control"
                                placeholder="Kilogram, Litre, Adet..." required />
                     </div>
                     <div class="mb-1">
-                        <label class="form-label">Sembol <span class="text-danger">*</span></label>
+                        <label class="form-label">@Localizer["Common_Symbol"] <span class="text-danger">*</span></label>
                         <input type="text" name="symbol" id="unit_Symbol" class="form-control"
                                placeholder="kg, lt, ad..." maxlength="10" required />
-                        <div class="text-muted mt-1" style="font-size:.78rem">Ürün kartlarında ve raporlarda görünür</div>
+                        <div class="text-muted mt-1" style="font-size:.78rem">@Localizer["Def_SymbolHint"]</div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">İptal</button>
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Kaydet</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@Localizer["Common_Cancel"]</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>@Localizer["Common_Save"]</button>
                 </div>
             </form>
         </div>
@@ -224,13 +223,20 @@
 
 @section Scripts {
 <script>
+const i18n = {
+    newCategory: '@Html.Raw(Localizer["Def_NewCategory"].Value.Replace("'", "\\'"))',
+    editCategory: '@Html.Raw(Localizer["Def_EditCategory"].Value.Replace("'", "\\'"))',
+    newUnit: '@Html.Raw(Localizer["Def_NewUnit"].Value.Replace("'", "\\'"))',
+    editUnit: '@Html.Raw(Localizer["Def_EditUnit"].Value.Replace("'", "\\'"))'
+};
+
 function openCatModal(id, name, desc, color) {
     const form = document.getElementById('catForm');
     if (id) {
-        document.getElementById('catModalTitle').innerHTML = '<i class="bi bi-pencil me-2"></i>Kategori Düzenle';
+        document.getElementById('catModalTitle').innerHTML = `<i class="bi bi-pencil me-2"></i>${i18n.editCategory}`;
         form.action = '/Definitions/EditCategory/' + id;
     } else {
-        document.getElementById('catModalTitle').innerHTML = '<i class="bi bi-tag me-2"></i>Yeni Kategori';
+        document.getElementById('catModalTitle').innerHTML = `<i class="bi bi-tag me-2"></i>${i18n.newCategory}`;
         form.action = '@Url.Action("CreateCategory","Definitions")';
         document.getElementById('cat_Name').value = '';
         document.getElementById('cat_Desc').value = '';
@@ -245,19 +251,19 @@ function openCatModal(id, name, desc, color) {
 
 document.getElementById('catModal').addEventListener('hidden.bs.modal', function() {
     document.getElementById('catForm').action = '@Url.Action("CreateCategory","Definitions")';
-    document.getElementById('catModalTitle').innerHTML = '<i class="bi bi-tag me-2"></i>Yeni Kategori';
+    document.getElementById('catModalTitle').innerHTML = `<i class="bi bi-tag me-2"></i>${i18n.newCategory}`;
 });
 
 function openUnitModal(id, name, symbol) {
     const form = document.getElementById('unitForm');
     if (id) {
-        document.getElementById('unitModalTitle').innerHTML = '<i class="bi bi-pencil me-2"></i>Birim Düzenle';
+        document.getElementById('unitModalTitle').innerHTML = `<i class="bi bi-pencil me-2"></i>${i18n.editUnit}`;
         form.action = '/Definitions/EditUnit/' + id;
         document.getElementById('unit_Name').value = name || '';
         document.getElementById('unit_Symbol').value = symbol || '';
         new bootstrap.Modal(document.getElementById('unitModal')).show();
     } else {
-        document.getElementById('unitModalTitle').innerHTML = '<i class="bi bi-rulers me-2"></i>Yeni Birim';
+        document.getElementById('unitModalTitle').innerHTML = `<i class="bi bi-rulers me-2"></i>${i18n.newUnit}`;
         form.action = '@Url.Action("CreateUnit","Definitions")';
         document.getElementById('unit_Name').value = '';
         document.getElementById('unit_Symbol').value = '';
@@ -266,7 +272,7 @@ function openUnitModal(id, name, symbol) {
 
 document.getElementById('unitModal').addEventListener('hidden.bs.modal', function() {
     document.getElementById('unitForm').action = '@Url.Action("CreateUnit","Definitions")';
-    document.getElementById('unitModalTitle').innerHTML = '<i class="bi bi-rulers me-2"></i>Yeni Birim';
+    document.getElementById('unitModalTitle').innerHTML = `<i class="bi bi-rulers me-2"></i>${i18n.newUnit}`;
 });
 </script>
 }

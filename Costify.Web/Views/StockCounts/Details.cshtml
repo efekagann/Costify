@@ -1,6 +1,6 @@
 @model Costify.Domain.Entities.StockCount
 @{
-    ViewData["Title"] = "Stok Sayımı — " + Model.CountDate.ToLocalTime().ToString("dd.MM.yyyy");
+    ViewData["Title"] = Localizer["SC_Title"].Value + " — " + Model.CountDate.ToLocalTime().ToString("dd.MM.yyyy");
     var isCompleted = Model.Status == Costify.Domain.Enums.StockCountStatus.Completed;
     var diffItems = Model.Items.Where(i => i.Difference != 0).ToList();
 }
@@ -9,11 +9,11 @@
     <div class="col-auto">
         @if (isCompleted)
         {
-            <span class="badge bg-success-soft fs-6"><i class="bi bi-check-circle-fill me-1"></i>Tamamlandı</span>
+            <span class="badge bg-success-soft fs-6"><i class="bi bi-check-circle-fill me-1"></i>@Localizer["SC_Completed"]</span>
         }
         else
         {
-            <span class="badge bg-info-soft fs-6"><i class="bi bi-hourglass-split me-1"></i>Devam Ediyor</span>
+            <span class="badge bg-info-soft fs-6"><i class="bi bi-hourglass-split me-1"></i>@Localizer["SC_InProgress"]</span>
         }
     </div>
     @if (!string.IsNullOrEmpty(Model.Notes))
@@ -26,14 +26,14 @@
         @if (!isCompleted)
         {
             <form asp-action="Finalize" asp-route-id="@Model.Id" method="post"
-                  onsubmit="return confirm('Sayım onaylandığında stoklar güncellenecek ve fark kayıtları oluşturulacak. Onaylıyor musunuz?')">
+                  onsubmit="return confirm('@Html.Raw(Localizer["SC_FinalizeConfirm"].Value.Replace("'", "\\'"))')">
                 @Html.AntiForgeryToken()
                 <button type="submit" class="btn btn-sm btn-success">
-                    <i class="bi bi-check2-circle me-1"></i>Sayımı Onayla & Uygula
+                    <i class="bi bi-check2-circle me-1"></i>@Localizer["SC_ApproveApply"]
                 </button>
             </form>
         }
-        <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Geri</a>
+        <a asp-action="Index" class="btn btn-sm btn-outline-secondary">@Localizer["Common_Back"]</a>
     </div>
 </div>
 
@@ -41,7 +41,7 @@
 {
     <div class="alert alert-warning d-flex gap-2 align-items-center rounded-3 mb-3" style="font-size:.875rem">
         <i class="bi bi-exclamation-triangle-fill"></i>
-        <span><strong>@diffItems.Count ürün</strong> için fark tespit edildi. Onayladığınızda bu ürünlerin stokları düzeltilecek.</span>
+        <span><strong>@diffItems.Count @Localizer["SC_Products"]</strong> @Localizer["SC_DiffAlertSuffix"]</span>
     </div>
 }
 
@@ -49,11 +49,11 @@
     @Html.AntiForgeryToken()
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <span>Sayım Listesi — @Model.Items.Count ürün</span>
+            <span>@Localizer["SC_CountList"] — @Model.Items.Count @Localizer["SC_Products"]</span>
             @if (!isCompleted)
             {
                 <button type="submit" class="btn btn-sm btn-primary">
-                    <i class="bi bi-save me-1"></i>Değerleri Kaydet
+                    <i class="bi bi-save me-1"></i>@Localizer["SC_SaveValues"]
                 </button>
             }
         </div>
@@ -61,12 +61,12 @@
             <table class="table mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th>Ürün</th>
-                        <th class="text-center">Birim</th>
-                        <th class="text-end">Sistem Stoğu</th>
-                        <th class="text-end" style="min-width:130px">Sayılan Miktar</th>
-                        <th class="text-end">Fark</th>
-                        <th class="text-end">Fark Değeri</th>
+                        <th>@Localizer["Common_Product"]</th>
+                        <th class="text-center">@Localizer["Common_Unit"]</th>
+                        <th class="text-end">@Localizer["SC_SystemStock"]</th>
+                        <th class="text-end" style="min-width:130px">@Localizer["SC_CountedQuantity"]</th>
+                        <th class="text-end">@Localizer["SC_Difference"]</th>
+                        <th class="text-end">@Localizer["SC_DiffValue"]</th>
                     </tr>
                 </thead>
                 <tbody>

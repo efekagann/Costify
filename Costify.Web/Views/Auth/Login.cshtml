@@ -1,13 +1,15 @@
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IHtmlLocalizer<SharedResource> Localizer
 @{
     Layout = null;
-    ViewData["Title"] = "Giriş Yap";
+    ViewData["Title"] = Localizer["Login_Title"].Value;
 }
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="@System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Costify — Giriş</title>
+    <title>Costify — @Localizer["Login_Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <style>
@@ -73,6 +75,8 @@
         .btn-login:hover { opacity: .92; transform: translateY(-1px); }
         .btn-login:active { transform: translateY(0); }
 
+        .lang-switcher { position: absolute; top: 1rem; right: 1rem; }
+
         .dots {
             position: fixed; top: 0; left: 0; right: 0; bottom: 0;
             pointer-events: none; overflow: hidden; z-index: 0;
@@ -96,6 +100,27 @@
         <div class="dot" style="width:160px;height:160px;top:20%;left:70%;animation-delay:1s"></div>
     </div>
 
+    <!-- Language switcher -->
+    @{
+        var currentCulture = System.Globalization.CultureInfo.CurrentUICulture.Name;
+        var returnUrl = "/Auth/Login";
+        var isTrLogin = currentCulture.StartsWith("tr");
+    }
+    <div style="position:fixed;top:1rem;right:1rem;z-index:10">
+        <div class="btn-group" role="group">
+            <a href="/Language/Set?culture=tr-TR&returnUrl=@Uri.EscapeDataString(returnUrl)"
+               class="btn btn-sm @(isTrLogin ? "btn-light" : "btn-outline-light")"
+               style="font-size:.72rem;padding:.28rem .65rem;font-weight:600;letter-spacing:.03em;border-radius:6px 0 0 6px;opacity:@(isTrLogin ? "1" : ".75")">
+                🇹🇷 TR
+            </a>
+            <a href="/Language/Set?culture=en-US&returnUrl=@Uri.EscapeDataString(returnUrl)"
+               class="btn btn-sm @(!isTrLogin ? "btn-light" : "btn-outline-light")"
+               style="font-size:.72rem;padding:.28rem .65rem;font-weight:600;letter-spacing:.03em;border-radius:0 6px 6px 0;opacity:@(!isTrLogin ? "1" : ".75")">
+                🇺🇸 US
+            </a>
+        </div>
+    </div>
+
     <div class="login-card position-relative" style="z-index:1">
         <div class="text-center mb-4">
             <div class="brand-icon mx-auto mb-3" style="background:none;box-shadow:none;width:160px;height:160px">
@@ -105,7 +130,7 @@
                 </span>
             </div>
             <h4 class="fw-bold mb-1" style="color:#1e293b">Costify</h4>
-            <p class="text-muted small mb-0">Kafe & Restoran Maliyet Yönetimi</p>
+            <p class="text-muted small mb-0">@Localizer["Login_Subtitle"]</p>
         </div>
 
         @if (!string.IsNullOrEmpty(ViewBag.Error as string))
@@ -121,7 +146,7 @@
             <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
 
             <div class="mb-3">
-                <label class="form-label fw-medium small" style="color:#374151">Kullanıcı Adı</label>
+                <label class="form-label fw-medium small" style="color:#374151">@Localizer["Login_Username"]</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-person"></i></span>
                     <input type="text" name="username" class="form-control" placeholder="admin"
@@ -130,7 +155,7 @@
             </div>
 
             <div class="mb-4">
-                <label class="form-label fw-medium small" style="color:#374151">Şifre</label>
+                <label class="form-label fw-medium small" style="color:#374151">@Localizer["Login_Password"]</label>
                 <div class="input-group">
                     <span class="input-group-text"><i class="bi bi-lock"></i></span>
                     <input type="password" name="password" id="passwordInput" class="form-control"
@@ -144,18 +169,19 @@
             </div>
 
             <button type="submit" class="btn btn-login btn-primary w-100 text-white">
-                <i class="bi bi-box-arrow-in-right me-2"></i>Giriş Yap
+                <i class="bi bi-box-arrow-in-right me-2"></i>@Localizer["Login_Submit"]
             </button>
         </form>
 
         <div class="text-center mt-4 pt-3 border-top">
             <span class="text-muted" style="font-size:.75rem">
                 <i class="bi bi-shield-check me-1" style="color:#10b981"></i>
-                Güvenli bağlantı — yalnızca yetkili erişim
+                @Localizer["Login_SecureNote"]
             </span>
         </div>
     </div>
 
+    <script src="/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
     function togglePass() {
         const input = document.getElementById('passwordInput');

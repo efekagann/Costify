@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence><xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" /></xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="xml:space" use="optional" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Common -->
+  <data name="Common_Save" xml:space="preserve"><value>Save</value></data>
+  <data name="Common_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Common_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="Common_Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Common_Back" xml:space="preserve"><value>Back</value></data>
+  <data name="Common_Update" xml:space="preserve"><value>Update</value></data>
+  <data name="Common_Active" xml:space="preserve"><value>Active</value></data>
+  <data name="Common_Inactive" xml:space="preserve"><value>Inactive</value></data>
+  <data name="Common_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Common_Date" xml:space="preserve"><value>Date</value></data>
+  <data name="Common_Product" xml:space="preserve"><value>Product</value></data>
+  <data name="Common_Category" xml:space="preserve"><value>Category</value></data>
+  <data name="Common_Unit" xml:space="preserve"><value>Unit</value></data>
+  <data name="Common_Quantity" xml:space="preserve"><value>Quantity</value></data>
+  <data name="Common_Total" xml:space="preserve"><value>Total</value></data>
+  <data name="Common_Price" xml:space="preserve"><value>Price</value></data>
+  <data name="Common_Description" xml:space="preserve"><value>Description</value></data>
+  <data name="Common_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="Common_NoData" xml:space="preserve"><value>No data</value></data>
+  <data name="Common_Detail" xml:space="preserve"><value>Detail</value></data>
+  <data name="Common_ViewAll" xml:space="preserve"><value>View All</value></data>
+  <data name="Common_Search" xml:space="preserve"><value>Search</value></data>
+  <data name="Common_Clear" xml:space="preserve"><value>Clear</value></data>
+  <data name="Common_Note" xml:space="preserve"><value>Note</value></data>
+  <data name="Common_Address" xml:space="preserve"><value>Address</value></data>
+  <data name="Common_Phone" xml:space="preserve"><value>Phone</value></data>
+  <data name="Common_Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Common_GrandTotal" xml:space="preserve"><value>Grand Total</value></data>
+  <data name="Common_UnitPrice" xml:space="preserve"><value>Unit Price</value></data>
+  <data name="Common_Received" xml:space="preserve"><value>Received</value></data>
+  <data name="Common_Ordered" xml:space="preserve"><value>Ordered</value></data>
+  <data name="Common_Cancelled" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="Common_PartiallyReceived" xml:space="preserve"><value>Partially Received</value></data>
+  <data name="Common_Draft" xml:space="preserve"><value>Draft</value></data>
+  <data name="Common_OrderNo" xml:space="preserve"><value>Order No</value></data>
+  <data name="Common_Vendor" xml:space="preserve"><value>Vendor</value></data>
+  <data name="Common_Loading" xml:space="preserve"><value>Loading...</value></data>
+  <data name="Common_Symbol" xml:space="preserve"><value>Symbol</value></data>
+  <data name="Common_ProductCount" xml:space="preserve"><value>Product Count</value></data>
+  <data name="Common_Color" xml:space="preserve"><value>Color</value></data>
+  <data name="Common_Optional" xml:space="preserve"><value>Optional...</value></data>
+  <data name="Common_SelectOption" xml:space="preserve"><value>— Select —</value></data>
+  <data name="Common_Amount" xml:space="preserve"><value>Amount</value></data>
+
+  <!-- Navigation -->
+  <data name="Nav_CafeRestaurant" xml:space="preserve"><value>Cafe &amp; Restaurant</value></data>
+  <data name="Nav_Menu" xml:space="preserve"><value>MENU</value></data>
+  <data name="Nav_Overview" xml:space="preserve"><value>Overview</value></data>
+  <data name="Nav_ProductsStock" xml:space="preserve"><value>Products &amp; Stock</value></data>
+  <data name="Nav_Vendors" xml:space="preserve"><value>Vendors</value></data>
+  <data name="Nav_Purchase" xml:space="preserve"><value>Purchase</value></data>
+  <data name="Nav_Definitions" xml:space="preserve"><value>DEFINITIONS</value></data>
+  <data name="Nav_CategoriesUnits" xml:space="preserve"><value>Categories &amp; Units</value></data>
+  <data name="Nav_Operation" xml:space="preserve"><value>OPERATION</value></data>
+  <data name="Nav_Recipes" xml:space="preserve"><value>Recipes</value></data>
+  <data name="Nav_StockCount" xml:space="preserve"><value>Stock Count</value></data>
+  <data name="Nav_Analysis" xml:space="preserve"><value>ANALYSIS</value></data>
+  <data name="Nav_Reports" xml:space="preserve"><value>Reports</value></data>
+  <data name="Nav_Admin" xml:space="preserve"><value>Administrator</value></data>
+  <data name="Nav_Logout" xml:space="preserve"><value>Sign Out</value></data>
+  <data name="Nav_DemoCafe" xml:space="preserve"><value>Demo Cafe</value></data>
+
+  <!-- Login -->
+  <data name="Login_Title" xml:space="preserve"><value>Sign In</value></data>
+  <data name="Login_Subtitle" xml:space="preserve"><value>Cafe &amp; Restaurant Cost Management</value></data>
+  <data name="Login_Username" xml:space="preserve"><value>Username</value></data>
+  <data name="Login_Password" xml:space="preserve"><value>Password</value></data>
+  <data name="Login_Submit" xml:space="preserve"><value>Sign In</value></data>
+  <data name="Login_SecureNote" xml:space="preserve"><value>Secure connection — authorized access only</value></data>
+
+  <!-- Dashboard -->
+  <data name="Dashboard_Title" xml:space="preserve"><value>Overview</value></data>
+  <data name="Dashboard_TotalProducts" xml:space="preserve"><value>Total Products</value></data>
+  <data name="Dashboard_CriticalStock" xml:space="preserve"><value>Critical Stock</value></data>
+  <data name="Dashboard_UrgentOrder" xml:space="preserve"><value>Urgent order required</value></data>
+  <data name="Dashboard_Vendors" xml:space="preserve"><value>Vendors</value></data>
+  <data name="Dashboard_MonthlySpend" xml:space="preserve"><value>This Month's Spend</value></data>
+  <data name="Dashboard_CriticalStockAlerts" xml:space="preserve"><value>Critical Stock Alerts</value></data>
+  <data name="Dashboard_RecentOrders" xml:space="preserve"><value>Recent Orders</value></data>
+  <data name="Dashboard_NewOrder" xml:space="preserve"><value>New Order</value></data>
+  <data name="Dashboard_NoOrders" xml:space="preserve"><value>No orders yet</value></data>
+  <data name="Dashboard_CreateFirstOrder" xml:space="preserve"><value>Create your first purchase order</value></data>
+
+  <!-- Products -->
+  <data name="Products_Title" xml:space="preserve"><value>Products &amp; Stock</value></data>
+  <data name="Products_SearchPlaceholder" xml:space="preserve"><value>Product name or SKU...</value></data>
+  <data name="Products_AllCategories" xml:space="preserve"><value>All Categories</value></data>
+  <data name="Products_NewProduct" xml:space="preserve"><value>New Product</value></data>
+  <data name="Products_MinStock" xml:space="preserve"><value>Min. Stock</value></data>
+  <data name="Products_LastPrice" xml:space="preserve"><value>Last Price</value></data>
+  <data name="Products_NotFound" xml:space="preserve"><value>No products found</value></data>
+  <data name="Products_NotFoundHint" xml:space="preserve"><value>Change search criteria or add a new product</value></data>
+  <data name="Products_EditProduct" xml:space="preserve"><value>Edit Product</value></data>
+  <data name="Products_ProductName" xml:space="preserve"><value>Product Name</value></data>
+  <data name="Products_CurrentStock" xml:space="preserve"><value>Current Stock</value></data>
+  <data name="Products_MinStockThreshold" xml:space="preserve"><value>Min. Stock Alert Threshold</value></data>
+  <data name="Products_MinStockHint" xml:space="preserve"><value>Alert when falling below this value</value></data>
+  <data name="Products_LastPurchasePrice" xml:space="preserve"><value>Last Purchase Price</value></data>
+  <data name="Products_OptionalNotes" xml:space="preserve"><value>Optional notes...</value></data>
+  <data name="Products_ProductInfo" xml:space="preserve"><value>Product Information</value></data>
+  <data name="Products_StockMovements" xml:space="preserve"><value>Recent Stock Movements</value></data>
+  <data name="Products_NoMovements" xml:space="preserve"><value>No movements yet.</value></data>
+  <data name="Products_Type" xml:space="preserve"><value>Type</value></data>
+  <data name="Products_UnitCost" xml:space="preserve"><value>Unit Cost</value></data>
+  <data name="Products_Purchase" xml:space="preserve"><value>Purchase</value></data>
+  <data name="Products_Usage" xml:space="preserve"><value>Usage</value></data>
+  <data name="Products_Waste" xml:space="preserve"><value>Waste</value></data>
+  <data name="Products_Adjustment" xml:space="preserve"><value>Adjustment</value></data>
+  <data name="Products_Return" xml:space="preserve"><value>Return</value></data>
+  <data name="Products_DeleteConfirm" xml:space="preserve"><value>Are you sure you want to delete this product?</value></data>
+  <data name="Products_Stock" xml:space="preserve"><value>Stock</value></data>
+  <data name="Products_NewProductTitle" xml:space="preserve"><value>Add New Product</value></data>
+  <data name="Products_EditTitle" xml:space="preserve"><value>Edit Product</value></data>
+
+  <!-- Vendors -->
+  <data name="Vendors_Title" xml:space="preserve"><value>Vendors</value></data>
+  <data name="Vendors_NewVendor" xml:space="preserve"><value>New Vendor</value></data>
+  <data name="Vendors_Company" xml:space="preserve"><value>Company</value></data>
+  <data name="Vendors_Contact" xml:space="preserve"><value>Contact</value></data>
+  <data name="Vendors_TaxNo" xml:space="preserve"><value>Tax No</value></data>
+  <data name="Vendors_NoVendors" xml:space="preserve"><value>No vendors yet</value></data>
+  <data name="Vendors_AddFirst" xml:space="preserve"><value>Add your first vendor</value></data>
+  <data name="Vendors_EditVendor" xml:space="preserve"><value>Edit Vendor</value></data>
+  <data name="Vendors_CompanyName" xml:space="preserve"><value>Company Name</value></data>
+  <data name="Vendors_CompanyPlaceholder" xml:space="preserve"><value>Vendor company name</value></data>
+  <data name="Vendors_ContactPerson" xml:space="preserve"><value>Contact Person</value></data>
+  <data name="Vendors_FullName" xml:space="preserve"><value>Full Name</value></data>
+  <data name="Vendors_AddressPlaceholder" xml:space="preserve"><value>Company address...</value></data>
+  <data name="Vendors_TaxNumber" xml:space="preserve"><value>Tax Number</value></data>
+  <data name="Vendors_DeleteConfirm" xml:space="preserve"><value>Are you sure you want to delete this vendor?</value></data>
+  <data name="Vendors_Info" xml:space="preserve"><value>Vendor Information</value></data>
+  <data name="Vendors_TotalOrders" xml:space="preserve"><value>Total Orders</value></data>
+  <data name="Vendors_TotalSpend" xml:space="preserve"><value>Total Spend</value></data>
+  <data name="Vendors_NoOrders" xml:space="preserve"><value>No orders</value></data>
+  <data name="Vendors_ProductPriceHistory" xml:space="preserve"><value>Product Price History</value></data>
+  <data name="Vendors_Change" xml:space="preserve"><value>Change</value></data>
+  <data name="Vendors_Other" xml:space="preserve"><value>Other</value></data>
+  <data name="Vendors_RecentOrders" xml:space="preserve"><value>Recent Orders</value></data>
+  <data name="Vendors_Count" xml:space="preserve"><value>vendor(s)</value></data>
+
+  <!-- PurchaseOrders -->
+  <data name="PO_Title" xml:space="preserve"><value>Purchase Orders</value></data>
+  <data name="PO_NewOrder" xml:space="preserve"><value>New Order</value></data>
+  <data name="PO_OrderDate" xml:space="preserve"><value>Order Date</value></data>
+  <data name="PO_Items" xml:space="preserve"><value>Items</value></data>
+  <data name="PO_NoOrders" xml:space="preserve"><value>No orders yet</value></data>
+  <data name="PO_CreateFirst" xml:space="preserve"><value>Create your first purchase order</value></data>
+  <data name="PO_NewPurchaseOrder" xml:space="preserve"><value>New Purchase Order</value></data>
+  <data name="PO_SelectVendor" xml:space="preserve"><value>— Select vendor —</value></data>
+  <data name="PO_ExpectedDelivery" xml:space="preserve"><value>Expected Delivery</value></data>
+  <data name="PO_NoteOptional" xml:space="preserve"><value>Optional order note...</value></data>
+  <data name="PO_OrderItems" xml:space="preserve"><value>Order Items</value></data>
+  <data name="PO_AddProduct" xml:space="preserve"><value>Add Product</value></data>
+  <data name="PO_AddProductHint" xml:space="preserve"><value>Use the button above to add products</value></data>
+  <data name="PO_GrandTotalLabel" xml:space="preserve"><value>Grand Total:</value></data>
+  <data name="PO_CreateOrder" xml:space="preserve"><value>Create Order</value></data>
+  <data name="PO_Info" xml:space="preserve"><value>Order Information</value></data>
+  <data name="PO_DeliveryDate" xml:space="preserve"><value>Delivery Date</value></data>
+  <data name="PO_TotalAmount" xml:space="preserve"><value>Total Amount</value></data>
+  <data name="PO_Receive" xml:space="preserve"><value>Receive</value></data>
+  <data name="PO_ReceiveConfirm" xml:space="preserve"><value>The order will be marked as received and stock will be updated. Do you confirm?</value></data>
+  <data name="PO_NoProductsAdded" xml:space="preserve"><value>No products added yet.</value></data>
+  <data name="PO_SelectProduct" xml:space="preserve"><value>— Select product —</value></data>
+  <data name="PO_UnitPriceLabel" xml:space="preserve"><value>Unit Price (₺)</value></data>
+  <data name="PO_Notes" xml:space="preserve"><value>Notes</value></data>
+  <data name="PO_Count" xml:space="preserve"><value>order(s)</value></data>
+
+  <!-- Definitions -->
+  <data name="Def_Title" xml:space="preserve"><value>Definitions</value></data>
+  <data name="Def_Subtitle" xml:space="preserve"><value>Category and unit definitions</value></data>
+  <data name="Def_Categories" xml:space="preserve"><value>Categories</value></data>
+  <data name="Def_Units" xml:space="preserve"><value>Units</value></data>
+  <data name="Def_ProductCategories" xml:space="preserve"><value>Product Categories</value></data>
+  <data name="Def_NewCategory" xml:space="preserve"><value>New Category</value></data>
+  <data name="Def_NoCategories" xml:space="preserve"><value>No categories yet</value></data>
+  <data name="Def_UnitsOfMeasurement" xml:space="preserve"><value>Units of Measurement</value></data>
+  <data name="Def_NewUnit" xml:space="preserve"><value>New Unit</value></data>
+  <data name="Def_NoUnits" xml:space="preserve"><value>No units yet</value></data>
+  <data name="Def_EditCategory" xml:space="preserve"><value>Edit Category</value></data>
+  <data name="Def_EditUnit" xml:space="preserve"><value>Edit Unit</value></data>
+  <data name="Def_CategoryName" xml:space="preserve"><value>Category Name</value></data>
+  <data name="Def_UnitName" xml:space="preserve"><value>Unit Name</value></data>
+  <data name="Def_SymbolHint" xml:space="preserve"><value>Visible in product cards and reports</value></data>
+  <data name="Def_DeleteCategoryConfirm" xml:space="preserve"><value>Are you sure you want to delete this category?</value></data>
+  <data name="Def_DeleteUnitConfirm" xml:space="preserve"><value>Are you sure you want to delete this unit?</value></data>
+
+  <!-- Recipes -->
+  <data name="Recipes_Title" xml:space="preserve"><value>Recipes</value></data>
+  <data name="Recipes_NewRecipe" xml:space="preserve"><value>New Recipe</value></data>
+  <data name="Recipes_IngredientCost" xml:space="preserve"><value>Ingredient Cost</value></data>
+  <data name="Recipes_SellingPrice" xml:space="preserve"><value>Selling Price</value></data>
+  <data name="Recipes_FoodCostPct" xml:space="preserve"><value>Food Cost %</value></data>
+  <data name="Recipes_Ingredients" xml:space="preserve"><value>Ingredients</value></data>
+  <data name="Recipes_NoRecipes" xml:space="preserve"><value>No recipes yet</value></data>
+  <data name="Recipes_CreateFirst" xml:space="preserve"><value>Create your first recipe and calculate costs</value></data>
+  <data name="Recipes_DeleteConfirm" xml:space="preserve"><value>Are you sure you want to delete this recipe?</value></data>
+  <data name="Recipes_EditRecipe" xml:space="preserve"><value>Edit Recipe</value></data>
+  <data name="Recipes_RecipeName" xml:space="preserve"><value>Recipe Name</value></data>
+  <data name="Recipes_SellingPriceLabel" xml:space="preserve"><value>Selling Price (₺)</value></data>
+  <data name="Recipes_EstimatedFoodCost" xml:space="preserve"><value>Estimated Food Cost %</value></data>
+  <data name="Recipes_AddIngredient" xml:space="preserve"><value>Add Ingredient</value></data>
+  <data name="Recipes_ProductRawMaterial" xml:space="preserve"><value>Product / Raw Material</value></data>
+  <data name="Recipes_LineCost" xml:space="preserve"><value>Line Cost</value></data>
+  <data name="Recipes_AddIngredientHint" xml:space="preserve"><value>Use the button above to add ingredients</value></data>
+  <data name="Recipes_TotalCostColon" xml:space="preserve"><value>Total Cost:</value></data>
+  <data name="Recipes_Info" xml:space="preserve"><value>Recipe Information</value></data>
+  <data name="Recipes_GrossProfit" xml:space="preserve"><value>Gross Profit</value></data>
+  <data name="Recipes_FoodCostPercentage" xml:space="preserve"><value>Food Cost Percentage</value></data>
+  <data name="Recipes_Ideal" xml:space="preserve"><value>Ideal</value></data>
+  <data name="Recipes_Moderate" xml:space="preserve"><value>Moderate</value></data>
+  <data name="Recipes_High" xml:space="preserve"><value>High</value></data>
+  <data name="Recipes_TargetExcellent" xml:space="preserve"><value>Target: below 25% — excellent</value></data>
+  <data name="Recipes_TargetBring" xml:space="preserve"><value>Target: bring below 25%</value></data>
+  <data name="Recipes_ReduceCost" xml:space="preserve"><value>Increase price or reduce cost</value></data>
+  <data name="Recipes_IngredientList" xml:space="preserve"><value>Ingredient List</value></data>
+  <data name="Recipes_CostShare" xml:space="preserve"><value>Cost Share %</value></data>
+  <data name="Recipes_TotalCostLabel" xml:space="preserve"><value>Total Cost</value></data>
+  <data name="Recipes_SelectProduct" xml:space="preserve"><value>— Select product —</value></data>
+  <data name="Recipes_Count" xml:space="preserve"><value>recipe(s)</value></data>
+  <data name="Recipes_Uncategorized" xml:space="preserve"><value>Uncategorized</value></data>
+
+  <!-- StockCounts -->
+  <data name="SC_Title" xml:space="preserve"><value>Stock Count</value></data>
+  <data name="SC_StartNew" xml:space="preserve"><value>Start New Count</value></data>
+  <data name="SC_HasDifference" xml:space="preserve"><value>Has Difference</value></data>
+  <data name="SC_NoDifference" xml:space="preserve"><value>No difference</value></data>
+  <data name="SC_Completed" xml:space="preserve"><value>Completed</value></data>
+  <data name="SC_InProgress" xml:space="preserve"><value>In Progress</value></data>
+  <data name="SC_NoStockCounts" xml:space="preserve"><value>No stock counts yet</value></data>
+  <data name="SC_CreateFirst" xml:space="preserve"><value>Start your first count, enter actual stock quantities</value></data>
+  <data name="SC_NewStockCount" xml:space="preserve"><value>New Stock Count</value></data>
+  <data name="SC_StartInfo" xml:space="preserve"><value>When the count starts, current stock quantities are saved as theoretical values. You then enter actual count values.</value></data>
+  <data name="SC_NoteOptional" xml:space="preserve"><value>Note (optional)</value></data>
+  <data name="SC_NotePlaceholder" xml:space="preserve"><value>January count...</value></data>
+  <data name="SC_Start" xml:space="preserve"><value>Start Count</value></data>
+  <data name="SC_ApproveApply" xml:space="preserve"><value>Approve &amp; Apply Count</value></data>
+  <data name="SC_DiffAlertSuffix" xml:space="preserve"><value>product(s) with differences detected. Stocks will be corrected upon approval.</value></data>
+  <data name="SC_CountList" xml:space="preserve"><value>Count List</value></data>
+  <data name="SC_SaveValues" xml:space="preserve"><value>Save Values</value></data>
+  <data name="SC_SystemStock" xml:space="preserve"><value>System Stock</value></data>
+  <data name="SC_CountedQuantity" xml:space="preserve"><value>Counted Quantity</value></data>
+  <data name="SC_Difference" xml:space="preserve"><value>Difference</value></data>
+  <data name="SC_DiffValue" xml:space="preserve"><value>Difference Value</value></data>
+  <data name="SC_FinalizeConfirm" xml:space="preserve"><value>Stock will be updated and difference records will be created upon approval. Do you confirm?</value></data>
+  <data name="SC_Count" xml:space="preserve"><value>count(s)</value></data>
+  <data name="SC_Products" xml:space="preserve"><value>product(s)</value></data>
+
+  <!-- Reports -->
+  <data name="Reports_Title" xml:space="preserve"><value>Reports</value></data>
+  <data name="Reports_TotalPurchases" xml:space="preserve"><value>Total Purchases (6 months)</value></data>
+  <data name="Reports_StockValue" xml:space="preserve"><value>Inventory Value</value></data>
+  <data name="Reports_ActiveRecipes" xml:space="preserve"><value>Active Recipes</value></data>
+  <data name="Reports_AvgFoodCost" xml:space="preserve"><value>Avg. Food Cost %</value></data>
+  <data name="Reports_DownloadExcel" xml:space="preserve"><value>Download Reports (Excel)</value></data>
+  <data name="Reports_ExcelHint" xml:space="preserve"><value>Excel (.xlsx) — opens directly</value></data>
+  <data name="Reports_PurchaseReport" xml:space="preserve"><value>Purchase Report</value></data>
+  <data name="Reports_Daily" xml:space="preserve"><value>Daily</value></data>
+  <data name="Reports_Weekly" xml:space="preserve"><value>Weekly</value></data>
+  <data name="Reports_Monthly" xml:space="preserve"><value>Monthly</value></data>
+  <data name="Reports_Yearly" xml:space="preserve"><value>Yearly</value></data>
+  <data name="Reports_StockReport" xml:space="preserve"><value>Stock Report</value></data>
+  <data name="Reports_StockStatus" xml:space="preserve"><value>Stock Status</value></data>
+  <data name="Reports_StockHint" xml:space="preserve"><value>Real-time stock and value information</value></data>
+  <data name="Reports_RecipeCostReport" xml:space="preserve"><value>Recipe Cost Report</value></data>
+  <data name="Reports_AllRecipes" xml:space="preserve"><value>All Recipes</value></data>
+  <data name="Reports_RecipeHint" xml:space="preserve"><value>Ingredient and food cost analysis</value></data>
+  <data name="Reports_MonthlyPurchases" xml:space="preserve"><value>Monthly Purchases (Last 6 Months)</value></data>
+  <data name="Reports_VendorSpend" xml:space="preserve"><value>Spend by Vendor</value></data>
+  <data name="Reports_StockByCategory" xml:space="preserve"><value>Inventory Value (By Category)</value></data>
+  <data name="Reports_Value" xml:space="preserve"><value>Value</value></data>
+  <data name="Reports_Share" xml:space="preserve"><value>Share</value></data>
+  <data name="Reports_RecipeCostAnalysis" xml:space="preserve"><value>Recipe Food Cost Analysis</value></data>
+  <data name="Reports_Cost" xml:space="preserve"><value>Cost</value></data>
+  <data name="Reports_GMPct" xml:space="preserve"><value>F.C.%</value></data>
+  <data name="Reports_NoRecipes" xml:space="preserve"><value>No recipes — create a recipe first</value></data>
+  <data name="Reports_Months" xml:space="preserve"><value>Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec</value></data>
+</root>
